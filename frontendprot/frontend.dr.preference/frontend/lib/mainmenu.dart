@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/overlays/scannedoverlay.dart';
 import 'overlays/settings.dart';
+import 'other/products.dart';
+import 'other/scan.dart';
 
 class MyCustomClass {
   static SettingsDialog dialog = SettingsDialog();
+  static ScanBarcode scanBarcode = ScanBarcode();
   static void openNewScreen(BuildContext context) {
     Navigator.push(
       context,
@@ -16,12 +20,9 @@ class MyCustomClass {
                   Align(
                       alignment: Alignment.topLeft,
                       child: Padding(
-                        padding: EdgeInsets.only(left: 16, top: 16),
+                        padding: const EdgeInsets.only(left: 16, top: 16),
                         child: ElevatedButton(
-                          onPressed: () {
-                            // Do something when the button is pressed
-                          },
-                          child: Icon(Icons.person_outlined),
+                          onPressed: () {},
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.grey.shade400),
@@ -30,6 +31,7 @@ class MyCustomClass {
                             minimumSize:
                                 MaterialStateProperty.all(Size(70, 70)),
                           ),
+                          child: const Icon(Icons.person_outlined),
                         ),
                       )),
                   Align(
@@ -41,7 +43,6 @@ class MyCustomClass {
                             showDialog(
                                 context: context, builder: (context) => dialog);
                           },
-                          child: Icon(Icons.menu),
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.grey.shade400),
@@ -50,6 +51,7 @@ class MyCustomClass {
                             minimumSize:
                                 MaterialStateProperty.all(Size(70, 70)),
                           ),
+                          child: Icon(Icons.menu),
                         ),
                       )),
                   Container(
@@ -58,11 +60,20 @@ class MyCustomClass {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            // Do something when the first button is pressed
+                          onPressed: () async {
+                            String? barcode = await scanBarcode.scanBarcode();
+                            if (barcode != null) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => MyDialog(
+                                  title: 'Scanned product: ',
+                                  message: barcode,
+                                ),
+                              );
+                            } else {
+                              const Text('Something wrong!');
+                            }
                           },
-                          child: Text('Scan product',
-                              style: TextStyle(fontSize: 24)),
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.grey.shade400),
@@ -71,14 +82,14 @@ class MyCustomClass {
                             minimumSize:
                                 MaterialStateProperty.all(Size(200, 100)),
                           ),
+                          child: const Text('Scan products',
+                              style: TextStyle(fontSize: 24)),
                         ),
                         SizedBox(height: 40),
                         ElevatedButton(
                           onPressed: () {
                             // Do something when the second button is pressed
                           },
-                          child: Text('Something...',
-                              style: TextStyle(fontSize: 24)),
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.grey.shade400),
@@ -87,14 +98,14 @@ class MyCustomClass {
                             minimumSize:
                                 MaterialStateProperty.all(Size(200, 100)),
                           ),
+                          child: const Text('Something...',
+                              style: TextStyle(fontSize: 24)),
                         ),
                         SizedBox(height: 40),
                         ElevatedButton(
                           onPressed: () {
-                            // Do something when the third button is pressed
+                            products.openNewscreen(context);
                           },
-                          child: Text('See products',
-                              style: TextStyle(fontSize: 24)),
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.grey.shade400),
@@ -103,6 +114,8 @@ class MyCustomClass {
                             minimumSize:
                                 MaterialStateProperty.all(Size(200, 100)),
                           ),
+                          child: const Text('See products',
+                              style: TextStyle(fontSize: 24)),
                         ),
                       ],
                     ),
