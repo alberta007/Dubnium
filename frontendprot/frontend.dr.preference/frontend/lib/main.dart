@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
 class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+  /**/   return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.green.shade800,
         body: Center(
