@@ -1,10 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'Widgets/signUpandInWidget.dart';
+import 'Widgets/mainmenu.dart';
 
-import 'mainmenu.dart';
-
-import 'overlays/registeroverlay.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 void main() async {
@@ -12,9 +11,6 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MyApp());
 }
-
-DatabaseReference usersRef =
-    FirebaseDatabase.instance.reference().child("users");
 
 class MyApp extends StatelessWidget {
   @override
@@ -25,94 +21,19 @@ class MyApp extends StatelessWidget {
 
 class MyHome extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.green.shade800,
-        body: Center(
-          child: Stack(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                child:
-                    Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  Image.asset(
-                    'assets/images/Dr.Preferenec-removebg-preview.png',
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      MyCustomClass.openNewScreen(context);
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.purple.shade500),
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.grey.shade400),
-                      minimumSize: MaterialStateProperty.all(Size(200, 75)),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Or...',
-                    style: TextStyle(fontSize: 25, color: Colors.grey.shade400),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => RegisterDialog());
-                    },
-                    child: Text(
-                      'Register',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.purple.shade500),
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.grey.shade400),
-                        minimumSize: MaterialStateProperty.all(Size(200, 75))),
-                  ),
-                  SizedBox(
-                    height: 60,
-                  ),
-                ]),
-              )
-            ],
-          ),
-        ));
-  }
+  Widget build(BuildContext context) => Scaffold(
+          body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: ((context, snapshot) {
+          if (snapshot.hasData) {
+            return const MyCustomClass();
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Something wrong!'),
+            );
+          } else {
+            return SignUpandInWidget();
+          }
+        }),
+      ));
 }
-   /*  return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.green.shade800,
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 300),
-            child: ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.grey.shade400),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green.shade800),
-                    minimumSize: MaterialStateProperty.all(Size(200, 100))),
-                child: Text(
-                  "Go!",
-                  style: TextStyle(fontSize: 40),
-                ),
-                onPressed: () => MyCustomClass.openNewScreen(context)),
-          ),
-        ),
-      ),
-    );*/
