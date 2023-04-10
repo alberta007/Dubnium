@@ -30,7 +30,7 @@ class MyHome extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
-            return const MyCustomClass();
+            return MyCustomClass();
           } else if (snapshot.hasError) {
             return Center(
               child: Text('Something wrong!'),

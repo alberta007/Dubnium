@@ -33,7 +33,7 @@ class _registerWidget extends State<registerWidget> {
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: Container(
-            color: Colors.green.shade600,
+            color: Color(0xFFEAF5E4),
             child: Stack(
               children: [
                 Container(
@@ -76,17 +76,16 @@ class _registerWidget extends State<registerWidget> {
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.purple.shade400),
+                                  Color(0xFF87A330)),
                               minimumSize: MaterialStateProperty.all<Size>(
                                   Size.fromHeight(50)),
                             ),
-                            icon: (Icon(
-                              Icons.lock_open,
-                              size: 32,
-                            )),
+                            icon: (Icon(Icons.lock_open,
+                                size: 32, color: Colors.black)),
                             label: Text(
                               'Sign up',
-                              style: TextStyle(fontSize: 24),
+                              style:
+                                  TextStyle(fontSize: 24, color: Colors.black),
                             ),
                           ),
                           SizedBox(
@@ -94,7 +93,7 @@ class _registerWidget extends State<registerWidget> {
                           ),
                           RichText(
                               text: TextSpan(
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: Color(0xFF87A330)),
                                   text: 'Already have an account?  ',
                                   children: [
                                 TextSpan(
@@ -103,7 +102,7 @@ class _registerWidget extends State<registerWidget> {
                                     text: 'Sign in',
                                     style: TextStyle(
                                         decoration: TextDecoration.underline,
-                                        color: Colors.purple.shade400))
+                                        color: Colors.black))
                               ]))
                         ],
                       ),
@@ -127,7 +126,7 @@ class _registerWidget extends State<registerWidget> {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
-            textColor: Colors.white,
+            textColor: Color(0xFF87A330),
             fontSize: 20.0);
       } else if (e.code == 'weak-password') {
         Fluttertoast.showToast(
@@ -136,7 +135,7 @@ class _registerWidget extends State<registerWidget> {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
-            textColor: Colors.white,
+            textColor: Color(0xFF87A330),
             fontSize: 20.0);
       }
       print(e);

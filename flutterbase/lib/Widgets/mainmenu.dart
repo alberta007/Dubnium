@@ -7,109 +7,231 @@ import '../other/scan.dart';
 import 'package:flutterbase/overlays/profileoverlay.dart';
 
 class MyCustomClass extends StatelessWidget {
+  static ProfileOverlay profile = ProfileOverlay();
   static SettingsDialog dialog = SettingsDialog();
   static ScanBarcode scanBarcode = ScanBarcode();
 
-  const MyCustomClass({super.key});
+  MyCustomClass({super.key});
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
-      backgroundColor: Colors.green.shade600,
+      backgroundColor: Color(0xFFEAF5E4),
       body: Center(
         child: Stack(
           children: [
             Align(
-                alignment: Alignment.topLeft,
+                alignment: Alignment.bottomLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 16),
+                    padding: const EdgeInsets.only(left: 40, bottom: 50),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.person_outline_outlined,
+                        size: 70,
+                      ),
+                      onPressed: () {},
+                    ))),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                    padding: const EdgeInsets.only(right: 80, bottom: 50),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.qr_code_scanner_outlined,
+                        size: 70,
+                      ),
+                      onPressed: () async {
+                        String? barcode = await scanBarcode.scanBarcode();
+                        if (barcode != null) {
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => MyDialog(
+                              title: 'Scanned product: ',
+                              message: barcode,
+                            ),
+                          );
+                        } else {
+                          const Text('Something wrong!');
+                        }
+                      },
+                    ))),
+            const Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                    padding: EdgeInsets.only(right: 0, top: 100),
+                    child: Text(
+                      'Dr.Preference',
+                      style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF3C2615)),
+                    ))),
+            Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 0, top: 190),
                   child: ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => ProfileOverlay());
-                    },
+                    onPressed: () async {},
                     style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.grey.shade400),
+                          MaterialStateProperty.all(Color(0xFF87A330)),
                       foregroundColor:
                           MaterialStateProperty.all(Colors.green.shade600),
-                      minimumSize: MaterialStateProperty.all(Size(70, 70)),
+                      minimumSize: MaterialStateProperty.all(Size(300, 60)),
                     ),
-                    child: const Icon(Icons.person_outlined),
+                    child: const Text('Preferences',
+                        style:
+                            TextStyle(fontSize: 24, color: Color(0xFF3C2615))),
                   ),
                 )),
             Align(
-                alignment: Alignment.topRight,
+                alignment: Alignment.topCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 16, top: 16),
+                  padding: const EdgeInsets.only(right: 0, top: 270),
                   child: ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context, builder: (context) => dialog);
-                    },
+                    onPressed: () async {},
                     style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.grey.shade400),
+                          MaterialStateProperty.all(Color(0xFF87A330)),
                       foregroundColor:
                           MaterialStateProperty.all(Colors.green.shade600),
-                      minimumSize: MaterialStateProperty.all(Size(70, 70)),
+                      minimumSize: MaterialStateProperty.all(Size(300, 60)),
                     ),
-                    child: Icon(Icons.menu),
+                    child: const Text('Social',
+                        style:
+                            TextStyle(fontSize: 24, color: Color(0xFF3C2615))),
                   ),
                 )),
-            Container(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      String? barcode = await scanBarcode.scanBarcode();
-                      if (barcode != null) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => MyDialog(
-                            title: 'Scanned product: ',
-                            message: barcode,
+            Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 0, top: 350),
+                  child: ElevatedButton(
+                    onPressed: () async {},
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all(Color(0xFF87A330)),
+                      foregroundColor:
+                          MaterialStateProperty.all(Colors.green.shade600),
+                      minimumSize: MaterialStateProperty.all(Size(300, 60)),
+                    ),
+                    child: const Text('Create meal',
+                        style:
+                            TextStyle(fontSize: 24, color: Color(0xFF3C2615))),
+                  ),
+                )),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                    padding: const EdgeInsets.only(right: 0, bottom: 130),
+                    child: Container(
+                      width: 300,
+                      height: 230,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF87A330),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 16.0),
+                                Text(
+                                  'Name:',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Color(0xFF3C2615),
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                SizedBox(height: 30.0),
+                                Text(
+                                  'E-mail: ${user.email}',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Color(0xFF3C2615),
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        );
-                      } else {
-                        const Text('Something wrong!');
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.grey.shade400),
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.green.shade600),
-                      minimumSize: MaterialStateProperty.all(Size(200, 100)),
-                    ),
-                    child: const Text('Scan products',
-                        style: TextStyle(fontSize: 24)),
-                  ),
-                  SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: () {
-                      products.openNewscreen(context);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.grey.shade400),
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.green.shade600),
-                      minimumSize: MaterialStateProperty.all(Size(200, 100)),
-                    ),
-                    child: const Text('See products',
-                        style: TextStyle(fontSize: 24)),
-                  ),
-                ],
-              ),
-            ),
+                          Positioned(
+                            bottom: 16.0,
+                            right: 16.0,
+                            child: IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      ProfileOverlay(),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ))),
           ],
         ),
       ),
     );
   }
 }
+/* 
+ Container(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {},
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.grey.shade400),
+                      foregroundColor:
+                          MaterialStateProperty.all(Colors.green.shade600),
+                      minimumSize: MaterialStateProperty.all(Size(300, 50)),
+                    ),
+                    child: const Text('Scan products',
+                        style: TextStyle(fontSize: 24)),
+                  ),
+                  SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.grey.shade400),
+                      foregroundColor:
+                          MaterialStateProperty.all(Colors.green.shade600),
+                      minimumSize: MaterialStateProperty.all(Size(300, 50)),
+                    ),
+                    child: const Text('See products',
+                        style: TextStyle(fontSize: 24)),
+                  ),
+                ],
+              ),
+            ),*/

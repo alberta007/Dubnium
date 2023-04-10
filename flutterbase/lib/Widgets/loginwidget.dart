@@ -36,7 +36,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: Container(
-            color: Colors.green.shade600, // set background color here
+            color: Color(0xFFEAF5E4),
             child: Stack(
               children: [
                 Container(
@@ -79,17 +79,21 @@ class _LoginWidgetState extends State<LoginWidget> {
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.purple.shade400),
+                                  Color(0xFF87A330)),
                               minimumSize: MaterialStateProperty.all<Size>(
                                   Size.fromHeight(50)),
                             ),
                             icon: (Icon(
                               Icons.lock_open,
                               size: 32,
+                              color: Colors.black,
                             )),
                             label: Text(
                               'Sign in',
-                              style: TextStyle(fontSize: 24),
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -97,7 +101,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ),
                           RichText(
                               text: TextSpan(
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: Colors.black),
                                   text: 'No account?  ',
                                   children: [
                                 TextSpan(
@@ -106,7 +110,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                     text: 'Sign up',
                                     style: TextStyle(
                                         decoration: TextDecoration.underline,
-                                        color: Colors.purple.shade400))
+                                        color: Color(0xFF87A330)))
                               ])),
                           SizedBox(
                             height: 25,
@@ -116,7 +120,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                             children: [
                               Expanded(
                                 child: Divider(
-                                  color: Colors.white,
+                                  color: Color(0xFF87A330),
                                   thickness: 1,
                                   indent: 10,
                                   endIndent: 10,
@@ -125,13 +129,13 @@ class _LoginWidgetState extends State<LoginWidget> {
                               Text(
                                 'Or',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xFF87A330),
                                   fontSize: 20,
                                 ),
                               ),
                               Expanded(
                                 child: Divider(
-                                  color: Colors.white,
+                                  color: Color(0xFF87A330),
                                   thickness: 1,
                                   indent: 10,
                                   endIndent: 10,
@@ -144,7 +148,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ),
                           ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
+                              primary: Color(0xFF87A330),
                               onPrimary: Colors.black,
                               minimumSize: Size(double.infinity, 50),
                             ),
