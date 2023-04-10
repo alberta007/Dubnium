@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterbase/provider/google_sign_in.dart';
 import 'Widgets/signUpandInWidget.dart';
 import 'Widgets/mainmenu.dart';
+import 'package:provider/provider.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 
@@ -15,7 +17,9 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: MyHome());
+    return ChangeNotifierProvider(
+        create: (context) => GoogleSignInProvider(),
+        child: MaterialApp(home: MyHome()));
   }
 }
 
