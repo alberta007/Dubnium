@@ -3,8 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutterbase/main.dart';
-import 'package:flutterbase/Widgets/mainmenu.dart';
 
 class registerWidget extends StatefulWidget {
   final VoidCallback onClickSignIn;
@@ -21,7 +19,7 @@ class registerWidget extends StatefulWidget {
 class _registerWidget extends State<registerWidget> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
+  final usernameController = TextEditingController();
   @override
   void dispose() {
     emailController.dispose();
@@ -49,6 +47,17 @@ class _registerWidget extends State<registerWidget> {
                             height: 30,
                           ),
                           TextFormField(
+                            controller: usernameController,
+                            textInputAction: TextInputAction.next,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter username...',
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
                             controller: emailController,
                             textInputAction: TextInputAction.next,
                             decoration: const InputDecoration(
@@ -72,7 +81,7 @@ class _registerWidget extends State<registerWidget> {
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
-                              signIn();
+                              signUp();
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
@@ -112,12 +121,43 @@ class _registerWidget extends State<registerWidget> {
           ),
         ),
       );
-
-  Future<void> signIn() async {
+  Future<void> signUp() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+      // Store the user's data in the Firebase Realtime Database.
+      final databaseReference = FirebaseDatabase.instance.reference();
+      String username;
+      // Check if the chosen username already exists in the database
+      final usernameExistsSnapshot = await databaseReference
+          .child('usernames/${usernameController.text.trim()}')
+          .once();
+      if (usernameExistsSnapshot.snapshot.value != null) {
+        // If the username already exists, show an error message.
+        Fluttertoast.showToast(
+            msg: 'The chosen username is already taken.',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Color(0xFF87A330),
+            fontSize: 20.0);
+      } else {
+        // If the username doesn't already exist, create the email and password and add the user's data to the database.
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim())
+            .then((value) async {
+          final user = FirebaseAuth.instance.currentUser!;
+          await user.updateDisplayName(usernameController.text.trim());
+
+          // Set the global variable with the created username
+
+          await databaseReference.child('users/${user.uid}').set({
+            'email': user.email,
+            'username': usernameController.text.trim(),
+          });
+        });
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         Fluttertoast.showToast(
@@ -130,7 +170,7 @@ class _registerWidget extends State<registerWidget> {
             fontSize: 20.0);
       } else if (e.code == 'weak-password') {
         Fluttertoast.showToast(
-            msg: 'The password is to short',
+            msg: 'The password is too short.',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -138,7 +178,6 @@ class _registerWidget extends State<registerWidget> {
             textColor: Color(0xFF87A330),
             fontSize: 20.0);
       }
-      print(e);
     }
   }
 }

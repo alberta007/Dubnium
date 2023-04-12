@@ -117,7 +117,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                            children: const [
                               Expanded(
                                 child: Divider(
                                   color: Color(0xFF87A330),

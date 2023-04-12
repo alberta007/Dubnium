@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterbase/overlays/scannedoverlay.dart';
+import '../other/constants/clobalVariables.dart';
 import '../overlays/settings.dart';
 import '../other/products.dart';
 import '../other/scan.dart';
 import 'package:flutterbase/overlays/profileoverlay.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class MyCustomClass extends StatelessWidget {
   static ProfileOverlay profile = ProfileOverlay();
@@ -17,6 +19,7 @@ class MyCustomClass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
+
     return Scaffold(
       backgroundColor: Color(0xFFEAF5E4),
       body: Center(
@@ -159,7 +162,7 @@ class MyCustomClass extends StatelessWidget {
                               children: [
                                 SizedBox(height: 16.0),
                                 Text(
-                                  'Name:',
+                                  'Username: ${user.displayName}',
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Color(0xFF3C2615),
@@ -168,7 +171,7 @@ class MyCustomClass extends StatelessWidget {
                                 ),
                                 SizedBox(height: 30.0),
                                 Text(
-                                  'E-mail: ${user.email}',
+                                  'Userid: ${user.displayName}',
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Color(0xFF3C2615),
@@ -201,37 +204,3 @@ class MyCustomClass extends StatelessWidget {
     );
   }
 }
-/* 
- Container(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {},
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.grey.shade400),
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.green.shade600),
-                      minimumSize: MaterialStateProperty.all(Size(300, 50)),
-                    ),
-                    child: const Text('Scan products',
-                        style: TextStyle(fontSize: 24)),
-                  ),
-                  SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.grey.shade400),
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.green.shade600),
-                      minimumSize: MaterialStateProperty.all(Size(300, 50)),
-                    ),
-                    child: const Text('See products',
-                        style: TextStyle(fontSize: 24)),
-                  ),
-                ],
-              ),
-            ),*/
