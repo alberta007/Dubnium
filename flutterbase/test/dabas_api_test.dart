@@ -7,9 +7,9 @@ void main() {
 
     Product? product = await GetProduct().fetchProduct(gtin);
 
-    expect(product!.allergens.isEmpty, false);
-    expect(product.allergens.first.allergen, 'Nötter');
-    expect(product.allergens.first.level, 'CONTAINS');
+    expect(product!.allergens.isEmpty, false); // List is not empty
+    expect(product.allergens.first.allergen, 'Nötter'); // List contains 'Nötter'
+    expect(product.allergens.first.level, 'CONTAINS'); // List contains 'CONTAINS'
   });
 
   test('Test if contains nothing', () async {
@@ -17,6 +17,6 @@ void main() {
 
     Product? product = await GetProduct().fetchProduct(gtin);
 
-    expect(product!.allergens.isEmpty, true);
+    expect(product!.allergens.isEmpty, true); // List is empty
   });
 }

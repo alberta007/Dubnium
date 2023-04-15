@@ -10,7 +10,7 @@ class Allergen {
   Allergen({required this.allergen, required this.level});
 
   factory Allergen.fromJson(Map<String, dynamic> json) {
-    return Allergen(allergen: json['Allergen'], level: json['Nivakod']);
+    return Allergen(allergen: json['Allergen'], level: json['Nivakod']); // Get values for keys 'Allergen' and 'Nivakod'
   }
 }
 
@@ -20,9 +20,8 @@ class Product {
   Product({required this.allergens});
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    var list = json['Allergener'] as List;
-    List<Allergen> allergenList =
-        list.map((i) => Allergen.fromJson(i)).toList();
+    var list = json['Allergener'] as List; // Get list of all 'Allergener'
+    List<Allergen> allergenList = list.map((i) => Allergen.fromJson(i)).toList(); // Iterate over list and parse each element
 
     return Product(allergens: allergenList);
   }
@@ -34,12 +33,12 @@ class GetProduct {
     const prependString = 'https://api.dabas.com/DABASService/V2/article/gtin/';
     const appendString = '/JSON?apikey=ad5f6a52-fe61-405e-bbb0-3cf78c60f5f6';
 
-    var url = Uri.parse(prependString + gtin.toString() + appendString);
-    var response = await http.get(url);
+    var url = Uri.parse(prependString + gtin.toString() + appendString); // Concatenate full URL
+    var response = await http.get(url); // Send request to URL and get response
     
-    if (response.statusCode == 200) {
-      var json = convert.jsonDecode(response.body);
-      product = Product.fromJson(json);
+    if (response.statusCode == 200) { // If statusCode indicates succesful response
+      var json = convert.jsonDecode(response.body); // Parse to JSON
+      product = Product.fromJson(json); // Parse to internal structure
     }
     return product;
   }
