@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutterbase/Widgets/mainmenu.dart';
+import 'package:flutterbase/camera_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutterbase/social_screen.dart';
 
 class menuBar extends StatelessWidget {
   const menuBar({Key? key}) : super(key: key);
@@ -39,7 +41,12 @@ class menuBar extends StatelessWidget {
                       Icons.center_focus_weak_sharp,
                       size: 90,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => cameraScreen()),
+                      );
+                    },
                   ),
                 ),
                 Positioned(
@@ -102,7 +109,13 @@ class menuBar extends StatelessWidget {
                       Icons.person_add_alt,
                       size: 70,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SocialScreen()),
+                      );
+                    },
                   ),
                 )
               ],
