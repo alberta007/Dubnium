@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class MembersList extends StatefulWidget {
@@ -6,7 +8,22 @@ class MembersList extends StatefulWidget {
 }
 
 class _MembersListState extends State<MembersList> {
-  List<String> members = []; // initialize an empty list of members
+  List<String> members = [];
+  final user = FirebaseAuth.instance.currentUser!;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMembers();
+  }
+
+  Future<void> fetchMembers() async {
+    List<String> fetchedMembers = await fetchMemberList();
+
+    setState(() {
+      members = fetchedMembers;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +89,7 @@ class _MembersListState extends State<MembersList> {
                                   onChanged: (value) {
                                     newMemberName = value;
                                   },
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText: 'Enter the new member name',
                                   ),
                                 ),
@@ -83,20 +100,23 @@ class _MembersListState extends State<MembersList> {
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        child: Text(
+                                        child: const Text(
                                           'Cancel',
                                           style: TextStyle(color: Colors.red),
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 120,
                                       ),
                                       ElevatedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            members.add(newMemberName);
-                                          });
+                                        onPressed: () async {
                                           Navigator.pop(context);
+                                          List<String> updatedMembersList =
+                                              await addMemberToList(
+                                                  newMemberName);
+                                          setState(() {
+                                            members = updatedMembersList;
+                                          });
                                         },
                                         style: ButtonStyle(
                                           backgroundColor:
@@ -188,7 +208,7 @@ class _MembersListState extends State<MembersList> {
                                 builder: (context) {
                                   String updatedMemberName = members[index];
                                   return AlertDialog(
-                                    title: Text('Edit member'),
+                                    title: const Text('Edit member'),
                                     content: TextField(
                                       onChanged: (value) {
                                         updatedMemberName = value;
@@ -203,7 +223,7 @@ class _MembersListState extends State<MembersList> {
                                     actions: [
                                       Row(
                                         children: [
-                                          SizedBox(width: 10),
+                                          const SizedBox(width: 10),
                                           ElevatedButton(
                                             onPressed: () {
                                               setState(() {
@@ -251,5 +271,40 @@ class _MembersListState extends State<MembersList> {
         ),
       ),
     );
+  }
+
+  Future<List<String>> addMemberToList(String newMember) async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('users/${user.uid}');
+
+    final snapshot = await userRef.child('members').get();
+
+    List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
+
+    List<String> membersList =
+        membersListDynamic.map((member) => member.toString()).toList();
+
+    membersList.add(newMember);
+
+    await userRef.update({'members': membersList});
+
+    return membersList;
+  }
+
+  Future<List<String>> fetchMemberList() async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('users/${user.uid}');
+
+    final snapshot = await userRef.child('members').get();
+
+    List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
+
+    List<String> membersList =
+        membersListDynamic.map((member) => member.toString()).toList();
+    return membersList;
   }
 }
