@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterbase/overlays/scannedoverlay.dart';
-import '../other/constants/clobalVariables.dart';
 import '../overlays/settings.dart';
 import '../other/products.dart';
 import '../other/scan.dart';
