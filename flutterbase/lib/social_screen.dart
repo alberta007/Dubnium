@@ -17,7 +17,7 @@ class _SocialScreen extends State<SocialScreen> {
   Widget build(BuildContext context) {
     return Material(
       child: Stack(
-        children: [MembersList(), const menuBar()],
+        children: [MembersList(), menuBar()],
       ),
     );
   }

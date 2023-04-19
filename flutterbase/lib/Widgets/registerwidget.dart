@@ -151,11 +151,12 @@ class _registerWidget extends State<registerWidget> {
           await user.updateDisplayName(usernameController.text.trim());
 
           // Set the global variable with the created username
-          List<String> membersList = [""];
-
-          await databaseReference.child('users/${user.uid}').set({
+          List<String> membersList = ["You"];
+          await databaseReference
+              .child('users/${usernameController.text.trim()}')
+              .set({
             'email': user.email,
-            'username': usernameController.text.trim(),
+            'user-id': user.uid,
             'members': membersList
           });
         });

@@ -276,8 +276,9 @@ class _MembersListState extends State<MembersList> {
   Future<List<String>> addMemberToList(String newMember) async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('users/${user.uid}');
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('users/${user.displayName}');
 
     final snapshot = await userRef.child('members').get();
 
@@ -296,8 +297,9 @@ class _MembersListState extends State<MembersList> {
   Future<List<String>> fetchMemberList() async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('users/${user.uid}');
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('users/${user.displayName}');
 
     final snapshot = await userRef.child('members').get();
 
@@ -305,6 +307,7 @@ class _MembersListState extends State<MembersList> {
 
     List<String> membersList =
         membersListDynamic.map((member) => member.toString()).toList();
+
     return membersList;
   }
 }

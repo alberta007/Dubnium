@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
@@ -98,7 +99,9 @@ class menuBar extends StatelessWidget {
                       Icons.menu,
                       size: 70,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                    },
                   ),
                 ),
                 Positioned(
