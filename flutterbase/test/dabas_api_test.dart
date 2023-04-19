@@ -8,8 +8,14 @@ void main() {
     Product? product = await GetProduct().fetchProduct(gtin);
 
     expect(product!.allergens.isEmpty, false); // List is not empty
-    expect(product.allergens.first.allergen, 'Nötter'); // List contains 'Nötter'
-    expect(product.allergens.first.level, 'CONTAINS'); // List contains 'CONTAINS'
+    expect(
+        product.allergens.first.allergen, 'Nötter'); // List contains 'Nötter'
+    expect(
+        product.allergens.first.level, 'CONTAINS'); // List contains 'CONTAINS'
+    expect(product.image,
+        'https://dabas.blob.core.windows.net/media/salta-kvarn/5053hasselntter200g07317731505302.png'); // image exists
+    expect(product.name, 'Hasselnötter KRAV');
+    expect(product.brand, 'SALTÅ KVARN');
   });
 
   test('Test if contains nothing', () async {
