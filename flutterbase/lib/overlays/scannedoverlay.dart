@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterbase/Widgets/camera_widget.dart';
 
 class MyDialog extends StatelessWidget {
   final String title;
