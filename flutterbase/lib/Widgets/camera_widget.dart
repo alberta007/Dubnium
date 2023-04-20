@@ -26,8 +26,18 @@ class _CameraWidgetState extends State<CameraWidget> {
             setState(() {
               isDialogShowing = true;
             });
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ScannedProduct(barCode)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ScannedProduct(barCode))
+            ).then((_) {
+              setState(() {
+                isDialogShowing = false;
+              });
+            });
+            
             /*
+            
             showDialog(
               context: context,
               barrierDismissible: false,
