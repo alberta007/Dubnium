@@ -11,6 +11,7 @@ class menuBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        /*
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
@@ -62,7 +63,7 @@ class menuBar extends StatelessWidget {
               ],
             ),
           ),
-        ),
+        ),*/
         Align(
           alignment: Alignment.topCenter,
           child: Container(
@@ -73,38 +74,48 @@ class menuBar extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                Positioned(
-                    top: 100,
-                    left: 53,
-                    child: Container(
-                      width: 290,
-                      height: 3,
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      width: 300,
+                      height: 90,
                       decoration: BoxDecoration(
-                        color: Color(0xFF87A330),
+                        border: Border(
+                          bottom: BorderSide(
+                            width: 3.0,
+                            color: Color(0xFF87A330),
+                          ),
+                        ),
                       ),
-                    )),
-                Positioned(
-                  bottom: 60,
-                  right: 70,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.menu,
-                      size: 70,
-                    ),
-                    onPressed: () {},
-                  ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: const <Widget>[
+                          Icon(
+                            Icons.person,
+                            size: 40,
+                            semanticLabel:
+                                'Text to announce in accessibility modes',
+                          ),
+                          Spacer(),
+                          Text(
+                            "Dr.Preference",
+                            textAlign: TextAlign.start,
+
+                            //overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 30),
+                          ),
+                          Spacer(),
+                          Icon(
+                            Icons.menu,
+                            size: 40,
+                          ),
+                        ],
+                      )),
                 ),
-                Positioned(
-                  bottom: 60,
-                  left: 40,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.person_add_alt,
-                      size: 70,
-                    ),
-                    onPressed: () {},
-                  ),
-                )
               ],
             ),
           ),

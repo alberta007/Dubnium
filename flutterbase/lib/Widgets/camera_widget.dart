@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterbase/Widgets/scanned_product.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutterbase/overlays/scannedoverlay.dart';
 
@@ -25,6 +26,8 @@ class _CameraWidgetState extends State<CameraWidget> {
             setState(() {
               isDialogShowing = true;
             });
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ScannedProduct(barCode)));
+            /*
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -37,6 +40,7 @@ class _CameraWidgetState extends State<CameraWidget> {
                 isDialogShowing = false;
               });
             });
+            */
           }
         }
       },
