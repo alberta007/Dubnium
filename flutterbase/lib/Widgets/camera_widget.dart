@@ -17,6 +17,7 @@ class _CameraWidgetState extends State<CameraWidget> {
   Widget build(BuildContext context) {
     return MobileScanner(
       controller: controller,
+      fit: BoxFit.fitHeight,
       onDetect: (capture) {
         if (!isDialogShowing) {
           final List<Barcode> barcodes = capture.barcodes;
@@ -29,7 +30,7 @@ class _CameraWidgetState extends State<CameraWidget> {
             });
             */
             debugPrint(
-                '!!!!!!!!!!!!!!!!!!!!!!!! ${barcode.displayValue}, ---------- ${barcode.rawValue}');
+                '!!!!!!!!!!!!!!!!!!!!!!!! ${barcode.displayValue}, ---------- ${barcode.rawValue}, eeeeeeeeeeeeeeee ${barcode.format}');
             Navigator.push(
                 context,
                 MaterialPageRoute(
