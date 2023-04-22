@@ -29,13 +29,19 @@ class Product {
       required this.brand});
 
   factory Product.fromJson(Map<String, dynamic> json) {
+    String image;
+
     var allerrgenerList =
         json['Allergener'] as List; // Get list of all 'Allergener'
     var imageList = json['Bilder'] as List; // Get list of all images
     List<Allergen> allergenList = allerrgenerList
         .map((i) => Allergen.fromJson(i))
         .toList(); // Iterate over list and parse each element
-    String image = imageList.first['Lank']; // Get the first image
+    if (!imageList.isEmpty) {
+      image = imageList.first['Lank']; // Get the first image
+    } else {
+      image = ''; // TODO: Fix default picture
+    }
 
     return Product(
         allergens: allergenList,
@@ -55,7 +61,8 @@ class GetProduct {
         prependString + gtin.toString() + appendString); // Concatenate full URL
     var response = await http.get(url).timeout(
         const Duration(seconds: 5)); // Send request to URL and get response
-    debugPrint('!!!!!!!!!!!!!!!!!!!!!!!!!!! ${response.statusCode} + ${product}');
+    debugPrint(
+        '!!!!!!!!!!!!!!!!!!!!!!!!!!! ${response.statusCode} + ${product}');
 
     if (response.statusCode == 200) {
       // If statusCode indicates succesful response

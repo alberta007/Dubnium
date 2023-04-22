@@ -16,6 +16,57 @@ class _ScannedProduct extends State<ScannedProduct> {
 
   _ScannedProduct(this.gtin);
 
+  bool isAllergensGood(Product? product) {
+    return true;
+  }
+
+  Widget goodOrBadProduct(Product? product) {
+    if (isAllergensGood(product)) {
+      return Column(
+        children: const [
+          Expanded(
+              flex: 8,
+              child: CircleAvatar(
+                backgroundColor: Color.fromARGB(255, 99, 221, 33),
+                radius: double.infinity,
+                child: Icon(
+                  Icons.check,
+                  size: 150,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+              )
+            ),
+          Expanded(
+              flex: 2,
+              child: Center(
+                child: Text('This is suitable for your preferences!'),
+              )),
+        ],
+      );
+    } else {
+      return Column(
+        children: const [
+          Expanded(
+              flex: 8,
+              child: CircleAvatar(
+                backgroundColor: Color.fromARGB(255, 221, 34, 34),
+                radius: double.infinity,
+                child: Icon(
+                  Icons.close,
+                  size: 150,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+              )),
+          Expanded(
+              flex: 2,
+              child: Center(
+                child: Text('This is NOT suitable for your preferences!'),
+              )),
+        ],
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -50,15 +101,58 @@ class _ScannedProduct extends State<ScannedProduct> {
                           return Column(
                             children: [
                               Expanded(
-                                flex: 6, 
-                                child: Icon(
-                                  Icons.check_box,
-                                  size: 100,
-                                )
+                                flex: 6,
+                                child: Container(
+                                  width: 300,
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: const BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 3.0,
+                                        color: Color(0xFF87A330),
+                                      ),
+                                    ),
+                                  ),
+                                  child: goodOrBadProduct(product)
+                                ),
                               ),
                               Expanded(
-                                flex: 4, 
-                                child: Container()
+                                flex: 4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: Text(
+                                            'Info about ${product.name}',
+                                          ),
+                                        )
+                                      ),
+                                      Expanded(
+                                        flex: 9,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 5,
+                                              child: CircleAvatar(
+                                                radius: double.infinity,
+                                                foregroundImage: Image.network(product.image).image,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 5,
+                                              child: Text(
+                                                '' // TODO: Information text
+                                              )
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ),
                               )
                             ],
                           );

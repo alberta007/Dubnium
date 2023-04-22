@@ -10,7 +10,8 @@ class CameraWidget extends StatefulWidget {
 
 class _CameraWidgetState extends State<CameraWidget> {
   String barCode = '';
-  MobileScannerController controller = MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates);
+  MobileScannerController controller =
+      MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates);
   bool isDialogShowing = false;
 
   @override
@@ -23,7 +24,12 @@ class _CameraWidgetState extends State<CameraWidget> {
           final List<Barcode> barcodes = capture.barcodes;
           for (final barcode in barcodes) {
             debugPrint('Barcode found! ${barcode.rawValue}');
-            barCode = barcode.rawValue!;
+            barCode = barcode.displayValue!;
+            while (barCode.length < 14) {
+              barCode = '0$barCode'; //Add zeros to increase length
+            }
+            debugPrint(
+                'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${barCode.length}');
             /*
             setState(() {
               isDialogShowing = true;
