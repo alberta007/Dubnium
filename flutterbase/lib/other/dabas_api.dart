@@ -22,7 +22,11 @@ class Product {
   final String name;
   final String brand;
 
-  Product({required this.allergens, required this.image, required this.name, required this.brand});
+  Product(
+      {required this.allergens,
+      required this.image,
+      required this.name,
+      required this.brand});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     var allerrgenerList =
@@ -34,7 +38,10 @@ class Product {
     String image = imageList.first['Lank']; // Get the first image
 
     return Product(
-        allergens: allergenList, image: image, name: json['Hyllkantstext'], brand: json['Varumarke']['Varumarke']);
+        allergens: allergenList,
+        image: image,
+        name: json['Hyllkantstext'],
+        brand: json['Varumarke']['Varumarke']);
   }
 }
 
@@ -46,7 +53,9 @@ class GetProduct {
 
     var url = Uri.parse(
         prependString + gtin.toString() + appendString); // Concatenate full URL
-    var response = await http.get(url); // Send request to URL and get response
+    var response = await http.get(url).timeout(
+        const Duration(seconds: 5)); // Send request to URL and get response
+    debugPrint('!!!!!!!!!!!!!!!!!!!!!!!!!!! ${response.statusCode} + ${product}');
 
     if (response.statusCode == 200) {
       // If statusCode indicates succesful response

@@ -17,8 +17,9 @@ class cameraScreenState extends State<cameraScreen> {
     return Material(
       child: Stack(
         children: [
+          const menuTopBar(),
           CameraWidget(),
-          const menuBar(),
+          const menuBottomBar(),
         ],
       ),
     );
