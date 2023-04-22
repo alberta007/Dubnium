@@ -14,12 +14,26 @@ class cameraScreenState extends State<cameraScreen> {
   MobileScannerController controller = MobileScannerController();
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
+    return Scaffold(
+      body: Column(
         children: [
-          const menuTopBar(),
-          CameraWidget(),
-          const menuBottomBar(),
+          const Expanded(
+            flex: 1, 
+            child: menuTopBar(),
+          ),
+          Expanded(
+            flex: 8, 
+            child: Container(
+              child: CameraWidget(),
+            ),
+          ),
+          const Expanded(
+            flex: 1, 
+            child: menuBottomBar(),
+          ),
+          
+          
+          
         ],
       ),
     );

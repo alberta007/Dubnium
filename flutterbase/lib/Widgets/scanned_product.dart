@@ -36,49 +36,58 @@ class _ScannedProduct extends State<ScannedProduct> {
             flex: 8,
             child: Container(
               child: FutureBuilder<Product?>(
-                future: product,
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    case ConnectionState.done:
-                    default:
-                      final Product? product = snapshot.data;
-                      if (product != null) {
-                        return Center(
-                          child: Text('Name: ${product.name}'),
+                  future: product,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      } else {
-                        return AlertDialog(
-                          title: const Text('Unknown Barcode'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const <Widget>[
-                              Text("Unforntunelty we couldn't find information about that product"),
+                      case ConnectionState.done:
+                      default:
+                        final Product? product = snapshot.data;
+                        if (product != null) {
+                          return Column(
+                            children: [
+                              Expanded(
+                                flex: 6, 
+                                child: Icon(
+                                  Icons.check_box,
+                                  size: 100,
+                                )
+                              ),
+                              Expanded(
+                                flex: 4, 
+                                child: Container()
+                              )
                             ],
-                          ),
-                          actions: <Widget>[
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Close'),
+                          );
+                        } else {
+                          return AlertDialog(
+                            title: const Text('Unknown Barcode'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const <Widget>[
+                                Text(
+                                    "Unforntunelty we couldn't find information about that product"),
+                              ],
                             ),
-                          ],
-                        );
-                      }
-                  }
-                }),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Close'),
+                              ),
+                            ],
+                          );
+                        }
+                    }
+                  }),
             ),
           ),
-          const Expanded(
-            flex: 1, 
-            child: menuBottomBar(),)
-          
-          
+          const Expanded(flex: 1, child: menuBottomBar())
         ],
       ),
     );

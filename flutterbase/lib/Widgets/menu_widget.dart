@@ -94,6 +94,24 @@ class menuBottomBar extends StatelessWidget {
                 ),
               ),
             ),
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const <Widget>[
+                Icon(
+                  Icons.qr_code_scanner,
+                  size: 70,
+                  semanticLabel: 'Text to announce in accessibility modes',
+                ),
+                Spacer(),
+                Icon(
+                  Icons.flatware,
+                  size: 70,
+                  semanticLabel: 'Text to announce in accessibility modes',
+                ),
+              ]
+            )
           )
         )
                  
