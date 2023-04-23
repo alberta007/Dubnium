@@ -126,7 +126,7 @@ class _ScannedProduct extends State<ScannedProduct> {
                                         flex: 1,
                                         child: Center(
                                           child: Text(
-                                            'Info about ${product.name}',
+                                            'Info about: ${product.name}',
                                           ),
                                         )
                                       ),
@@ -138,13 +138,17 @@ class _ScannedProduct extends State<ScannedProduct> {
                                               flex: 5,
                                               child: CircleAvatar(
                                                 radius: double.infinity,
-                                                foregroundImage: Image.network(product.image).image,
+                                                foregroundImage: product.image == '' ? Image.asset('assets/images/picture-unavailable.png').image : Image.network(product.image).image ,
+                                                backgroundColor: Color(0xFF87A330),
                                               ),
                                             ),
+                                            Spacer(),
                                             Expanded(
                                               flex: 5,
                                               child: Text(
-                                                '' // TODO: Information text
+                                                product.allergens.isEmpty ?
+                                                'Made by: ${product.brand}, \nProduct contains following allergens: none' :
+                                                'Made by: ${product.brand}, \nProduct contains following allergens: ${product.allergens}'
                                               )
                                             ),
                                           ],

@@ -40,7 +40,7 @@ class Product {
     if (!imageList.isEmpty) {
       image = imageList.first['Lank']; // Get the first image
     } else {
-      image = ''; // TODO: Fix default picture
+      image = '';
     }
 
     return Product(

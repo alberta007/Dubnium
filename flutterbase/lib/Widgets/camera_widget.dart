@@ -10,8 +10,7 @@ class CameraWidget extends StatefulWidget {
 
 class _CameraWidgetState extends State<CameraWidget> {
   String barCode = '';
-  MobileScannerController controller =
-      MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates);
+  MobileScannerController controller = MobileScannerController();
   bool isDialogShowing = false;
 
   @override
@@ -20,7 +19,7 @@ class _CameraWidgetState extends State<CameraWidget> {
       controller: controller,
       fit: BoxFit.fitHeight,
       onDetect: (capture) {
-        if (!isDialogShowing) {
+        if (ModalRoute.of(context)!.isCurrent) {
           final List<Barcode> barcodes = capture.barcodes;
           for (final barcode in barcodes) {
             debugPrint('Barcode found! ${barcode.rawValue}');
@@ -28,35 +27,11 @@ class _CameraWidgetState extends State<CameraWidget> {
             while (barCode.length < 14) {
               barCode = '0$barCode'; //Add zeros to increase length
             }
-            debugPrint(
-                'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${barCode.length}');
-            /*
-            setState(() {
-              isDialogShowing = true;
-            });
-            */
-            debugPrint(
-                '!!!!!!!!!!!!!!!!!!!!!!!! ${barcode.displayValue}, ---------- ${barcode.rawValue}, eeeeeeeeeeeeeeee ${barcode.format}');
+            
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => ScannedProduct(barCode)));
-
-            /*
-            
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) => MyDialog(
-                title: 'Scanned product: ',
-                message: barCode,
-              ),
-            ).then((_) {
-              setState(() {
-                isDialogShowing = false;
-              });
-            });
-            */
           }
         }
       },
