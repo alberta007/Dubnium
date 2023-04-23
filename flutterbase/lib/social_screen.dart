@@ -15,9 +15,24 @@ class SocialScreen extends StatefulWidget {
 class _SocialScreen extends State<SocialScreen> {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
-        children: [MembersList(), menuBar()],
+    return Scaffold(
+      body: Column(
+        children: [
+          const Expanded(
+            flex: 12,
+            child: menuTopBar(),
+          ),
+          Expanded(
+            flex: 76,
+            child: Container(
+              child: MembersList(),
+            ),
+          ),
+          const Expanded(
+            flex: 12,
+            child: menuBottomBar(),
+          ),
+        ],
       ),
     );
   }
