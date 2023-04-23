@@ -34,8 +34,7 @@ class _ScannedProduct extends State<ScannedProduct> {
                   size: 150,
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
-              )
-            ),
+              )),
           Expanded(
               flex: 2,
               child: Center(
@@ -80,11 +79,11 @@ class _ScannedProduct extends State<ScannedProduct> {
       body: Column(
         children: [
           const Expanded(
-            flex: 1,
+            flex: 12,
             child: menuTopBar(),
           ),
           Expanded(
-            flex: 8,
+            flex: 76,
             child: Container(
               child: FutureBuilder<Product?>(
                   future: product,
@@ -103,60 +102,64 @@ class _ScannedProduct extends State<ScannedProduct> {
                               Expanded(
                                 flex: 6,
                                 child: Container(
-                                  width: 300,
-                                  padding: const EdgeInsets.all(20),
-                                  decoration: const BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        width: 3.0,
-                                        color: Color(0xFF87A330),
+                                    width: 300,
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          width: 3.0,
+                                          color: Color(0xFF87A330),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  child: goodOrBadProduct(product)
-                                ),
+                                    child: goodOrBadProduct(product)),
                               ),
                               Expanded(
                                 flex: 4,
                                 child: Container(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Center(
-                                          child: Text(
-                                            'Info about: ${product.name}',
-                                          ),
-                                        )
-                                      ),
-                                      Expanded(
-                                        flex: 9,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 5,
-                                              child: CircleAvatar(
-                                                radius: double.infinity,
-                                                foregroundImage: product.image == '' ? Image.asset('assets/images/picture-unavailable.png').image : Image.network(product.image).image ,
-                                                backgroundColor: Color(0xFF87A330),
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            Expanded(
-                                              flex: 5,
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                            flex: 1,
+                                            child: Center(
                                               child: Text(
-                                                product.allergens.isEmpty ?
-                                                'Made by: ${product.brand}, \nProduct contains following allergens: none' :
-                                                'Made by: ${product.brand}, \nProduct contains following allergens: ${product.allergens}'
-                                              )
-                                            ),
-                                          ],
+                                                'Info about: ${product.name}',
+                                              ),
+                                            )),
+                                        Expanded(
+                                          flex: 9,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 5,
+                                                child: CircleAvatar(
+                                                  radius: double.infinity,
+                                                  foregroundImage: product
+                                                              .image ==
+                                                          ''
+                                                      ? Image.asset(
+                                                              'assets/images/picture-unavailable.png')
+                                                          .image
+                                                      : Image.network(
+                                                              product.image)
+                                                          .image,
+                                                  backgroundColor:
+                                                      Color(0xFF87A330),
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Expanded(
+                                                  flex: 5,
+                                                  child: Text(product
+                                                          .allergens.isEmpty
+                                                      ? 'Made by: ${product.brand}, \nProduct contains following allergens: none'
+                                                      : 'Made by: ${product.brand}, \nProduct contains following allergens: ${product.allergens}')),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                ),
+                                      ],
+                                    )),
                               )
                             ],
                           );
@@ -185,7 +188,7 @@ class _ScannedProduct extends State<ScannedProduct> {
                   }),
             ),
           ),
-          const Expanded(flex: 1, child: menuBottomBar())
+          const Expanded(flex: 12, child: menuBottomBar())
         ],
       ),
     );
