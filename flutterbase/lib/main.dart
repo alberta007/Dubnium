@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterbase/camera_screen.dart';
 import 'package:flutterbase/provider/google_sign_in.dart';
 import 'Widgets/signUpandInWidget.dart';
 import 'Widgets/mainmenu.dart';
@@ -32,14 +33,14 @@ class MyHome extends StatelessWidget {
                 future: Future.delayed(Duration(seconds: 2)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    return MyCustomClass();
+                    return cameraScreen();
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
                 },
               );
             } else if (snapshot.hasError) {
-              return Center(
+              return const Center(
                 child: Text('Something wrong!'),
               );
             } else {
