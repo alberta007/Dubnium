@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutterbase/Widgets/mainmenu.dart';
 import 'package:flutterbase/camera_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutterbase/social_screen.dart';
 
 import 'camera_widget.dart';
 

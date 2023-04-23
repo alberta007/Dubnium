@@ -40,7 +40,7 @@ class MyHome extends StatelessWidget {
                 },
               );
             } else if (snapshot.hasError) {
-              return Center(
+              return const Center(
                 child: Text('Something wrong!'),
               );
             } else {

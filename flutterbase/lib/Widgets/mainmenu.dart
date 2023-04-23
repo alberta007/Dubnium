@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterbase/camera_screen.dart';
 import 'package:flutterbase/overlays/scannedoverlay.dart';
 import '../overlays/settings.dart';
 import '../other/products.dart';
@@ -44,20 +45,8 @@ class MyCustomClass extends StatelessWidget {
                         Icons.qr_code_scanner_outlined,
                         size: 70,
                       ),
-                      onPressed: () async {
-                        String? barcode = await scanBarcode.scanBarcode();
-                        if (barcode != null) {
-                          // ignore: use_build_context_synchronously
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => MyDialog(
-                              title: 'Scanned product: ',
-                              message: barcode,
-                            ),
-                          );
-                        } else {
-                          const Text('Something wrong!');
-                        }
+                      onPressed: () {
+                        Navigator.pop(context);
                       },
                     ))),
             const Align(
