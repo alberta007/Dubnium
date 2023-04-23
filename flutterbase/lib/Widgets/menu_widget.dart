@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutterbase/Widgets/mainmenu.dart';
-import 'package:flutterbase/camera_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterbase/social_screen.dart';
 
@@ -90,45 +89,49 @@ class menuBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-            width: double.infinity,
-            height: 120,
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: double.infinity,
+        height: 120,
+        decoration: const BoxDecoration(
+          color: Color(0xFFEAF5E4),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: 300,
+            height: 90,
             decoration: const BoxDecoration(
-              color: Color(0xFFEAF5E4),
+              border: Border(
+                top: BorderSide(
+                  width: 3.0,
+                  color: Color(0xFF87A330),
+                ),
+              ),
             ),
-            child: Align(
-                alignment: Alignment.center,
-                child: Container(
-                    width: 300,
-                    height: 90,
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          width: 3.0,
-                          color: Color(0xFF87A330),
-                        ),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 0.0, horizontal: 20.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const <Widget>[
-                          Icon(
-                            Icons.qr_code_scanner,
-                            size: 70,
-                            semanticLabel:
-                                'Text to announce in accessibility modes',
-                          ),
-                          Spacer(),
-                          Icon(
-                            Icons.flatware,
-                            size: 70,
-                            semanticLabel:
-                                'Text to announce in accessibility modes',
-                          ),
-                        ])))));
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const <Widget>[
+                Icon(
+                  Icons.qr_code_scanner,
+                  size: 70,
+                  semanticLabel: 'Text to announce in accessibility modes',
+                ),
+                Spacer(),
+                Icon(
+                  Icons.flatware,
+                  size: 70,
+                  semanticLabel: 'Text to announce in accessibility modes',
+                ),
+              ]
+            )
+          )
+        )
+                 
+      )
+      
+    );
   }
 }
