@@ -18,22 +18,19 @@ class cameraScreenState extends State<cameraScreen> {
       body: Column(
         children: [
           const Expanded(
-            flex: 1, 
+            flex: 12,
             child: menuTopBar(),
           ),
           Expanded(
-            flex: 8, 
+            flex: 76,
             child: Container(
               child: CameraWidget(),
             ),
           ),
           const Expanded(
-            flex: 1, 
+            flex: 12,
             child: menuBottomBar(),
           ),
-          
-          
-          
         ],
       ),
     );

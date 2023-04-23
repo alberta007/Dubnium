@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutterbase/Widgets/mainmenu.dart';
+import 'package:flutterbase/camera_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class menuTopBar extends StatelessWidget {
+import 'camera_widget.dart';
+
+class menuTopBar extends StatelessWidget { // TODO: Make menu bars buttons and link everything togheter
   const menuTopBar({Key? key}) : super(key: key);
 
   @override
@@ -35,13 +38,22 @@ class menuTopBar extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    children: const <Widget>[
-                      Icon(
-                        Icons.person,
-                        size: 40,
-                        semanticLabel:
+                    children: <Widget>[
+                      IconButton(
+                        onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => cameraScreen(),
+                          ),
+                        );
+                        },
+                        icon: Icon(
+                          Icons.person,
+                          size: 40,
+                          semanticLabel:
                             'Text to announce in accessibility modes',
-                      ),
+                      )),
                       Spacer(),
                       Text(
                         "Dr.Preference",
