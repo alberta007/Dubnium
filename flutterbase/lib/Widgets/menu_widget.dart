@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutterbase/Widgets/mainmenu.dart';
+import 'package:flutterbase/Widgets/preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class menuTopBar extends StatelessWidget {
@@ -94,29 +95,35 @@ class menuBottomBar extends StatelessWidget {
                 ),
               ),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
+            //padding: const EdgeInsets.only(right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const <Widget>[
-                Icon(
-                  Icons.qr_code_scanner,
-                  size: 70,
-                  semanticLabel: 'Text to announce in accessibility modes',
-                ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyCustomClass2()),
+                      );
+                    },
+                    icon: (Icon(Icons.qr_code_scanner, size: 70))),
                 Spacer(),
-                Icon(
-                  Icons.flatware,
-                  size: 70,
-                  semanticLabel: 'Text to announce in accessibility modes',
-                ),
-              ]
-            )
-          )
-        )
-                 
-      )
-      
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyCustomClass2()),
+                      );
+                    },
+                    icon: (Icon(Icons.flatware, size: 70))),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
