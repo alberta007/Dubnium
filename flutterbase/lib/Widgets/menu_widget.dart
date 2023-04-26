@@ -72,10 +72,7 @@ class menuTopBar extends StatelessWidget {
                       Spacer(),
                       IconButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: ((context) => cameraScreen())));
+                            FirebaseAuth.instance.signOut();
                           },
                           icon: Icon(
                             Icons.menu,
@@ -90,6 +87,8 @@ class menuTopBar extends StatelessWidget {
     );
   }
 }
+
+
 
 class menuBottomBar extends StatelessWidget {
   const menuBottomBar({Key? key}) : super(key: key);

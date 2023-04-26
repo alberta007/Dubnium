@@ -10,8 +10,22 @@ class CameraWidget extends StatefulWidget {
 
 class _CameraWidgetState extends State<CameraWidget> {
   String barCode = '';
-  MobileScannerController controller = MobileScannerController();
-  bool isDialogShowing = false;
+  MobileScannerController controller =
+      MobileScannerController(autoStart: false);
+  bool isScanning = true;
+
+  @override
+  void didChangeDependencies() {
+    controller.stop();
+    controller.start();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +41,14 @@ class _CameraWidgetState extends State<CameraWidget> {
             while (barCode.length < 14) {
               barCode = '0$barCode'; //Add zeros to increase length
             }
-            
+            controller.stop();
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ScannedProduct(barCode)));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ScannedProduct(barCode)))
+                .then((value) {
+              controller.start();
+            });
           }
         }
       },

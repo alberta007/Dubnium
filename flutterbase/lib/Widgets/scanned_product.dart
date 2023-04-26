@@ -10,9 +10,12 @@ class ScannedProduct extends StatefulWidget {
   _ScannedProduct createState() => _ScannedProduct(gtin);
 }
 
-class _ScannedProduct extends State<ScannedProduct> {
+class _ScannedProduct extends State<ScannedProduct>
+    with TickerProviderStateMixin {
   final String gtin;
   late Future<Product?> product;
+  late AnimationController animationController;
+  late Animation<double> animation;
 
   _ScannedProduct(this.gtin);
 
@@ -21,20 +24,23 @@ class _ScannedProduct extends State<ScannedProduct> {
   }
 
   Widget goodOrBadProduct(Product? product) {
+    animationController.forward();
     if (isAllergensGood(product)) {
       return Column(
-        children: const [
+        children: [
           Expanded(
               flex: 8,
-              child: CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 99, 221, 33),
-                radius: double.infinity,
-                child: Icon(
-                  Icons.check,
-                  size: 150,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-              )),
+              child: ScaleTransition(
+                  scale: animation,
+                  child: CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 99, 221, 33),
+                    radius: double.infinity,
+                    child: Icon(
+                      Icons.check,
+                      size: 150,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                    ),
+                  ))),
           Expanded(
               flex: 2,
               child: Center(
@@ -44,18 +50,20 @@ class _ScannedProduct extends State<ScannedProduct> {
       );
     } else {
       return Column(
-        children: const [
+        children: [
           Expanded(
               flex: 8,
-              child: CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 221, 34, 34),
-                radius: double.infinity,
-                child: Icon(
-                  Icons.close,
-                  size: 150,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-              )),
+              child: ScaleTransition(
+                  scale: animation,
+                  child: CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 221, 34, 34),
+                    radius: double.infinity,
+                    child: Icon(
+                      Icons.close,
+                      size: 150,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                    ),
+                  ))),
           Expanded(
               flex: 2,
               child: Center(
@@ -70,6 +78,20 @@ class _ScannedProduct extends State<ScannedProduct> {
   void initState() {
     super.initState();
     product = GetProduct().fetchProduct(gtin);
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    animation = CurvedAnimation(
+        parent: animationController, curve: Curves.fastOutSlowIn);
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -96,6 +118,7 @@ class _ScannedProduct extends State<ScannedProduct> {
                       case ConnectionState.done:
                       default:
                         final Product? product = snapshot.data;
+
                         if (product != null) {
                           return Column(
                             children: [
