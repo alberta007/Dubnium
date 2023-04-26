@@ -18,10 +18,10 @@ class _MembersListState extends State<MembersList> {
   }
 
   Future<void> fetchMembers() async {
-    List<String> fetchedMembers = await fetchMemberList();
+    List<String> fetchedActiveMembers = await fetchActiveMemberList();
 
     setState(() {
-      members = fetchedMembers;
+      members = fetchedActiveMembers;
     });
   }
 
@@ -207,6 +207,7 @@ class _MembersListState extends State<MembersList> {
                                 context: context,
                                 builder: (context) {
                                   String updatedMemberName = members[index];
+                                  String oldName = updatedMemberName;
                                   return AlertDialog(
                                     title: const Text('Edit member'),
                                     content: TextField(
@@ -225,11 +226,69 @@ class _MembersListState extends State<MembersList> {
                                         children: [
                                           const SizedBox(width: 10),
                                           ElevatedButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                members.removeAt(index);
-                                              });
-                                              Navigator.pop(context);
+                                            onPressed: () async {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          'Are you sure?'),
+                                                      actions: [
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              style: ButtonStyle(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(
+                                                                          Colors
+                                                                              .red)),
+                                                              child: const Text(
+                                                                  'No'),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 100,
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                await deleteMember(
+                                                                  members[
+                                                                      index],
+                                                                );
+
+                                                                setState(() {
+                                                                  members
+                                                                      .removeAt(
+                                                                          index);
+                                                                });
+                                                                Navigator.pop(
+                                                                    context);
+
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              style:
+                                                                  ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(Color(
+                                                                            0xFF87A330)),
+                                                              ),
+                                                              child: const Text(
+                                                                  'Yes'),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    );
+                                                  });
                                             },
                                             style: ButtonStyle(
                                                 backgroundColor:
@@ -239,12 +298,67 @@ class _MembersListState extends State<MembersList> {
                                           ),
                                           const SizedBox(width: 110),
                                           ElevatedButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                members[index] =
-                                                    updatedMemberName;
-                                              });
-                                              Navigator.pop(context);
+                                            onPressed: () async {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          'Are you sure?'),
+                                                      actions: [
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              style: ButtonStyle(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(
+                                                                          Colors
+                                                                              .red)),
+                                                              child: const Text(
+                                                                  'No'),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 100,
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                await updateMemberName(
+                                                                    members[
+                                                                        index],
+                                                                    updatedMemberName);
+
+                                                                setState(() {
+                                                                  members[index] =
+                                                                      updatedMemberName;
+                                                                });
+                                                                Navigator.pop(
+                                                                    context);
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              style:
+                                                                  ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(Color(
+                                                                            0xFF87A330)),
+                                                              ),
+                                                              child: const Text(
+                                                                  'Yes'),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    );
+                                                  });
                                             },
                                             style: ButtonStyle(
                                               backgroundColor:
@@ -276,11 +390,16 @@ class _MembersListState extends State<MembersList> {
   Future<List<String>> addMemberToList(String newMember) async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}');
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshot = await userRef.child('ActiveAndUnactive/Members/Active').get();
+    final snapshot = await userRef
+        .child('${user.displayName}/ActiveAndUnactive/Members/Active')
+        .get();
+
+    await userRef
+        .child('${user.displayName}/Members/$newMember')
+        .set(newMember);
 
     List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
 
@@ -289,12 +408,13 @@ class _MembersListState extends State<MembersList> {
 
     membersList.add(newMember);
 
-    await userRef.update({'ActiveAndUnactive/Members/Active': membersList});
+    await userRef.update(
+        {'${user.displayName}/ActiveAndUnactive/Members/Active': membersList});
 
     return membersList;
   }
 
-  Future<List<String>> fetchMemberList() async {
+  Future<List<String>> fetchActiveMemberList() async {
     final user = FirebaseAuth.instance.currentUser!;
 
     DatabaseReference userRef = FirebaseDatabase.instance
@@ -307,6 +427,61 @@ class _MembersListState extends State<MembersList> {
 
     List<String> membersList =
         membersListDynamic.map((member) => member.toString()).toList();
+
+    return membersList;
+  }
+
+  Future<List<String>> updateMemberName(String oldName, String newName) async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
+
+    final snapshot = await userRef
+        .child('${user.displayName}/ActiveAndUnactive/Members/Active')
+        .get();
+
+    List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
+
+    List<String> membersList =
+        membersListDynamic.map((member) => member.toString()).toList();
+
+    int index = membersList.indexOf(oldName);
+    if (index != -1) {
+      membersList[index] = newName;
+      await userRef.update({
+        '${user.displayName}/ActiveAndUnactive/Members/Active': membersList,
+        '${user.displayName}/Members/$oldName': null,
+        '${user.displayName}/Members/$newName': newName,
+      });
+    }
+
+    return membersList;
+  }
+
+  Future<List<String>> deleteMember(String memberName) async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
+
+    await userRef.child('${user.displayName}/Members/$memberName').remove();
+
+    final snapshot = await userRef
+        .child('${user.displayName}/ActiveAndUnactive/Members/Active')
+        .get();
+
+    List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
+
+    List<String> membersList =
+        membersListDynamic.map((member) => member.toString()).toList();
+
+    membersList.remove(memberName);
+
+    await userRef.update({
+      '${user.displayName}/ActiveAndUnactive/Members/Active': membersList,
+      '${user.displayName}/Members/$memberName': null,
+    });
 
     return membersList;
   }
