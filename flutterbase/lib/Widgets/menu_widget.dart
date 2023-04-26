@@ -72,11 +72,8 @@ class menuTopBar extends StatelessWidget {
                       Spacer(),
                       IconButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: ((context) => cameraScreen())));
-                          },
+  FirebaseAuth.instance.signOut();
+                                               },
                           icon: Icon(
                             Icons.menu,
                             size: 40,

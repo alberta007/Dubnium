@@ -278,9 +278,9 @@ class _MembersListState extends State<MembersList> {
 
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
-        .child('users/${user.displayName}');
+        .child('Users/${user.displayName}');
 
-    final snapshot = await userRef.child('members').get();
+    final snapshot = await userRef.child('ActiveAndUnactive/Members/Active').get();
 
     List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
 
@@ -289,7 +289,7 @@ class _MembersListState extends State<MembersList> {
 
     membersList.add(newMember);
 
-    await userRef.update({'members': membersList});
+    await userRef.update({'ActiveAndUnactive/Members/Active': membersList});
 
     return membersList;
   }
@@ -299,9 +299,9 @@ class _MembersListState extends State<MembersList> {
 
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
-        .child('users/${user.displayName}');
+        .child('Users/${user.displayName}/ActiveAndUnactive/Members');
 
-    final snapshot = await userRef.child('members').get();
+    final snapshot = await userRef.child('Active').get();
 
     List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
 
