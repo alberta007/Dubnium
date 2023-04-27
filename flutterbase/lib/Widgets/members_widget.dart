@@ -8,7 +8,7 @@ class MembersList extends StatefulWidget {
 }
 
 class _MembersListState extends State<MembersList> {
-  List<String> members = [];
+  List<String> activemembers = [];
   final user = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -19,9 +19,10 @@ class _MembersListState extends State<MembersList> {
 
   Future<void> fetchMembers() async {
     List<String> fetchedActiveMembers = await fetchActiveMemberList();
+    List<String> unactiveMembers = await fetchActiveMemberList();
 
     setState(() {
-      members = fetchedActiveMembers;
+      activemembers = fetchedActiveMembers;
     });
   }
 
@@ -115,7 +116,7 @@ class _MembersListState extends State<MembersList> {
                                               await addMemberToList(
                                                   newMemberName);
                                           setState(() {
-                                            members = updatedMembersList;
+                                            activemembers = updatedMembersList;
                                           });
                                         },
                                         style: ButtonStyle(
@@ -191,191 +192,213 @@ class _MembersListState extends State<MembersList> {
                     height: 325,
                     color: const Color(0xFFEAF5E4),
                     child: ListView.builder(
-                      itemCount: members.length,
+                      itemCount: activemembers.length,
                       itemBuilder: (context, index) {
                         return ListTile(
                           title: Text(
-                            members[index],
+                            activemembers[index],
                             style: TextStyle(color: Colors.black, fontSize: 32),
                           ),
-                          trailing: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Color(0xFF87A330))),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  String updatedMemberName = members[index];
-                                  String oldName = updatedMemberName;
-                                  return AlertDialog(
-                                    title: const Text('Edit member'),
-                                    content: TextField(
-                                      onChanged: (value) {
-                                        updatedMemberName = value;
-                                      },
-                                      decoration: const InputDecoration(
-                                        hintText:
-                                            'Enter the updated member name',
+                          trailing: Wrap(spacing: 5, children: <Widget>[
+                            ElevatedButton(
+                                onPressed: () async {
+                                  await changeToUnactive(activemembers[index]);
+                                  setState(() {
+                                    activemembers.removeAt(index);
+                                  });
+                                },
+                                child: Text("B")),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  await changeToActive(activemembers[index]);
+                                  setState(() {
+                                    activemembers.removeAt(index);
+                                  });
+                                },
+                                child: Text("A")),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color(0xFF87A330))),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    String updatedMemberName =
+                                        activemembers[index];
+                                    String oldName = updatedMemberName;
+                                    return AlertDialog(
+                                      title: const Text('Edit member'),
+                                      content: TextField(
+                                        onChanged: (value) {
+                                          updatedMemberName = value;
+                                        },
+                                        decoration: const InputDecoration(
+                                          hintText:
+                                              'Enter the updated member name',
+                                        ),
+                                        controller: TextEditingController(
+                                            text: activemembers[index]),
                                       ),
-                                      controller: TextEditingController(
-                                          text: members[index]),
-                                    ),
-                                    actions: [
-                                      Row(
-                                        children: [
-                                          const SizedBox(width: 10),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title: const Text(
-                                                          'Are you sure?'),
-                                                      actions: [
-                                                        Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 20,
-                                                            ),
-                                                            ElevatedButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              style: ButtonStyle(
+                                      actions: [
+                                        Row(
+                                          children: [
+                                            const SizedBox(width: 10),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Are you sure?'),
+                                                        actions: [
+                                                          Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 20,
+                                                              ),
+                                                              ElevatedButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                style: ButtonStyle(
+                                                                    backgroundColor:
+                                                                        MaterialStateProperty.all(
+                                                                            Colors.red)),
+                                                                child:
+                                                                    const Text(
+                                                                        'No'),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 100,
+                                                              ),
+                                                              ElevatedButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await deleteMember(
+                                                                    activemembers[
+                                                                        index],
+                                                                  );
+
+                                                                  setState(() {
+                                                                    activemembers
+                                                                        .removeAt(
+                                                                            index);
+                                                                  });
+                                                                  Navigator.pop(
+                                                                      context);
+
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                style:
+                                                                    ButtonStyle(
                                                                   backgroundColor:
                                                                       MaterialStateProperty.all(
-                                                                          Colors
-                                                                              .red)),
-                                                              child: const Text(
-                                                                  'No'),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 100,
-                                                            ),
-                                                            ElevatedButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                await deleteMember(
-                                                                  members[
-                                                                      index],
-                                                                );
-
-                                                                setState(() {
-                                                                  members
-                                                                      .removeAt(
-                                                                          index);
-                                                                });
-                                                                Navigator.pop(
-                                                                    context);
-
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              style:
-                                                                  ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(Color(
-                                                                            0xFF87A330)),
+                                                                          Color(
+                                                                              0xFF87A330)),
+                                                                ),
+                                                                child:
+                                                                    const Text(
+                                                                        'Yes'),
                                                               ),
-                                                              child: const Text(
-                                                                  'Yes'),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
-                                                    );
-                                                  });
-                                            },
-                                            style: ButtonStyle(
+                                                            ],
+                                                          )
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.red)),
+                                              child: const Text('Delete'),
+                                            ),
+                                            const SizedBox(width: 110),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Are you sure?'),
+                                                        actions: [
+                                                          Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 20,
+                                                              ),
+                                                              ElevatedButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                style: ButtonStyle(
+                                                                    backgroundColor:
+                                                                        MaterialStateProperty.all(
+                                                                            Colors.red)),
+                                                                child:
+                                                                    const Text(
+                                                                        'No'),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 100,
+                                                              ),
+                                                              ElevatedButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await updateMemberName(
+                                                                      activemembers[
+                                                                          index],
+                                                                      updatedMemberName);
+
+                                                                  setState(() {
+                                                                    activemembers[
+                                                                            index] =
+                                                                        updatedMemberName;
+                                                                  });
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                style:
+                                                                    ButtonStyle(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(
+                                                                          Color(
+                                                                              0xFF87A330)),
+                                                                ),
+                                                                child:
+                                                                    const Text(
+                                                                        'Yes'),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                              style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
-                                                        Colors.red)),
-                                            child: const Text('Delete'),
-                                          ),
-                                          const SizedBox(width: 110),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title: const Text(
-                                                          'Are you sure?'),
-                                                      actions: [
-                                                        Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 20,
-                                                            ),
-                                                            ElevatedButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              style: ButtonStyle(
-                                                                  backgroundColor:
-                                                                      MaterialStateProperty.all(
-                                                                          Colors
-                                                                              .red)),
-                                                              child: const Text(
-                                                                  'No'),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 100,
-                                                            ),
-                                                            ElevatedButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                await updateMemberName(
-                                                                    members[
-                                                                        index],
-                                                                    updatedMemberName);
-
-                                                                setState(() {
-                                                                  members[index] =
-                                                                      updatedMemberName;
-                                                                });
-                                                                Navigator.pop(
-                                                                    context);
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              style:
-                                                                  ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(Color(
-                                                                            0xFF87A330)),
-                                                              ),
-                                                              child: const Text(
-                                                                  'Yes'),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
-                                                    );
-                                                  });
-                                            },
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Color(0xFF87A330)),
+                                                        Color(0xFF87A330)),
+                                              ),
+                                              child: const Text('Save'),
                                             ),
-                                            child: const Text('Save'),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: const Text('Edit'),
-                          ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: const Text('Edit'),
+                            ),
+                          ]),
                         );
                       },
                     )),
@@ -484,5 +507,108 @@ class _MembersListState extends State<MembersList> {
     });
 
     return membersList;
+  }
+
+  Future<List<String>> changeToActive(String change) async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/ActiveAndUnactive/Members');
+
+    final snapshotActive = await userRef.child('Active').get();
+
+    List<String> newList = [];
+
+    if (snapshotActive.value != null) {
+      List<dynamic> activeMembersListDynamic =
+          snapshotActive.value as List<dynamic>;
+
+      List<String> membersActiveList =
+          activeMembersListDynamic.map((member) => member.toString()).toList();
+
+      membersActiveList.remove(change);
+
+      List<String> newUnActiveList = [change];
+
+      newList = membersActiveList;
+
+      final snapshotUnactive = await userRef.child('Unactive').get();
+
+      if (snapshotUnactive == null) {
+        List<String> newActiveList = [change];
+        await userRef.update({
+          'Unactive': newUnActiveList,
+          'Active': membersActiveList,
+        });
+      } else {
+        List<dynamic> UnactiveMembersListDynamic =
+            snapshotUnactive.value as List<dynamic>;
+
+        List<String> membersUnActiveList =
+            UnactiveMembersListDynamic.map((member) => member.toString())
+                .toList();
+
+        membersUnActiveList.add(change);
+
+        await userRef.update({
+          'Unactive': membersUnActiveList,
+          'Active': membersActiveList,
+        });
+      }
+    }
+    return newList;
+  }
+
+  Future<List<String>> changeToUnactive(String change) async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/ActiveAndUnactive/Members');
+
+    final snapshotUnActive = await userRef.child('Unactive').get();
+
+    List<String> newList = [];
+
+    if (snapshotUnActive.value != null) {
+      List<dynamic> unActiveMembersListDynamic =
+          snapshotUnActive.value as List<dynamic>;
+
+      List<String> membersUnactiveList = unActiveMembersListDynamic
+          .map((member) => member.toString())
+          .toList();
+
+      membersUnactiveList.remove(change);
+
+      List<String> newUnActiveList = [change];
+
+      newList = membersUnactiveList;
+
+      final snapshotActive = await userRef.child('Active').get();
+
+      if (snapshotActive == null) {
+        List<String> newActiveList = [change];
+        await userRef.update({
+          'Unactive': membersUnactiveList,
+          'Active': newActiveList,
+        });
+      } else {
+        List<dynamic> activeMembersListDynamic =
+            snapshotActive.value as List<dynamic>;
+
+        List<String> membersActiveList = activeMembersListDynamic
+            .map((member) => member.toString())
+            .toList();
+
+        membersActiveList.add(change);
+
+        await userRef.update({
+          'Unactive': membersUnactiveList,
+          'Active': membersActiveList,
+        });
+      }
+    }
+
+    return newList;
   }
 }
