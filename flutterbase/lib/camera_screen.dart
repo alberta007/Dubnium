@@ -25,7 +25,6 @@ class cameraScreenState extends State<cameraScreen> with RouteAware {
   @override
   void didPushNext() {
     // Closes scanner when leaving route
-    debugPrint('Called didPushNext!');
     controller.stop();
     super.didPushNext();
   }
@@ -34,7 +33,6 @@ class cameraScreenState extends State<cameraScreen> with RouteAware {
   void didPopNext() {
     // Restarts scanner when coming back to route
     // BUG: Doesn't work when coming from another scanner route, starts scanner and instantly closes
-    debugPrint('Called didPopNext!');
     controller.dispose();
     controller.start();
     super.didPopNext();
@@ -42,7 +40,6 @@ class cameraScreenState extends State<cameraScreen> with RouteAware {
 
   @override
   void didPop() {
-    debugPrint('Called didPop!');
     didPopNext();
     super.didPop();
   }

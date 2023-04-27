@@ -8,7 +8,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterbase/camera_screen.dart';
 import 'package:flutterbase/social_screen.dart';
 import 'package:flutterbase/Widgets/preferences.dart';
-import 'camera_widget.dart';
 
 class menuTopBar extends StatelessWidget {
   const menuTopBar({Key? key}) : super(key: key);
