@@ -151,30 +151,29 @@ class _registerWidget extends State<registerWidget> {
           await user.updateDisplayName(usernameController.text.trim());
 
           // Set the global variable with the created username
-          
+
           List<String> activeMembers = ["You"];
-          List<String> unactiveMembers = ["Not you!"];
           List<String> unactiveFriends = ["Birgitta"];
           List<String> activeFriends = ["Anders"];
 
-           await databaseReference
+          await databaseReference
               .child('Users/${usernameController.text.trim()}')
               .set({
-            'Userdetails' : {
-            'Email': user.email,
-            'user-id': user.uid, },
-            
-            'Members': {'You': {'Preferences' : 'Hej',},},
-            
-            'Friends' : {"Cool": 'ett'},
-            
-            'ActiveAndUnactive' : 
-            {"Members":{"Active" : activeMembers, 'Unactive' : unactiveMembers},
-            "Friends" : {"Active" : 'Göran', "Unactive" : 'Birgitta' }}
-            
-             
+            'Userdetails': {
+              'Email': user.email,
+              'user-id': user.uid,
+            },
+            'Members': {
+              'You': {
+                'Preferences': 'Hej',
+              },
+            },
+            'Friends': {"Cool": 'ett'},
+            'ActiveAndUnactive': {
+              "Members": {"Active": activeMembers},
+              "Friends": {"Active": 'Göran', "Unactive": 'Birgitta'}
+            }
           });
-
         });
       }
     } on FirebaseAuthException catch (e) {

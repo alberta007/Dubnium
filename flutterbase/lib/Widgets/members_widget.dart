@@ -10,7 +10,8 @@ class MembersList extends StatefulWidget {
 class _MembersListState extends State<MembersList> {
   List<String> activemembers = [];
   final user = FirebaseAuth.instance.currentUser!;
-
+  bool isActive = true;
+  String onOff = "Off";
   @override
   void initState() {
     super.initState();
@@ -19,7 +20,6 @@ class _MembersListState extends State<MembersList> {
 
   Future<void> fetchMembers() async {
     List<String> fetchedActiveMembers = await fetchActiveMemberList();
-    List<String> unactiveMembers = await fetchActiveMemberList();
 
     setState(() {
       activemembers = fetchedActiveMembers;
@@ -28,6 +28,7 @@ class _MembersListState extends State<MembersList> {
 
   @override
   Widget build(BuildContext context) {
+    // Keep track of which button is active
     return Scaffold(
       backgroundColor: Color(0xFFEAF5E4),
       body: Center(
@@ -79,7 +80,6 @@ class _MembersListState extends State<MembersList> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          // show a dialog to add a new member
                           showDialog(
                             context: context,
                             builder: (context) {
@@ -181,6 +181,65 @@ class _MembersListState extends State<MembersList> {
                           ),
                         ),
                       ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 280,
+                          height: 40,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: TextButton(
+                                  onPressed: () async {
+                                    List<String> fetchedActiveMembers =
+                                        await fetchActiveMemberList();
+                                    isActive = true;
+
+                                    setState(() {
+                                      activemembers = fetchedActiveMembers;
+                                      isActive = true;
+                                      onOff = "Off";
+                                    });
+                                  },
+                                  child: Text(
+                                    'Active',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: isActive
+                                          ? Colors.black
+                                          : Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: TextButton(
+                                  onPressed: () async {
+                                    List<String> fetchedUnActiveMembers =
+                                        await fetchUnActiveMemberList();
+                                    setState(() {
+                                      activemembers = fetchedUnActiveMembers;
+                                      isActive = false;
+                                      onOff = "On";
+                                    });
+                                  },
+                                  child: Text(
+                                    'Unactive',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: isActive
+                                          ? Colors.grey.shade600
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -189,33 +248,45 @@ class _MembersListState extends State<MembersList> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                     width: 280,
-                    height: 325,
+                    height: 300,
                     color: const Color(0xFFEAF5E4),
                     child: ListView.builder(
                       itemCount: activemembers.length,
                       itemBuilder: (context, index) {
                         return ListTile(
+                          leading: ElevatedButton(
+                            onPressed: () async {
+                              if (isActive) {
+                                await changeToUnactive(activemembers[index]);
+                                setState(() {
+                                  activemembers.removeAt(index);
+                                });
+                              } else if (!isActive) {
+                                await changeToActive(activemembers[index]);
+                                setState(() {
+                                  activemembers.removeAt(index);
+                                });
+                              }
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all((Colors.amber)),
+                              minimumSize:
+                                  MaterialStateProperty.all(Size(55, 40)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                            ),
+                            child: Text(onOff),
+                          ),
                           title: Text(
                             activemembers[index],
-                            style: TextStyle(color: Colors.black, fontSize: 32),
+                            style: TextStyle(color: Colors.black, fontSize: 25),
                           ),
                           trailing: Wrap(spacing: 5, children: <Widget>[
-                            ElevatedButton(
-                                onPressed: () async {
-                                  await changeToUnactive(activemembers[index]);
-                                  setState(() {
-                                    activemembers.removeAt(index);
-                                  });
-                                },
-                                child: Text("B")),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  await changeToActive(activemembers[index]);
-                                  setState(() {
-                                    activemembers.removeAt(index);
-                                  });
-                                },
-                                child: Text("A")),
                             ElevatedButton(
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
@@ -415,20 +486,16 @@ class _MembersListState extends State<MembersList> {
 
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
-
     final snapshot = await userRef
         .child('${user.displayName}/ActiveAndUnactive/Members/Active')
         .get();
-
     await userRef
         .child('${user.displayName}/Members/$newMember')
         .set(newMember);
 
     List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
-
     List<String> membersList =
         membersListDynamic.map((member) => member.toString()).toList();
-
     membersList.add(newMember);
 
     await userRef.update(
@@ -439,15 +506,26 @@ class _MembersListState extends State<MembersList> {
 
   Future<List<String>> fetchActiveMemberList() async {
     final user = FirebaseAuth.instance.currentUser!;
-
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/ActiveAndUnactive/Members');
-
     final snapshot = await userRef.child('Active').get();
 
     List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
+    List<String> membersList =
+        membersListDynamic.map((member) => member.toString()).toList();
 
+    return membersList;
+  }
+
+  Future<List<String>> fetchUnActiveMemberList() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/ActiveAndUnactive/Members');
+    final snapshot = await userRef.child('Unactive').get();
+
+    List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
     List<String> membersList =
         membersListDynamic.map((member) => member.toString()).toList();
 
@@ -456,20 +534,18 @@ class _MembersListState extends State<MembersList> {
 
   Future<List<String>> updateMemberName(String oldName, String newName) async {
     final user = FirebaseAuth.instance.currentUser!;
-
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
-
     final snapshot = await userRef
         .child('${user.displayName}/ActiveAndUnactive/Members/Active')
         .get();
 
     List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
-
     List<String> membersList =
         membersListDynamic.map((member) => member.toString()).toList();
 
     int index = membersList.indexOf(oldName);
+
     if (index != -1) {
       membersList[index] = newName;
       await userRef.update({
@@ -484,21 +560,16 @@ class _MembersListState extends State<MembersList> {
 
   Future<List<String>> deleteMember(String memberName) async {
     final user = FirebaseAuth.instance.currentUser!;
-
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
-
     await userRef.child('${user.displayName}/Members/$memberName').remove();
-
     final snapshot = await userRef
         .child('${user.displayName}/ActiveAndUnactive/Members/Active')
         .get();
 
     List<dynamic> membersListDynamic = snapshot.value as List<dynamic>;
-
     List<String> membersList =
         membersListDynamic.map((member) => member.toString()).toList();
-
     membersList.remove(memberName);
 
     await userRef.update({
@@ -509,9 +580,8 @@ class _MembersListState extends State<MembersList> {
     return membersList;
   }
 
-  Future<List<String>> changeToActive(String change) async {
+  Future<List<String>> changeToUnactive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
-
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/ActiveAndUnactive/Members');
@@ -535,44 +605,45 @@ class _MembersListState extends State<MembersList> {
 
       final snapshotUnactive = await userRef.child('Unactive').get();
 
-      if (snapshotUnactive == null) {
-        List<String> newActiveList = [change];
-        await userRef.update({
-          'Unactive': newUnActiveList,
-          'Active': membersActiveList,
-        });
-      } else {
-        List<dynamic> UnactiveMembersListDynamic =
+      if (snapshotUnactive.exists) {
+        List<dynamic> activeMembersListDynamic =
             snapshotUnactive.value as List<dynamic>;
 
-        List<String> membersUnActiveList =
-            UnactiveMembersListDynamic.map((member) => member.toString())
-                .toList();
+        List<String> membersUnactiveList = activeMembersListDynamic
+            .map((member) => member.toString())
+            .toList();
 
-        membersUnActiveList.add(change);
+        membersUnactiveList.add(change);
 
         await userRef.update({
-          'Unactive': membersUnActiveList,
           'Active': membersActiveList,
+          'Unactive': membersUnactiveList,
+        });
+      } else {
+        List<String> newUnactiveList = [change];
+        await userRef.update({
+          'Active': membersActiveList,
+          'Unactive': newUnactiveList,
         });
       }
     }
+
     return newList;
   }
 
-  Future<List<String>> changeToUnactive(String change) async {
+  Future<List<String>> changeToActive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/ActiveAndUnactive/Members');
 
-    final snapshotUnActive = await userRef.child('Unactive').get();
+    final snapshotUnactive = await userRef.child('Unactive').get();
 
     List<String> newList = [];
 
-    if (snapshotUnActive.value != null) {
+    if (snapshotUnactive.value != null) {
       List<dynamic> unActiveMembersListDynamic =
-          snapshotUnActive.value as List<dynamic>;
+          snapshotUnactive.value as List<dynamic>;
 
       List<String> membersUnactiveList = unActiveMembersListDynamic
           .map((member) => member.toString())
@@ -586,13 +657,7 @@ class _MembersListState extends State<MembersList> {
 
       final snapshotActive = await userRef.child('Active').get();
 
-      if (snapshotActive == null) {
-        List<String> newActiveList = [change];
-        await userRef.update({
-          'Unactive': membersUnactiveList,
-          'Active': newActiveList,
-        });
-      } else {
+      if (snapshotActive.exists) {
         List<dynamic> activeMembersListDynamic =
             snapshotActive.value as List<dynamic>;
 
@@ -603,8 +668,14 @@ class _MembersListState extends State<MembersList> {
         membersActiveList.add(change);
 
         await userRef.update({
-          'Unactive': membersUnactiveList,
           'Active': membersActiveList,
+          'Unactive': membersUnactiveList,
+        });
+      } else {
+        List<String> newUnactiveList = [change];
+        await userRef.update({
+          'Active': membersUnactiveList,
+          'Unactive': newUnactiveList,
         });
       }
     }
