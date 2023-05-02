@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutterbase/Widgets/mainmenu.dart';
@@ -7,10 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterbase/camera_screen.dart';
 import 'package:flutterbase/social_screen.dart';
 import 'package:flutterbase/Widgets/preferences.dart';
-import 'camera_widget.dart';
 
 class menuTopBar extends StatelessWidget {
-  // TODO: Make menu bars buttons and link everything togheter
   const menuTopBar({Key? key}) : super(key: key);
 
   @override
@@ -29,8 +28,9 @@ class menuTopBar extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: Container(
-                  width: 300,
+                  width: 320,
                   height: 90,
+                  padding: EdgeInsets.all(4.0),
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
@@ -41,7 +41,7 @@ class menuTopBar extends StatelessWidget {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
                           onPressed: () {
@@ -52,16 +52,18 @@ class menuTopBar extends StatelessWidget {
                               ),
                             );
                           },
+                          iconSize: 40,
+                          style: IconButton.styleFrom(
+                            highlightColor: Colors.green.withOpacity(0.2),
+                          ),
                           icon: Icon(
                             Icons.diversity_3,
-                            size: 40,
                             semanticLabel:
                                 'Text to announce in accessibility modes',
                           )),
-                      Spacer(),
+                      //Spacer(),
                       Text(
                         "Dr.Preference",
-                        textAlign: TextAlign.start,
 
                         //overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -69,14 +71,18 @@ class menuTopBar extends StatelessWidget {
                             fontStyle: FontStyle.normal,
                             fontSize: 30),
                       ),
-                      Spacer(),
+                      //Spacer(),
                       IconButton(
+                          iconSize: 40,
+                          style: IconButton.styleFrom(
+                            highlightColor: Colors.green.withOpacity(0.2),
+                          ),
                           onPressed: () {
-  FirebaseAuth.instance.signOut();
-                                               },
+                            FirebaseAuth.instance.signOut();
+                          },
+
                           icon: Icon(
                             Icons.menu,
-                            size: 40,
                           )),
                     ],
                   )),
@@ -89,6 +95,7 @@ class menuTopBar extends StatelessWidget {
 }
 
 class menuBottomBar extends StatelessWidget {
+
   const menuBottomBar({Key? key}) : super(key: key);
 
   @override
@@ -104,8 +111,8 @@ class menuBottomBar extends StatelessWidget {
         child: Align(
           alignment: Alignment.center,
           child: Container(
-            width: 300,
-            height: 90,
+            width: 320,
+            height: 120,
             decoration: const BoxDecoration(
               border: Border(
                 top: BorderSide(
@@ -126,6 +133,12 @@ class menuBottomBar extends StatelessWidget {
                   alignment: Alignment.center,
                   child: IconButton(
                     iconSize: 60,
+                    style: IconButton.styleFrom(
+                      backgroundColor: Color(0xFFEAF5E4),
+                      highlightColor: Colors.green.withOpacity(0.2),
+                      elevation: 2,
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -134,11 +147,9 @@ class menuBottomBar extends StatelessWidget {
                         ),
                       );
                     },
-                    padding: EdgeInsets.all(0.0),
-                    constraints: BoxConstraints(),
-                    icon: Icon(
-                      Icons.qr_code_scanner,
-                      semanticLabel: 'Text to announce in accessibility modes',
+                    icon: const ImageIcon(
+                      AssetImage("assets/images/scan-28.png"),
+                      //semanticLabel: 'Text to announce in accessibility modes',
                     ),
                   ),
                 ),
@@ -146,6 +157,12 @@ class menuBottomBar extends StatelessWidget {
                 Align(
                   alignment: Alignment.center,
                   child: IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Color(0xFFEAF5E4),
+                      highlightColor: Colors.green.withOpacity(0.2),
+                      elevation: 2,
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                    ),
                     iconSize: 60,
                     onPressed: () {
                       Navigator.push(
@@ -155,9 +172,7 @@ class menuBottomBar extends StatelessWidget {
                         ),
                       );
                     },
-                    padding: EdgeInsets.all(0.0),
-                    constraints: BoxConstraints(),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.flatware,
                       semanticLabel: 'Text to announce in accessibility modes',
                     ),

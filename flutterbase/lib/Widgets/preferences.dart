@@ -94,8 +94,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                         ],
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
+                        padding: EdgeInsets.all(20),
                         child: TextField(
                           decoration: InputDecoration(
                               hintText: 'Search',
