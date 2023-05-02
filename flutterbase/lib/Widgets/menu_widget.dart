@@ -80,6 +80,7 @@ class menuTopBar extends StatelessWidget {
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
                           },
+
                           icon: Icon(
                             Icons.menu,
                           )),
