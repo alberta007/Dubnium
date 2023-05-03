@@ -65,6 +65,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           TextFormField(
                             controller: passwordController,
                             textInputAction: TextInputAction.next,
+                            obscureText: true,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Enter password...',
