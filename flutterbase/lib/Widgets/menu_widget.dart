@@ -80,7 +80,6 @@ class menuTopBar extends StatelessWidget {
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
                           },
-
                           icon: Icon(
                             Icons.menu,
                           )),
@@ -95,7 +94,6 @@ class menuTopBar extends StatelessWidget {
 }
 
 class menuBottomBar extends StatelessWidget {
-
   const menuBottomBar({Key? key}) : super(key: key);
 
   @override
@@ -137,7 +135,8 @@ class menuBottomBar extends StatelessWidget {
                       backgroundColor: Color(0xFFEAF5E4),
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -161,7 +160,8 @@ class menuBottomBar extends StatelessWidget {
                       backgroundColor: Color(0xFFEAF5E4),
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     iconSize: 60,
                     onPressed: () {
