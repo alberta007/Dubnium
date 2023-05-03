@@ -8,7 +8,7 @@ class Socials extends StatefulWidget {
 }
 
 class _SocialsState extends State<Socials> {
-  bool membersActive = true;
+  bool onMembersScreen = true, isActive = true;
 
   void initState() {
     super.initState();
@@ -30,24 +30,39 @@ class _SocialsState extends State<Socials> {
           color: Color(0xFFEAF5E4),
           child: Stack(
             children: [
-              membersActive ? MembersList() : FriendsList(),
+              onMembersScreen ? MembersList() : FriendsList(),
               Align(
                 alignment: Alignment.topLeft,
                 child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
+                  onPressed: () {
+                    setState(() {
+                      onMembersScreen = true;
+                      isActive = true;
+                    });
+                  },
+                  child: Text(
                     'Members ',
-                    style: TextStyle(fontSize: 30, color: Colors.black),
+                    style: TextStyle(fontSize: 30, color: isActive
+                                    ? Colors.black
+                                    : Colors.grey.shade600),
                   ),
                 ),
               ),
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
+                  onPressed: () {
+                     setState(() {
+                      onMembersScreen = false;
+                      isActive = false;
+
+                    });
+                  },
+                  child: Text(
                     'Friends',
-                    style: TextStyle(fontSize: 30, color: Colors.black),
+                    style: TextStyle(fontSize: 30, color: isActive
+                                    ? Colors.grey.shade600
+                                    : Colors.black),
                   ),
                 ),
               ),
@@ -537,8 +552,9 @@ class _MembersListState extends State<MembersList> {
     membersList.add(newMember);
 
     await userRef.update(
-        {'${user.displayName}/ActiveAndUnactive/Members/Active': membersList});
-
+        {'${user.displayName}/ActiveAndUnactive/Members/Active/Abbe': ['Hej','Cool'],
+        });
+    
     return membersList;
   }
 
@@ -763,8 +779,8 @@ class FriendsList extends StatefulWidget {
 }
 
 class _FriendsListState extends State<FriendsList> {
-  List<String> activemembers = [];
-  List<String> activemembersSorted = [];
+  List<String> activeFriends = [];
+  List<String> activeFriendsSorted = [];
   final user = FirebaseAuth.instance.currentUser!;
   bool isActive = true;
   String onOff = "Off", memberOrFriend = "Add member";
@@ -784,8 +800,8 @@ class _FriendsListState extends State<FriendsList> {
     numberOfUnactive = fetchedUnactiveMembers.length;
 
     setState(() {
-      activemembers = fetchedActiveMembers;
-      activemembersSorted = activemembers;
+      activeFriends = fetchedActiveMembers;
+      activeFriendsSorted = activeFriends;
 
       fetchedActiveMembers.sort((a, b) => b.compareTo(a));
     });
@@ -841,7 +857,7 @@ class _FriendsListState extends State<FriendsList> {
                                     List<String> updatedMembersList =
                                         await addMemberToList(newMemberName);
                                     setState(() {
-                                      activemembers = updatedMembersList;
+                                      activeFriends = updatedMembersList;
                                     });
                                   },
                                   style: ButtonStyle(
@@ -883,7 +899,7 @@ class _FriendsListState extends State<FriendsList> {
                   child: TextField(
                     onChanged: (value) {
                       setState(() {
-                        activemembers = activemembersSorted
+                        activeFriends = activeFriendsSorted
                             .where((string) => string
                                 .toLowerCase()
                                 .contains(value.toLowerCase()))
@@ -930,7 +946,7 @@ class _FriendsListState extends State<FriendsList> {
                               isActive = true;
 
                               setState(() {
-                                activemembers = fetchedActiveMembers;
+                                activeFriends = fetchedActiveMembers;
                                 isActive = true;
                                 onOff = "Off";
                                 numberOffActive = fetchedActiveMembers.length;
@@ -954,7 +970,7 @@ class _FriendsListState extends State<FriendsList> {
                               List<String> fetchedUnActiveMembers =
                                   await fetchUnActiveMemberList();
                               setState(() {
-                                activemembers = fetchedUnActiveMembers;
+                                activeFriends = fetchedUnActiveMembers;
                                 isActive = false;
                                 onOff = "On";
                                 numberOfUnactive =
@@ -987,20 +1003,20 @@ class _FriendsListState extends State<FriendsList> {
               height: 370,
               color: const Color(0xFFEAF5E4),
               child: ListView.builder(
-                itemCount: activemembers.length,
+                itemCount: activeFriends.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: ElevatedButton(
                       onPressed: () async {
                         if (isActive) {
-                          await changeToUnactive(activemembers[index]);
+                          await changeToUnactive(activeFriends[index]);
                           setState(() {
-                            activemembers.removeAt(index);
+                            activeFriends.removeAt(index);
                           });
                         } else if (!isActive) {
-                          await changeToActive(activemembers[index]);
+                          await changeToActive(activeFriends[index]);
                           setState(() {
-                            activemembers.removeAt(index);
+                            activeFriends.removeAt(index);
                           });
                         }
                       },
@@ -1018,7 +1034,7 @@ class _FriendsListState extends State<FriendsList> {
                       child: Text(onOff),
                     ),
                     title: Text(
-                      activemembers[index],
+                      activeFriends[index],
                       style: TextStyle(color: Colors.black, fontSize: 25),
                     ),
                     trailing: Wrap(spacing: 5, children: <Widget>[
@@ -1030,7 +1046,7 @@ class _FriendsListState extends State<FriendsList> {
                           showDialog(
                             context: context,
                             builder: (context) {
-                              String updatedMemberName = activemembers[index];
+                              String updatedMemberName = activeFriends[index];
                               String oldName = updatedMemberName;
                               return AlertDialog(
                                 title: const Text('Edit member'),
@@ -1042,7 +1058,7 @@ class _FriendsListState extends State<FriendsList> {
                                     hintText: 'Enter the updated member name',
                                   ),
                                   controller: TextEditingController(
-                                      text: activemembers[index]),
+                                      text: activeFriends[index]),
                                 ),
                                 actions: [
                                   Row(
@@ -1081,12 +1097,12 @@ class _FriendsListState extends State<FriendsList> {
                                                         ElevatedButton(
                                                           onPressed: () async {
                                                             await deleteMember(
-                                                              activemembers[
+                                                              activeFriends[
                                                                   index],
                                                             );
 
                                                             setState(() {
-                                                              activemembers
+                                                              activeFriends
                                                                   .removeAt(
                                                                       index);
                                                             });
@@ -1151,12 +1167,12 @@ class _FriendsListState extends State<FriendsList> {
                                                         ElevatedButton(
                                                           onPressed: () async {
                                                             await updateMemberName(
-                                                                activemembers[
+                                                                activeFriends[
                                                                     index],
                                                                 updatedMemberName);
 
                                                             setState(() {
-                                                              activemembers[
+                                                              activeFriends[
                                                                       index] =
                                                                   updatedMemberName;
                                                             });
