@@ -24,9 +24,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => GoogleSignInProvider(),
         child: MaterialApp(
-            navigatorObservers: [
-              routeObserver
-            ],
+            navigatorObservers: [routeObserver],
             theme: ThemeData(
               useMaterial3: true,
             ),
