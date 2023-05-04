@@ -58,18 +58,14 @@ class menuTopBar extends StatelessWidget {
                           ),
                           icon: Icon(
                             Icons.diversity_3,
-                            semanticLabel:
-                                'Text to announce in accessibility modes',
+                            semanticLabel: 'Text to announce in accessibility modes',
                           )),
                       //Spacer(),
                       Text(
                         "Dr.Preference",
 
                         //overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 30),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 30),
                       ),
                       //Spacer(),
                       IconButton(
@@ -80,7 +76,6 @@ class menuTopBar extends StatelessWidget {
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
                           },
-
                           icon: Icon(
                             Icons.menu,
                           )),
@@ -95,7 +90,6 @@ class menuTopBar extends StatelessWidget {
 }
 
 class menuBottomBar extends StatelessWidget {
-
   const menuBottomBar({Key? key}) : super(key: key);
 
   @override
@@ -137,6 +131,7 @@ class menuBottomBar extends StatelessWidget {
                       backgroundColor: Color(0xFFEAF5E4),
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
+                      shadowColor: Color.fromARGB(255, 0, 0, 0),
                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     onPressed: () {
@@ -161,6 +156,7 @@ class menuBottomBar extends StatelessWidget {
                       backgroundColor: Color(0xFFEAF5E4),
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
+                      shadowColor: Color.fromARGB(255, 0, 0, 0),
                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     iconSize: 60,
