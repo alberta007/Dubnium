@@ -60,7 +60,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                     ),*/
                     body: Column(children: [
                       TabBar(
-                        labelColor: Color(0xFF3C2615),
+                        labelColor: Colors.black,
                         tabs: [
                           Tab(child: Text("Your (${profilePreferences.length})", style: TextStyle(fontSize: 20))),
                           Tab(child: Text("Other ()", style: TextStyle(fontSize: 20))),
