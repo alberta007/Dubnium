@@ -8,6 +8,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterbase/camera_screen.dart';
 import 'package:flutterbase/social_screen.dart';
 import 'package:flutterbase/Widgets/preferences.dart';
+import 'package:flutterbase/overlays/profileoverlay.dart';
+
+enum MenuItem {
+  item1,
+  item2,
+  item3,
+}
 
 class menuTopBar extends StatelessWidget {
   const menuTopBar({Key? key}) : super(key: key);
@@ -68,17 +75,37 @@ class menuTopBar extends StatelessWidget {
                         style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 30),
                       ),
                       //Spacer(),
-                      IconButton(
-                          iconSize: 40,
-                          style: IconButton.styleFrom(
-                            highlightColor: Colors.green.withOpacity(0.2),
-                          ),
-                          onPressed: () {
-                            FirebaseAuth.instance.signOut();
+                      PopupMenuButton<MenuItem>(
+                          onSelected: (value) {
+                            if (value == MenuItem.item1) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProfileOverlay(),
+                              ));
+                            } else if (value == MenuItem.item2) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProfileOverlay(),
+                              ));
+                            } else if (value == MenuItem.item3) {
+                              FirebaseAuth.instance.signOut();
+                            }
                           },
                           icon: Icon(
                             Icons.menu,
-                          )),
+                          ),
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: MenuItem.item1,
+                                  child: Text('Settings'),
+                                ),
+                                PopupMenuItem(
+                                  value: MenuItem.item2,
+                                  child: Text('Profile'),
+                                ),
+                                PopupMenuItem(
+                                  value: MenuItem.item3,
+                                  child: Text('Sign Out'),
+                                ),
+                              ])
                     ],
                   )),
             ),
