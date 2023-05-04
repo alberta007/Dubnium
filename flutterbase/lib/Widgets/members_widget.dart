@@ -864,73 +864,80 @@ class _FriendsListState extends State<FriendsList> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        String newMemberName = '';
-                        return AlertDialog(
-                          title: Text('Add a new member'),
-                          content: TextField(
-                            onChanged: (value) {
-                              newMemberName = value;
-                            },
-                            decoration: const InputDecoration(
-                              hintText: 'Enter the new member name',
-                            ),
-                          ),
-                          actions: [
-                            Row(
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text(
-                                    'Cancel',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
+                Stack(
+                  children: [ 
+                    Align(
+                      alignment: Alignment(0.8, 0),
+                      child: ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            String newMemberName = '';
+                            return AlertDialog(
+                              title: Text('Add a new member'),
+                              content: TextField(
+                                onChanged: (value) {
+                                  newMemberName = value;
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: 'Enter the new member name',
                                 ),
-                                const SizedBox(
-                                  width: 120,
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    List<String> updatedMembersList =
-                                        await addMemberToList(newMemberName);
-                                    setState(() {
-                                      activeFriends = updatedMembersList;
-                                    });
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFF87A330)),
-                                  ),
-                                  child: Text('Add'),
-                                ),
+                              ),
+                              actions: [
+                                Row(
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        'Cancel',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 120,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        List<String> updatedMembersList =
+                                            await addMemberToList(newMemberName);
+                                        setState(() {
+                                          activeFriends = updatedMembersList;
+                                        });
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty.all(
+                                            Color(0xFF87A330)),
+                                      ),
+                                      child: Text('Add'),
+                                    ),
+                                  ],
+                                )
                               ],
-                            )
-                          ],
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(const Color(0xFF87A330)),
-                    minimumSize: MaterialStateProperty.all(Size(130, 50)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(const Color(0xFF87A330)),
+                        minimumSize: MaterialStateProperty.all(Size(130, 50)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
                       ),
+                      child: Text("Add friend",
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 255, 255, 255))),
+                                      ),
                     ),
-                  ),
-                  child: Text("Add friend",
-                      style: TextStyle(
-                          fontSize: 17,
-                          color: Color.fromARGB(255, 255, 255, 255))),
+                  ]
                 ),
                 const SizedBox(height: 10),
                 Container(
