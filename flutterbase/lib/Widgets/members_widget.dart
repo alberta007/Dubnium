@@ -564,12 +564,19 @@ class _MembersListState extends State<MembersList> {
     final activeSnapshot = await userRef.child('Active').get();
 
     List<String> activeMembers = [];
+    if (activeSnapshot.exists) {
     Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+
+
     if (membersMap != null) {
       membersMap.forEach((key, value) {
         activeMembers.add(key);
       });
     }
+        }
+      else {
+        activeMembers = [];
+      }
 
     print("People: $activeMembers");
     return activeMembers;
@@ -728,83 +735,65 @@ class _MembersListState extends State<MembersList> {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
-        .child('Users/${user.displayName}/ActiveAndUnactive/Members');
+        .child('Users/${user.displayName}/Members');
 
-    final snapshotActive = await userRef.child('Active').get();
+    final snapshotActive = await userRef.child('Active/$change').get();
 
     List<String> newList = [];
 
-    if (snapshotActive.value != null) {
-      List<String> membersActiveList = await databaseList(snapshotActive);
+    if (snapshotActive.exists) {
+    final snapshotActivePreferences = await userRef.child('Active/$change/Preferences').get();
 
-      membersActiveList.remove(change);
+    if(snapshotActivePreferences.exists){
+      
+      List<String> membersUnactiveList = await databaseList(snapshotActivePreferences);
 
-      List<String> newUnActiveList = [change];
-
-      newList = membersActiveList;
-
-      final snapshotUnactive = await userRef.child('Unactive').get();
-
-      if (snapshotUnactive.exists) {
-        List<String> membersUnactiveList = await databaseList(snapshotUnactive);
-
-        membersUnactiveList.add(change);
-
-        await userRef.update({
-          'Active': membersActiveList,
-          'Unactive': membersUnactiveList,
-        });
-      } else {
-        List<String> newUnactiveList = [change];
-        await userRef.update({
-          'Active': membersActiveList,
-          'Unactive': newUnactiveList,
-        });
-      }
+      await userRef.update({
+        'Active/$change': null,
+        'Unactive/$change/Preferences': membersUnactiveList,
+      });
     }
+    else {
+      await userRef.update({
+        'Active/$change': null,
+        'Unactive/$change' : change,
+      });
 
+    }
+    }
     return newList;
   }
 
   Future<List<String>> changeToActive(String change) async {
-    final user = FirebaseAuth.instance.currentUser!;
+      final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
-        .child('Users/${user.displayName}/ActiveAndUnactive/Members');
+        .child('Users/${user.displayName}/Members');
 
-    final snapshotUnactive = await userRef.child('Unactive').get();
+    final snapshotActive = await userRef.child('Unactive/$change').get();
 
     List<String> newList = [];
 
-    if (snapshotUnactive.value != null) {
-      List<String> membersUnactiveList = await databaseList(snapshotUnactive);
+    if (snapshotActive.exists) {
+    final snapshotActivePreferences = await userRef.child('Unactive/$change/Preferences').get();
 
-      membersUnactiveList.remove(change);
+    if(snapshotActivePreferences.exists){
+      
+      List<String> membersUnactiveList = await databaseList(snapshotActivePreferences);
 
-      List<String> newUnActiveList = [change];
-
-      newList = membersUnactiveList;
-
-      final snapshotActive = await userRef.child('Active').get();
-
-      if (snapshotActive.exists) {
-        List<String> membersActiveList = await databaseList(snapshotActive);
-
-        membersActiveList.add(change);
-
-        await userRef.update({
-          'Active': membersActiveList,
-          'Unactive': membersUnactiveList,
-        });
-      } else {
-        List<String> newUnactiveList = [change];
-        await userRef.update({
-          'Active': membersUnactiveList,
-          'Unactive': newUnactiveList,
-        });
-      }
+      await userRef.update({
+        'Unactive/$change': null,
+        'Active/$change/Preferences': membersUnactiveList,
+      });
     }
+    else {
+      await userRef.update({
+        'Unactive/$change': null,
+        'Active/$change' : change,
+      });
 
+    }
+    }
     return newList;
   }
 
