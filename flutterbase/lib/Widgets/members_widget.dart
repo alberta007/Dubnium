@@ -822,7 +822,6 @@ class FriendsList extends StatefulWidget {
 class _FriendsListState extends State<FriendsList> {
   List<String> activeFriends = [];
   List<String> activeFriendsSorted = [];
-  List<String> requestList = [];
 
   final user = FirebaseAuth.instance.currentUser!;
   bool isActive = true;
@@ -842,11 +841,10 @@ class _FriendsListState extends State<FriendsList> {
     numberOffActive = fetchedActiveMembers.length;
     numberOfUnactive = fetchedUnactiveMembers.length;
 */
-    List<String> fetchedRequestList = await fetchFriendRequests();
+
     setState(() {
       activeFriends = [];
       activeFriendsSorted = [];
-      requestList = fetchedRequestList;
 /*    
       fetchedActiveMembers.sort((a, b) => b.compareTo(a));
   */
@@ -873,20 +871,45 @@ class _FriendsListState extends State<FriendsList> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          List<String> fetchedRequestList =
+                              await fetchFriendRequests();
+
+                          // ignore: use_build_context_synchronously
                           showDialog(
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
                                   title: const Text("Friend requests:"),
                                   actions: [
-                                    ListView.builder(
-                                        itemCount: requestList.length,
-                                        itemBuilder: (context, index) {
-                                          return ListTile(
-                                            title: Text(requestList[index]),
-                                          );
-                                        })
+                                    Container(
+                                      width: 320,
+                                      height: 200,
+                                      child: ListView.builder(
+                                          itemCount: fetchedRequestList.length,
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              title: Text(
+                                                  fetchedRequestList[index],
+                                                  style: const TextStyle(
+                                                      fontSize: 25)),
+                                              trailing: Stack(
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      acceptFriendRequest(
+                                                          fetchedRequestList[
+                                                              index]);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    icon: Icon(Icons.check),
+                                                    color: Colors.green,
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                    )
                                   ],
                                 );
                               });
@@ -1366,10 +1389,13 @@ class _FriendsListState extends State<FriendsList> {
   }
 
   Future<List<String>> fetchFriendRequests() async {
+    final user = FirebaseAuth.instance.currentUser!;
+
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshotRequests = await userRef.child('Friendrequests').get();
+    final snapshotRequests =
+        await userRef.child('${user.displayName}/Friendrequests').get();
 
     List<String> temp = [];
 
@@ -1384,6 +1410,7 @@ class _FriendsListState extends State<FriendsList> {
       temp = [];
     }
 
+    print("Testar $temp");
     return temp;
   }
 
@@ -1394,7 +1421,7 @@ class _FriendsListState extends State<FriendsList> {
         FirebaseDatabase.instance.reference().child('Users');
 
     final snapshotRequests =
-        await userRef.child('${user.displayName}Friendrequests').get();
+        await userRef.child('${user.displayName}/Friendrequests').get();
 
     List<dynamic> requestListDynamic = snapshotRequests.value as List<dynamic>;
 
