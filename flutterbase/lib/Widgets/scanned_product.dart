@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutterbase/Widgets/menu_widget.dart';
 import 'package:flutterbase/other/dabas_api.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutterbase/Widgets/members_widget.dart';
 
 class ScannedProduct extends StatefulWidget {
   final String gtin;
@@ -10,7 +13,8 @@ class ScannedProduct extends StatefulWidget {
   _ScannedProduct createState() => _ScannedProduct(gtin);
 }
 
-class _ScannedProduct extends State<ScannedProduct> with TickerProviderStateMixin {
+class _ScannedProduct extends State<ScannedProduct>
+    with TickerProviderStateMixin {
   final String gtin;
   late Future<Product?> product;
   late AnimationController animationController;
@@ -43,7 +47,12 @@ class _ScannedProduct extends State<ScannedProduct> with TickerProviderStateMixi
           Expanded(
               flex: 2,
               child: Center(
-                child: Text('This is suitable for your preferences!', textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 99, 221, 33), fontWeight: FontWeight.bold)),
+                child: Text('This is suitable for your preferences!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Color.fromARGB(255, 99, 221, 33),
+                        fontWeight: FontWeight.bold)),
               )),
         ],
       );
@@ -66,7 +75,12 @@ class _ScannedProduct extends State<ScannedProduct> with TickerProviderStateMixi
           Expanded(
               flex: 2,
               child: Center(
-                child: Text('This is NOT suitable for your preferences!', textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 221, 34, 34), fontWeight: FontWeight.bold)),
+                child: Text('This is NOT suitable for your preferences!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Color.fromARGB(255, 221, 34, 34),
+                        fontWeight: FontWeight.bold)),
               )),
         ],
       );
@@ -83,13 +97,62 @@ class _ScannedProduct extends State<ScannedProduct> with TickerProviderStateMixi
       duration: const Duration(seconds: 2),
     );
 
-    animation = CurvedAnimation(parent: animationController, curve: Curves.fastOutSlowIn);
+    animation = CurvedAnimation(
+        parent: animationController, curve: Curves.fastOutSlowIn);
   }
 
   @override
   void dispose() {
     animationController.dispose();
     super.dispose();
+  }
+
+  Future<List<String>> getPreferences() async {
+    List<String> preferences;
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}'); // Get reference for current user
+
+    DataSnapshot activeMembersSnapshot = await userRef
+        .child('Members/Active')
+        .get(); // Snapshot of active members
+    DataSnapshot activeFriendsSnapshot = await userRef
+        .child('Friends/Active')
+        .get(); // Snapshot of active friends
+
+    Map<String, dynamic> activeMembers = activeMembersSnapshot.value
+        as Map<String, dynamic>; // Get Map from snapshot
+    Map<String, dynamic> activeFriends =
+        activeFriendsSnapshot.value as Map<String, dynamic>; // Get Map from snapshot
+
+    List<String> membersPreferences = [];
+
+    activeMembers.forEach((key, value) {
+      List<String> preferences = value as List<String>;
+
+      membersPreferences.addAll(preferences);
+    });
+    membersPreferences =
+        membersPreferences.toSet().toList(); // Remove dublicates
+    return [];
+  }
+
+  Map<String, dynamic> databaseList(DataSnapshot snapshot) {
+    Map<String, dynamic> databaseMapDynamic =
+        snapshot.value as Map<String, dynamic>;
+
+    return databaseMapDynamic;
+
+    Map<String, dynamic> membersMap = <String, dynamic>{};
+    if (databaseMapDynamic != null) {
+      databaseMapDynamic.forEach((key, value) {
+        membersMap.putIfAbsent(key, () => value);
+      });
+    }
+
+    return membersMap;
   }
 
   @override
@@ -147,7 +210,10 @@ class _ScannedProduct extends State<ScannedProduct> with TickerProviderStateMixi
                                               child: Text(
                                                 'Info about: ${product.name}',
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             )),
                                         Expanded(
@@ -158,8 +224,17 @@ class _ScannedProduct extends State<ScannedProduct> with TickerProviderStateMixi
                                                 flex: 5,
                                                 child: CircleAvatar(
                                                   radius: double.infinity,
-                                                  foregroundImage: product.image == '' ? Image.asset('assets/images/picture-unavailable.png').image : Image.network(product.image).image,
-                                                  backgroundColor: Color(0xFF87A330),
+                                                  foregroundImage: product
+                                                              .image ==
+                                                          ''
+                                                      ? Image.asset(
+                                                              'assets/images/picture-unavailable.png')
+                                                          .image
+                                                      : Image.network(
+                                                              product.image)
+                                                          .image,
+                                                  backgroundColor:
+                                                      Color(0xFF87A330),
                                                 ),
                                               ),
                                               Spacer(),
@@ -168,44 +243,80 @@ class _ScannedProduct extends State<ScannedProduct> with TickerProviderStateMixi
                                                   child: Container(
                                                       width: 250,
                                                       child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
                                                         children: [
                                                           Column(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               Text(
                                                                 'Made by: ',
-                                                                textAlign: TextAlign.left,
-                                                                style: TextStyle(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
                                                                   fontSize: 16,
-                                                                  fontWeight: FontWeight.bold,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
                                                                 ),
                                                               ),
                                                               Text(
                                                                 'Allergens: ',
-                                                                textAlign: TextAlign.left,
-                                                                style: TextStyle(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
                                                                   fontSize: 16,
-                                                                  fontWeight: FontWeight.bold,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
                                                                 ),
                                                               ),
                                                             ],
                                                           ),
                                                           Column(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: [
                                                               Text(
-                                                                product.allergens.isEmpty ? '${product.brand}' : '${product.brand}',
-                                                                textAlign: TextAlign.left,
-                                                                style: TextStyle(fontSize: 16),
+                                                                product.allergens
+                                                                        .isEmpty
+                                                                    ? '${product.brand}'
+                                                                    : '${product.brand}',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16),
                                                               ),
                                                               Text(
-                                                                product.allergens.isEmpty ? 'none' : '${product.allergens}',
-                                                                textAlign: TextAlign.left,
-                                                                style: TextStyle(fontSize: 16),
+                                                                product.allergens
+                                                                        .isEmpty
+                                                                    ? 'none'
+                                                                    : '${product.allergens}',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16),
                                                               ),
                                                             ],
                                                           ),
@@ -226,7 +337,8 @@ class _ScannedProduct extends State<ScannedProduct> with TickerProviderStateMixi
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: const <Widget>[
-                                Text("Unforntunelty we couldn't find information about that product"),
+                                Text(
+                                    "Unforntunelty we couldn't find information about that product"),
                               ],
                             ),
                             actions: <Widget>[

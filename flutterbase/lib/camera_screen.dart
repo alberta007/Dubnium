@@ -39,12 +39,6 @@ class cameraScreenState extends State<cameraScreen> with RouteAware {
   }
 
   @override
-  void didPop() {
-    didPopNext();
-    super.didPop();
-  }
-
-  @override
   void dispose() {
     controller.dispose();
     routeObserver.unsubscribe(this);
