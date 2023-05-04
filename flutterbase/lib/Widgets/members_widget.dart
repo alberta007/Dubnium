@@ -260,6 +260,8 @@ class _MembersListState extends State<MembersList> {
                             onPressed: () async {
                               List<String> fetchedActiveMembers =
                                   await fetchActiveMemberList();
+                              List<String> fetchedUnactiveMembers =
+                                  await fetchActiveMemberList();
                               isActive = true;
 
                               setState(() {
@@ -267,6 +269,7 @@ class _MembersListState extends State<MembersList> {
                                 isActive = true;
                                 onOff = "Off";
                                 numberOffActive = fetchedActiveMembers.length;
+                                numberOfUnactive = fetchedUnactiveMembers.length;
                               });
                             },
                             child: Text(
@@ -284,10 +287,14 @@ class _MembersListState extends State<MembersList> {
                           alignment: Alignment.topRight,
                           child: TextButton(
                             onPressed: () async {
+                               List<String> fetchedActiveMembers =
+                                  await fetchActiveMemberList();
                               List<String> fetchedUnActiveMembers =
                                   await fetchUnActiveMemberList();
                               setState(() {
                                 activemembers = fetchedUnActiveMembers;
+                                numberOffActive = fetchedActiveMembers.length;
+
                                 isActive = false;
                                 onOff = "On";
                                 numberOfUnactive =
@@ -829,17 +836,18 @@ class _FriendsListState extends State<FriendsList> {
   }
 
   Future<void> fetchMembers() async {
-    List<String> fetchedActiveMembers = await fetchActiveMemberList();
+   /* List<String> fetchedActiveMembers = await fetchActiveMemberList();
     List<String> fetchedUnactiveMembers = await fetchUnActiveMemberList();
 
     numberOffActive = fetchedActiveMembers.length;
     numberOfUnactive = fetchedUnactiveMembers.length;
-
+*/
     setState(() {
-      activeFriends = fetchedActiveMembers;
-      activeFriendsSorted = activeFriends;
-
+      activeFriends = [];
+      activeFriendsSorted = [];
+/*
       fetchedActiveMembers.sort((a, b) => b.compareTo(a));
+  */
     });
   }
 
@@ -912,16 +920,16 @@ class _FriendsListState extends State<FriendsList> {
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all(const Color(0xFF87A330)),
-                    minimumSize: MaterialStateProperty.all(Size(380, 50)),
+                    minimumSize: MaterialStateProperty.all(Size(130, 50)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
                   ),
-                  child: Text(memberOrFriend,
+                  child: Text("Add friend",
                       style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 17,
                           color: Color.fromARGB(255, 255, 255, 255))),
                 ),
                 const SizedBox(height: 10),
