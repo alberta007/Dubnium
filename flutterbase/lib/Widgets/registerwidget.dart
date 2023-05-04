@@ -169,7 +169,7 @@ class _registerWidget extends State<registerWidget> {
                 }
               }
             },
-            'Friends': {"Cool": 'ett'},
+            'Friends': {},
           });
         });
       }

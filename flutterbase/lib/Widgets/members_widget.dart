@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Socials extends StatefulWidget {
   @override
@@ -269,7 +270,8 @@ class _MembersListState extends State<MembersList> {
                                 isActive = true;
                                 onOff = "Off";
                                 numberOffActive = fetchedActiveMembers.length;
-                                numberOfUnactive = fetchedUnactiveMembers.length;
+                                numberOfUnactive =
+                                    fetchedUnactiveMembers.length;
                               });
                             },
                             child: Text(
@@ -287,7 +289,7 @@ class _MembersListState extends State<MembersList> {
                           alignment: Alignment.topRight,
                           child: TextButton(
                             onPressed: () async {
-                               List<String> fetchedActiveMembers =
+                              List<String> fetchedActiveMembers =
                                   await fetchActiveMemberList();
                               List<String> fetchedUnActiveMembers =
                                   await fetchUnActiveMemberList();
@@ -572,18 +574,16 @@ class _MembersListState extends State<MembersList> {
 
     List<String> activeMembers = [];
     if (activeSnapshot.exists) {
-    Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
 
-
-    if (membersMap != null) {
-      membersMap.forEach((key, value) {
-        activeMembers.add(key);
-      });
-    }
-        }
-      else {
-        activeMembers = [];
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          activeMembers.add(key);
+        });
       }
+    } else {
+      activeMembers = [];
+    }
 
     print("People: $activeMembers");
     return activeMembers;
@@ -749,30 +749,29 @@ class _MembersListState extends State<MembersList> {
     List<String> newList = [];
 
     if (snapshotActive.exists) {
-    final snapshotActivePreferences = await userRef.child('Active/$change/Preferences').get();
+      final snapshotActivePreferences =
+          await userRef.child('Active/$change/Preferences').get();
 
-    if(snapshotActivePreferences.exists){
-      
-      List<String> membersUnactiveList = await databaseList(snapshotActivePreferences);
+      if (snapshotActivePreferences.exists) {
+        List<String> membersUnactiveList =
+            await databaseList(snapshotActivePreferences);
 
-      await userRef.update({
-        'Active/$change': null,
-        'Unactive/$change/Preferences': membersUnactiveList,
-      });
-    }
-    else {
-      await userRef.update({
-        'Active/$change': null,
-        'Unactive/$change' : change,
-      });
-
-    }
+        await userRef.update({
+          'Active/$change': null,
+          'Unactive/$change/Preferences': membersUnactiveList,
+        });
+      } else {
+        await userRef.update({
+          'Active/$change': null,
+          'Unactive/$change': change,
+        });
+      }
     }
     return newList;
   }
 
   Future<List<String>> changeToActive(String change) async {
-      final user = FirebaseAuth.instance.currentUser!;
+    final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/Members');
@@ -782,24 +781,23 @@ class _MembersListState extends State<MembersList> {
     List<String> newList = [];
 
     if (snapshotActive.exists) {
-    final snapshotActivePreferences = await userRef.child('Unactive/$change/Preferences').get();
+      final snapshotActivePreferences =
+          await userRef.child('Unactive/$change/Preferences').get();
 
-    if(snapshotActivePreferences.exists){
-      
-      List<String> membersUnactiveList = await databaseList(snapshotActivePreferences);
+      if (snapshotActivePreferences.exists) {
+        List<String> membersUnactiveList =
+            await databaseList(snapshotActivePreferences);
 
-      await userRef.update({
-        'Unactive/$change': null,
-        'Active/$change/Preferences': membersUnactiveList,
-      });
-    }
-    else {
-      await userRef.update({
-        'Unactive/$change': null,
-        'Active/$change' : change,
-      });
-
-    }
+        await userRef.update({
+          'Unactive/$change': null,
+          'Active/$change/Preferences': membersUnactiveList,
+        });
+      } else {
+        await userRef.update({
+          'Unactive/$change': null,
+          'Active/$change': change,
+        });
+      }
     }
     return newList;
   }
@@ -824,6 +822,8 @@ class FriendsList extends StatefulWidget {
 class _FriendsListState extends State<FriendsList> {
   List<String> activeFriends = [];
   List<String> activeFriendsSorted = [];
+  List<String> requestList = [];
+
   final user = FirebaseAuth.instance.currentUser!;
   bool isActive = true;
   String onOff = "Off", memberOrFriend = "Add member";
@@ -836,16 +836,18 @@ class _FriendsListState extends State<FriendsList> {
   }
 
   Future<void> fetchMembers() async {
-   /* List<String> fetchedActiveMembers = await fetchActiveMemberList();
+    /* List<String> fetchedActiveMembers = await fetchActiveMemberList();
     List<String> fetchedUnactiveMembers = await fetchUnActiveMemberList();
-
+    
     numberOffActive = fetchedActiveMembers.length;
     numberOfUnactive = fetchedUnactiveMembers.length;
 */
+    List<String> fetchedRequestList = await fetchFriendRequests();
     setState(() {
       activeFriends = [];
       activeFriendsSorted = [];
-/*
+      requestList = fetchedRequestList;
+/*    
       fetchedActiveMembers.sort((a, b) => b.compareTo(a));
   */
     });
@@ -864,80 +866,131 @@ class _FriendsListState extends State<FriendsList> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Stack(
-                  children: [ 
+                Container(
+                  width: 320,
+                  height: 55,
+                  child: Stack(children: [
                     Align(
-                      alignment: Alignment(0.8, 0),
+                      alignment: Alignment.topLeft,
                       child: ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            String newMemberName = '';
-                            return AlertDialog(
-                              title: Text('Add a new member'),
-                              content: TextField(
-                                onChanged: (value) {
-                                  newMemberName = value;
-                                },
-                                decoration: const InputDecoration(
-                                  hintText: 'Enter the new member name',
-                                ),
-                              ),
-                              actions: [
-                                Row(
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text(
-                                        'Cancel',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 120,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                        List<String> updatedMembersList =
-                                            await addMemberToList(newMemberName);
-                                        setState(() {
-                                          activeFriends = updatedMembersList;
-                                        });
-                                      },
-                                      style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.all(
-                                            Color(0xFF87A330)),
-                                      ),
-                                      child: Text('Add'),
-                                    ),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Friend requests:"),
+                                  actions: [
+                                    ListView.builder(
+                                        itemCount: requestList.length,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            title: Text(requestList[index]),
+                                          );
+                                        })
                                   ],
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(const Color(0xFF87A330)),
-                        minimumSize: MaterialStateProperty.all(Size(130, 50)),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
+                                );
+                              });
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF87A330)),
+                          minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
                           ),
                         ),
+                        child: const Text("Friend requests",
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 255, 255, 255))),
                       ),
-                      child: Text("Add friend",
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: Color.fromARGB(255, 255, 255, 255))),
-                                      ),
                     ),
-                  ]
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              String newMemberName = '';
+                              return AlertDialog(
+                                title: Text('Add a new friend'),
+                                content: TextField(
+                                  onChanged: (value) {
+                                    newMemberName = value;
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: 'Enter friend name ',
+                                  ),
+                                ),
+                                actions: [
+                                  Row(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Cancel',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 120,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          String test = await sendFriendRequest(
+                                              newMemberName);
+
+                                          if (test == "No") {
+                                            Fluttertoast.showToast(
+                                                msg: 'Username doesnt exist',
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.CENTER,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                                textColor: Color(0xFF87A330),
+                                                fontSize: 20.0);
+                                          }
+                                          setState(() {});
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Color(0xFF87A330)),
+                                        ),
+                                        child: Text('Add'),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF87A330)),
+                          minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: Text("Add new friend",
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 255, 255, 255))),
+                      ),
+                    ),
+                  ]),
                 ),
                 const SizedBox(height: 10),
                 Container(
@@ -1280,10 +1333,82 @@ class _FriendsListState extends State<FriendsList> {
 
     final snapshot = await userRef.child(friendName).get();
 
+    List<String> requestList = [];
+
     if (snapshot.exists) {
-      await userRef.update({'${friendName}/Friendrequests': user.displayName});
+      final friendRequestsExist =
+          await userRef.child('${friendName}/Friendrequests').get();
+
+      if (friendRequestsExist.exists) {
+        List<dynamic> friendRequestListDynamic =
+            friendRequestsExist.value as List<dynamic>;
+
+        List<String> friendRequestList = friendRequestListDynamic
+            .map((member) => member.toString())
+            .toList();
+
+        friendRequestList.add('${user.displayName}');
+
+        await userRef.update({
+          '$friendName/Friendrequests': friendRequestList,
+        });
+        requestList = friendRequestList;
+      } else {
+        requestList = ['${user.displayName}'];
+        await userRef.update({
+          '$friendName/Friendrequests': requestList,
+        });
+      }
+    } else {
+      friendName = "No";
     }
     return friendName;
+  }
+
+  Future<List<String>> fetchFriendRequests() async {
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
+
+    final snapshotRequests = await userRef.child('Friendrequests').get();
+
+    List<String> temp = [];
+
+    if (snapshotRequests.exists) {
+      List<dynamic> requestListDynamic =
+          snapshotRequests.value as List<dynamic>;
+
+      List<String> requestList =
+          requestListDynamic.map((member) => member.toString()).toList();
+      temp = requestList;
+    } else {
+      temp = [];
+    }
+
+    return temp;
+  }
+
+  Future<void> acceptFriendRequest(String friendName) async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
+
+    final snapshotRequests =
+        await userRef.child('${user.displayName}Friendrequests').get();
+
+    List<dynamic> requestListDynamic = snapshotRequests.value as List<dynamic>;
+
+    List<String> requestList =
+        requestListDynamic.map((member) => member.toString()).toList();
+
+    requestList.remove(friendName);
+
+    await userRef.update({
+      '${user.displayName}/Friendrequests': requestList,
+    });
+    await userRef
+        .child('${user.displayName}/Friends/Active/$friendName')
+        .set(friendName);
   }
 
   Future<List<String>> fetchActiveFriendList() async {
