@@ -13,6 +13,8 @@ class _MembersListState extends State<MembersList> {
   final user = FirebaseAuth.instance.currentUser!;
   bool isActive = true;
   String onOff = "Off";
+  int numberOffActive = 0;
+  int numberOfUnactive = 0;
   @override
   void initState() {
     super.initState();
@@ -21,10 +23,14 @@ class _MembersListState extends State<MembersList> {
 
   Future<void> fetchMembers() async {
     List<String> fetchedActiveMembers = await fetchActiveMemberList();
+    List<String> fetchedUnactiveMembers = await fetchUnActiveMemberList();
 
     setState(() {
       activemembers = fetchedActiveMembers;
       activemembersSorted = activemembers;
+
+      numberOffActive = fetchedActiveMembers.length;
+      numberOfUnactive = fetchedUnactiveMembers.length;
 
       fetchedActiveMembers.sort((a, b) => b.compareTo(a));
     });
@@ -156,13 +162,33 @@ class _MembersListState extends State<MembersList> {
                             ),
                           ),
                           TabBar(labelColor: Colors.black, tabs: [
-                            Tab(child: Text("Active (${activeMembers.length})", style: TextStyle(fontSize: 20))),
-                            Tab(child: Text("Unactive (${unactiveMembers.length})", style: TextStyle(fontSize: 20))),
+                            Tab(child: Text("Active (${activeMembers.length})", style: TextStyle(fontSize: 18))),
+                            Tab(child: Text("Inactive (${unactiveMembers.length})", style: TextStyle(fontSize: 18))),
                           ]),
                           Expanded(
                             child: TabBarView(
                               children: [
-                                Text(activeMembers.first),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.only(top: 0, bottom: 25, right: 25, left: 25),
+                                  itemCount: activemembers.length,
+                                  //alignment: Alignment.topCenter,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    final memberName = activemembers[index];
+                                    return Container(
+                                      //margin: EdgeInsets.all(20.0),
+                                      padding: EdgeInsets.all(16.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      child: Text(
+                                        memberName,
+                                        style: TextStyle(fontSize: 18.0),
+                                      ),
+                                    );
+                                  },
+                                ),
                                 Text(unactiveMembers.first),
                               ],
                             ),
@@ -223,8 +249,8 @@ class _MembersListState extends State<MembersList> {
                             ),
                           ),
                           TabBar(labelColor: Colors.black, tabs: [
-                            Tab(child: Text("Active (${activeFriends.length})", style: TextStyle(fontSize: 20))),
-                            Tab(child: Text("Unactive (${unactiveFriends.length})", style: TextStyle(fontSize: 20))),
+                            Tab(child: Text("Active (${activeFriends.length})", style: TextStyle(fontSize: 18))),
+                            Tab(child: Text("Unactive (${unactiveFriends.length})", style: TextStyle(fontSize: 18))),
                           ]),
                           Expanded(
                             child: TabBarView(
@@ -263,8 +289,10 @@ class _MembersListState extends State<MembersList> {
   }
 
   Future<List<String>> fetchActiveMemberList() async {
-    DatabaseReference userRef = await fetcHelper();
-    final snapshot = await userRef.child('Active').get();
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
+    final snapshot = await userRef.child('${user.displayName}/ActiveAndUnactive/Members/Active').get();
 
     List<String> membersList = await databaseList(snapshot);
 
