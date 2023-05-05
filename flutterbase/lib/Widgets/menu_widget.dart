@@ -162,6 +162,7 @@ class menuBottomBar extends StatelessWidget {
                       backgroundColor: Color(0xFFEAF5E4),
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
+                      shadowColor: Color.fromARGB(255, 0, 0, 0),
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
@@ -187,6 +188,7 @@ class menuBottomBar extends StatelessWidget {
                       backgroundColor: Color(0xFFEAF5E4),
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
+                      shadowColor: Color.fromARGB(255, 0, 0, 0),
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
