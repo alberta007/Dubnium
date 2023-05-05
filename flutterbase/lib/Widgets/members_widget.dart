@@ -3,6 +3,87 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+class Socials extends StatefulWidget {
+  @override
+  _SocialsState createState() => _SocialsState();
+}
+
+class _SocialsState extends State<Socials> {
+  bool onMembersScreen = true, isActive = true;
+
+  void initState() {
+    super.initState();
+    firstScreen();
+  }
+
+  Future<void> firstScreen() async {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Color(0xFFEAF5E4),
+      body: Center(
+        child: Container(
+          height: 610,
+          width: 320,
+          color: Color(0xFFEAF5E4),
+          child: Stack(
+            children: [
+              onMembersScreen ? MembersList() : FriendsList(),
+              Align(
+                alignment: Alignment.topLeft,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      onMembersScreen = true;
+                      isActive = true;
+                    });
+                  },
+                  child: Text(
+                    'Members ',
+                    style: TextStyle(
+                        fontSize: 30,
+                        color: isActive ? Colors.black : Colors.grey.shade600),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      onMembersScreen = false;
+                      isActive = false;
+                    });
+                  },
+                  child: Text(
+                    'Friends',
+                    style: TextStyle(
+                        fontSize: 30,
+                        color: isActive ? Colors.grey.shade600 : Colors.black),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 60,
+                child: Container(
+                  width: 320,
+                  height: 3,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF87A330),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 class MembersList extends StatefulWidget {
   @override
   _MembersListState createState() => _MembersListState();
@@ -338,10 +419,6 @@ class _MembersListState extends State<MembersList> {
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshot = await userRef
-        .child('${user.displayName}/ActiveAndInactive/Members/Active')
-        .get();
-
     await userRef
         .child('${user.displayName}/Members/Active/$newMember')
         .set(newMember);
@@ -560,6 +637,522 @@ class _MembersListState extends State<MembersList> {
   }
 
 // FUNCTIONS FOR FRIENDS
+}
+
+class FriendsList extends StatefulWidget {
+  const FriendsList({super.key});
+
+  @override
+  State<FriendsList> createState() => _FriendsListState();
+}
+
+class _FriendsListState extends State<FriendsList> {
+  List<String> activeFriends = [];
+  List<String> activeFriendsSorted = [];
+
+  final user = FirebaseAuth.instance.currentUser!;
+  bool isActive = true;
+  String onOff = "Off", memberOrFriend = "Add member";
+  int numberOffActive = 0, numberOfInactive = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMembers();
+  }
+
+  Future<void> fetchMembers() async {
+    List<String> fetchedActiveFriends = await fetchActiveFriendList();
+    List<String> fetchedInactiveFriends = await fetchUnActiveFriendsList();
+
+    setState(() {
+      numberOffActive = fetchedActiveFriends.length;
+      numberOfInactive = fetchedInactiveFriends.length;
+
+      activeFriends = fetchedActiveFriends;
+      activeFriendsSorted = [];
+/*    
+      fetchedActiveMembers.sort((a, b) => b.compareTo(a));
+  */
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            height: 470,
+            width: 320,
+            color: Color(0xFFEAF5E4),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: 320,
+                  height: 55,
+                  child: Stack(children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          List<String> fetchedRequestList =
+                              await fetchFriendRequests();
+
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Friend requests:"),
+                                  actions: [
+                                    Container(
+                                      width: 320,
+                                      height: 200,
+                                      child: ListView.builder(
+                                          itemCount: fetchedRequestList.length,
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              title: Text(
+                                                  fetchedRequestList[index],
+                                                  style: const TextStyle(
+                                                      fontSize: 25)),
+                                              trailing: Stack(
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      acceptFriendRequest(
+                                                          fetchedRequestList[
+                                                              index]);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    icon: Icon(Icons.check),
+                                                    color: Colors.green,
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                    )
+                                  ],
+                                );
+                              });
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF87A330)),
+                          minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text("Friend requests",
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 255, 255, 255))),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              String newMemberName = '';
+                              return AlertDialog(
+                                title: Text('Add a new friend'),
+                                content: TextField(
+                                  onChanged: (value) {
+                                    newMemberName = value;
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: 'Enter friend name ',
+                                  ),
+                                ),
+                                actions: [
+                                  Row(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Cancel',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 120,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          String test = await sendFriendRequest(
+                                              newMemberName);
+
+                                          if (test == "No") {
+                                            Fluttertoast.showToast(
+                                                msg: 'Username doesnt exist',
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.CENTER,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                                textColor: Color(0xFF87A330),
+                                                fontSize: 20.0);
+                                          }
+                                          setState(() {});
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Color(0xFF87A330)),
+                                        ),
+                                        child: Text('Add'),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF87A330)),
+                          minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                        ),
+                        child: Text("Add new friend",
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 255, 255, 255))),
+                      ),
+                    ),
+                  ]),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  width: 320,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        activeFriends = activeFriendsSorted
+                            .where((string) => string
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Search member',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: 320,
+                    height: 3,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF87A330),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 320,
+                    height: 43,
+                    color: Color(0xFFEAF5E4),
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: () async {
+                              List<String> fetchedActiveFriends =
+                                  await fetchActiveFriendList();
+                              isActive = true;
+
+                              setState(() {
+                                activeFriends = fetchedActiveFriends;
+                                isActive = true;
+                                onOff = "Off";
+                                numberOffActive = fetchedActiveFriends.length;
+                              });
+                            },
+                            child: Text(
+                              'Active($numberOffActive)',
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: isActive
+                                    ? Colors.black
+                                    : Colors.grey.shade600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: TextButton(
+                            onPressed: () async {
+                              List<String> fetchedInactiveFriendsList =
+                                  await fetchUnActiveFriendsList();
+                              setState(() {
+                                activeFriends = fetchedInactiveFriendsList;
+                                isActive = false;
+                                onOff = "On";
+                                numberOfInactive =
+                                    fetchedInactiveFriendsList.length;
+                              });
+                            },
+                            child: Text(
+                              'Inactive($numberOfInactive)',
+                              style: TextStyle(
+                                fontSize: 25,
+                                color: isActive
+                                    ? Colors.grey.shade600
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment(0.0, 1),
+          child: Container(
+              width: 320,
+              height: 370,
+              color: const Color(0xFFEAF5E4),
+              child: ListView.builder(
+                itemCount: activeFriends.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: ElevatedButton(
+                      onPressed: () async {
+                        if (isActive) {
+                          await changeToInactive(activeFriends[index]);
+                          setState(() {
+                            activeFriends.removeAt(index);
+                          });
+                        } else if (!isActive) {
+                          await changeToActive(activeFriends[index]);
+                          setState(() {
+                            activeFriends.removeAt(index);
+                          });
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all((Colors.amber)),
+                        minimumSize: MaterialStateProperty.all(Size(55, 40)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                      ),
+                      child: Text(onOff),
+                    ),
+                    title: Text(
+                      activeFriends[index],
+                      style: TextStyle(color: Colors.black, fontSize: 25),
+                    ),
+                    trailing: Wrap(spacing: 5, children: <Widget>[
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xFF87A330))),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              String updatedMemberName = activeFriends[index];
+                              String oldName = updatedMemberName;
+                              return AlertDialog(
+                                title: const Text('Edit member'),
+                                content: TextField(
+                                  onChanged: (value) {
+                                    updatedMemberName = value;
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: 'Enter the updated member name',
+                                  ),
+                                  controller: TextEditingController(
+                                      text: activeFriends[index]),
+                                ),
+                                actions: [
+                                  Row(
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                      'Are you sure?'),
+                                                  actions: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 20,
+                                                        ),
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                                  MaterialStateProperty
+                                                                      .all(Colors
+                                                                          .red)),
+                                                          child:
+                                                              const Text('No'),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 100,
+                                                        ),
+                                                        ElevatedButton(
+                                                          onPressed: () async {
+                                                            Navigator.pop(
+                                                                context);
+
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all(Color(
+                                                                        0xFF87A330)),
+                                                          ),
+                                                          child:
+                                                              const Text('Yes'),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.red)),
+                                        child: const Text('Delete'),
+                                      ),
+                                      const SizedBox(width: 110),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                      'Are you sure?'),
+                                                  actions: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 20,
+                                                        ),
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                                  MaterialStateProperty
+                                                                      .all(Colors
+                                                                          .red)),
+                                                          child:
+                                                              const Text('No'),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 100,
+                                                        ),
+                                                        ElevatedButton(
+                                                          onPressed: () async {
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all(Color(
+                                                                        0xFF87A330)),
+                                                          ),
+                                                          child:
+                                                              const Text('Yes'),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Color(0xFF87A330)),
+                                        ),
+                                        child: const Text('Save'),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('Edit'),
+                      ),
+                    ]),
+                  );
+                },
+              )),
+        )
+      ],
+    );
+  }
 
   Future<String> sendFriendRequest(String friendName) async {
     final user = FirebaseAuth.instance.currentUser!;
@@ -719,7 +1312,55 @@ class _MembersListState extends State<MembersList> {
     print("People: $unactiveMembers");
     return unactiveMembers;
   }
+
+  Future<List<String>> changeToInactive(String change) async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Friends');
+
+    final snapshotActive = await userRef.child('Active/$change').get();
+
+    List<String> newList = [];
+
+    if (snapshotActive.exists) {
+      await userRef.update({
+        'Active/$change': null,
+        'Inactive/$change': change,
+      });
+    }
+    return newList;
+  }
+
+  Future<List<String>> changeToActive(String change) async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Friends');
+
+    final snapshotActive = await userRef.child('Inactive/$change').get();
+
+    List<String> newList = [];
+
+    if (snapshotActive.exists) {
+      await userRef.update({
+        'Inactive/$change': null,
+        'Active/$change': change,
+      });
+    }
+    return newList;
+  }
+
+  Future<List<String>> databaseList(DataSnapshot snapshot) async {
+    List<dynamic> databaseListDynamic = snapshot.value as List<dynamic>;
+
+    List<String> dataBaseList =
+        databaseListDynamic.map((member) => member.toString()).toList();
+
+    return dataBaseList;
+  }
 }
+
 /* 
                           Align(
                               alignment: Alignment.center,
