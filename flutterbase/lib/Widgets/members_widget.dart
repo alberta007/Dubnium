@@ -1408,7 +1408,9 @@ class _FriendsListState extends State<FriendsList> {
         requestListDynamic.map((member) => member.toString()).toList();
 
     requestList.remove(friendName);
-
+    await userRef.update({
+      '${user.displayName}/Friendrequests': requestList,
+    });
     final snapshotActive =
         await userRef.child('${friendName}/Members/Active/You').get();
 
@@ -1416,48 +1418,13 @@ class _FriendsListState extends State<FriendsList> {
         await userRef.child('${friendName}/Members/Unactive/You').get();
 
     if (snapshotActive.exists) {
-      final snapshotActivePreferences = await userRef
-          .child('${user.displayName}/Members/Active/You/Preferences')
-          .get();
-
-      if (snapshotActivePreferences.exists) {
-        List<dynamic> activePreferencesListDynamic =
-            snapshotActivePreferences.value as List<dynamic>;
-
-        List<String> activePreferences = activePreferencesListDynamic
-            .map((member) => member.toString())
-            .toList();
-
-        await userRef.update({
-          '${user.displayName}/Friends/Active/$friendName': activePreferences,
-        });
-      } else {
-        await userRef
-            .child('${user.displayName}/Friends/Active/$friendName')
-            .set(friendName);
-      }
+      await userRef
+          .child('${user.displayName}/Friends/Active/$friendName')
+          .set(friendName);
     } else if (snapshotUnactive.exists) {
-      final snapshotUnactivePreferences = await userRef
-          .child('${user.displayName}/Members/Unactive/You/Preferences')
-          .get();
-
-      if (snapshotUnactivePreferences.exists) {
-        List<dynamic> unActivePreferencesListDynamic =
-            snapshotUnactivePreferences.value as List<dynamic>;
-
-        List<String> unactivePreferences = unActivePreferencesListDynamic
-            .map((member) => member.toString())
-            .toList();
-
-        await userRef.update({
-          '${user.displayName}/Friends/Unactive/$friendName':
-              unactivePreferences,
-        });
-      } else {
-        await userRef
-            .child('${user.displayName}/Friends/Unactive/$friendName')
-            .set(friendName);
-      }
+      await userRef
+          .child('${user.displayName}/Friends/Unactive/$friendName')
+          .set(friendName);
     }
   }
 
@@ -1524,23 +1491,10 @@ class _FriendsListState extends State<FriendsList> {
     List<String> newList = [];
 
     if (snapshotActive.exists) {
-      final snapshotActivePreferences =
-          await userRef.child('Active/$change/Preferences').get();
-
-      if (snapshotActivePreferences.exists) {
-        List<String> membersUnactiveList =
-            await databaseList(snapshotActivePreferences);
-
-        await userRef.update({
-          'Active/$change': null,
-          'Unactive/$change/Preferences': membersUnactiveList,
-        });
-      } else {
-        await userRef.update({
-          'Active/$change': null,
-          'Unactive/$change': change,
-        });
-      }
+      await userRef.update({
+        'Active/$change': null,
+        'Unactive/$change': change,
+      });
     }
     return newList;
   }
@@ -1549,30 +1503,17 @@ class _FriendsListState extends State<FriendsList> {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
-        .child('Users/${user.displayName}/Members');
+        .child('Users/${user.displayName}/Friends');
 
     final snapshotActive = await userRef.child('Unactive/$change').get();
 
     List<String> newList = [];
 
     if (snapshotActive.exists) {
-      final snapshotActivePreferences =
-          await userRef.child('Unactive/$change/Preferences').get();
-
-      if (snapshotActivePreferences.exists) {
-        List<String> membersUnactiveList =
-            await databaseList(snapshotActivePreferences);
-
-        await userRef.update({
-          'Unactive/$change': null,
-          'Active/$change/Preferences': membersUnactiveList,
-        });
-      } else {
-        await userRef.update({
-          'Unactive/$change': null,
-          'Active/$change': change,
-        });
-      }
+      await userRef.update({
+        'Unactive/$change': null,
+        'Active/$change': change,
+      });
     }
     return newList;
   }
