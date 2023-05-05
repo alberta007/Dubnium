@@ -91,6 +91,7 @@ class menuTopBar extends StatelessWidget {
                           },
                           icon: Icon(
                             Icons.menu,
+                            size: 40,
                           ),
                           itemBuilder: (context) => [
                                 PopupMenuItem(

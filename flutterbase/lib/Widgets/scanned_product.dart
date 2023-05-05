@@ -4,6 +4,7 @@ import 'package:flutterbase/other/dabas_api.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutterbase/Widgets/members_widget.dart';
+import 'package:flutterbase/other/firebase_functions.dart';
 
 class ScannedProduct extends StatefulWidget {
   final String gtin;
@@ -17,6 +18,7 @@ class _ScannedProduct extends State<ScannedProduct>
     with TickerProviderStateMixin {
   final String gtin;
   late Future<Product?> product;
+  late Future<List<String>> preferences;
   late AnimationController animationController;
   late Animation<double> animation;
 
@@ -91,6 +93,7 @@ class _ScannedProduct extends State<ScannedProduct>
   void initState() {
     super.initState();
     product = GetProduct().fetchProduct(gtin);
+    preferences = getPreferences();
 
     animationController = AnimationController(
       vsync: this,
@@ -121,38 +124,45 @@ class _ScannedProduct extends State<ScannedProduct>
     DataSnapshot activeFriendsSnapshot = await userRef
         .child('Friends/Active')
         .get(); // Snapshot of active friends
+    List<String> activeMembersPreferences = getMembersPreferences(
+        activeMembersSnapshot); // Get preferences from snapshot
+    //List<String> activeFriends = getFriends(activeFriendsSnapshot); // Get friends from snapshot
+    List<String> membersPreferences =
+        activeMembersPreferences.toSet().toList(); // Remove dublicates
 
-    Map<String, dynamic> activeMembers = activeMembersSnapshot.value
-        as Map<String, dynamic>; // Get Map from snapshot
-    Map<String, dynamic> activeFriends =
-        activeFriendsSnapshot.value as Map<String, dynamic>; // Get Map from snapshot
-
-    List<String> membersPreferences = [];
-
-    activeMembers.forEach((key, value) {
-      List<String> preferences = value as List<String>;
-
-      membersPreferences.addAll(preferences);
-    });
-    membersPreferences =
-        membersPreferences.toSet().toList(); // Remove dublicates
     return [];
   }
 
-  Map<String, dynamic> databaseList(DataSnapshot snapshot) {
-    Map<String, dynamic> databaseMapDynamic =
-        snapshot.value as Map<String, dynamic>;
+  List<String> getFriends(DataSnapshot snapshot) {
+    debugPrint("snap: ${snapshot.value}");
+    Map<dynamic, dynamic> databaseMapDynamic = snapshot.value as Map;
+    List<String> friends = [];
 
-    return databaseMapDynamic;
-
-    Map<String, dynamic> membersMap = <String, dynamic>{};
     if (databaseMapDynamic != null) {
       databaseMapDynamic.forEach((key, value) {
-        membersMap.putIfAbsent(key, () => value);
+        debugPrint('key: $key, value: $value');
       });
     }
 
-    return membersMap;
+    return [];
+  }
+
+  List<String> getMembersPreferences(DataSnapshot snapshot) {
+    Map<dynamic, dynamic> databaseMapDynamic = snapshot.value as Map;
+    List<String> membersPreferences = [];
+
+    if (databaseMapDynamic != null) {
+      databaseMapDynamic.forEach((key, value) {
+        Map<dynamic, dynamic> valueMap = value as Map;
+        valueMap.forEach((key, value) {
+          List<dynamic> preferences = value as List<dynamic>;
+
+          membersPreferences.addAll(preferences.cast<String>());
+        });
+      });
+    }
+
+    return membersPreferences;
   }
 
   @override
@@ -168,8 +178,8 @@ class _ScannedProduct extends State<ScannedProduct>
           Expanded(
             flex: 76,
             child: Container(
-              child: FutureBuilder<Product?>(
-                  future: product,
+              child: FutureBuilder(
+                  future: Future.wait([product, preferences]),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
@@ -178,7 +188,8 @@ class _ScannedProduct extends State<ScannedProduct>
                         );
                       case ConnectionState.done:
                       default:
-                        final Product? product = snapshot.data;
+                        debugPrint('${snapshot.data?[0]}');
+                        final Product? product = snapshot.data?[0] as Product?;
 
                         if (product != null) {
                           return Column(
