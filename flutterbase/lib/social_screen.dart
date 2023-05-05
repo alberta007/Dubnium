@@ -24,7 +24,7 @@ class _SocialScreen extends State<SocialScreen> {
           Expanded(
             flex: 76,
             child: Container(
-              child: Socials(),
+              child: MembersList(),
             ),
           ),
           const Expanded(
