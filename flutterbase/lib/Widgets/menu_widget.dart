@@ -22,7 +22,7 @@ class menuTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.topCenter,
+      alignment: Alignment.center,
       child: Container(
         width: double.infinity,
         height: 120,
@@ -65,14 +65,29 @@ class menuTopBar extends StatelessWidget {
                           ),
                           icon: Icon(
                             Icons.diversity_3,
+                            color: Color(0xff3c2615),
+                            size: 40,
                             semanticLabel: 'Text to announce in accessibility modes',
                           )),
-                      //Spacer(),
+                      Spacer(),
                       Text(
                         "Dr.Preference",
 
                         //overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 30),
+                        style: TextStyle(
+                            //color: Color(0xFF87A330),
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.normal,
+                            fontSize: 30,
+                            foreground: Paint()
+                              ..shader = LinearGradient(
+                                colors: <Color>[
+                                  Color(0xff3c2615),
+                                  Color(0xFF87A330)
+                                  //Color(0xffcad593)
+                                  //add more color here.
+                                ],
+                              ).createShader(Rect.fromLTWH(120.0, 50.0, 200.0, 50.0))),
                       ),
                       //Spacer(),
                       PopupMenuButton<MenuItem>(
@@ -172,6 +187,7 @@ class menuBottomBar extends StatelessWidget {
                     },
                     icon: const ImageIcon(
                       AssetImage("assets/images/scan-28.png"),
+                      color: Colors.black,
                       //semanticLabel: 'Text to announce in accessibility modes',
                     ),
                   ),
@@ -198,6 +214,7 @@ class menuBottomBar extends StatelessWidget {
                     },
                     icon: const Icon(
                       Icons.flatware,
+                      color: Colors.black,
                       semanticLabel: 'Text to announce in accessibility modes',
                     ),
                   ),
