@@ -152,10 +152,6 @@ class _registerWidget extends State<registerWidget> {
 
           // Set the global variable with the created username
 
-          List<String> activeMembers = ["You"];
-          List<String> unactiveFriends = ["Birgitta"];
-          List<String> activeFriends = ["Anders"];
-
           await databaseReference
               .child('Users/${usernameController.text.trim()}')
               .set({
@@ -164,15 +160,16 @@ class _registerWidget extends State<registerWidget> {
               'user-id': user.uid,
             },
             'Members': {
-              'You': {
-                'Preferences': 'Hej',
-              },
+              'Active': {
+                'You': {
+                  'Preferences': ['Ägg'],
+                },
+                'Am': {
+                  'Preferences': ['Ägg', 'Cola'],
+                }
+              }
             },
-            'Friends': {"Cool": 'ett'},
-            'ActiveAndUnactive': {
-              "Members": {"Active": activeMembers},
-              "Friends": {"Active": 'Göran', "Unactive": 'Birgitta'}
-            }
+            'Friends': {},
           });
         });
       }

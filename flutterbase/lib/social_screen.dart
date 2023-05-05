@@ -15,6 +15,7 @@ class _SocialScreen extends State<SocialScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           const Expanded(
@@ -24,7 +25,7 @@ class _SocialScreen extends State<SocialScreen> {
           Expanded(
             flex: 76,
             child: Container(
-              child: MembersList(),
+              child: Socials(),
             ),
           ),
           const Expanded(
