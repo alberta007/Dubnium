@@ -170,13 +170,13 @@ class _MembersListState extends State<MembersList> {
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
-                                  padding: EdgeInsets.only(top: 0, bottom: 25, right: 25, left: 25),
+                                  padding: EdgeInsets.only(top: 0),
                                   itemCount: activemembers.length,
                                   //alignment: Alignment.topCenter,
                                   itemBuilder: (BuildContext context, int index) {
                                     final memberName = activemembers[index];
                                     return Container(
-                                      //margin: EdgeInsets.all(20.0),
+                                      margin: EdgeInsets.only(top: 25, right: 25, left: 25, bottom: 0),
                                       padding: EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
                                         border: Border.all(color: Colors.black),
@@ -250,7 +250,7 @@ class _MembersListState extends State<MembersList> {
                           ),
                           TabBar(labelColor: Colors.black, tabs: [
                             Tab(child: Text("Active (${activeFriends.length})", style: TextStyle(fontSize: 18))),
-                            Tab(child: Text("Unactive (${unactiveFriends.length})", style: TextStyle(fontSize: 18))),
+                            Tab(child: Text("Inactive (${unactiveFriends.length})", style: TextStyle(fontSize: 18))),
                           ]),
                           Expanded(
                             child: TabBarView(
