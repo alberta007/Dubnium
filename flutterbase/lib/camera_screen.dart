@@ -14,7 +14,6 @@ class cameraScreen extends StatefulWidget {
 class cameraScreenState extends State<cameraScreen> with RouteAware {
   String barCode = '';
   MobileScannerController controller = MobileScannerController();
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -59,23 +58,17 @@ class cameraScreenState extends State<cameraScreen> with RouteAware {
               controller: controller,
               fit: BoxFit.fitHeight,
               onDetect: (capture) {
-                if (ModalRoute.of(context)!.isCurrent) {
-                  final List<Barcode> barcodes = capture.barcodes;
-                  for (final barcode in barcodes) {
-                    debugPrint('Barcode found! ${barcode.rawValue}');
-                    barCode = barcode.displayValue!;
-                    while (barCode.length < 14) {
-                      barCode = '0$barCode'; //Add zeros to increase length
-                    }
-                    controller.stop();
-                    Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ScannedProduct(barCode)))
-                        .then((value) {
-                      controller.start();
-                    });
+                final List<Barcode> barcodes = capture.barcodes;
+                for (final barcode in barcodes) {
+                  debugPrint('Barcode found! ${barcode.rawValue}');
+                  barCode = barcode.displayValue!;
+                  while (barCode.length < 14) {
+                    barCode = '0$barCode'; //Add zeros to increase length
                   }
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ScannedProduct(barCode)));
                 }
               },
             ),
