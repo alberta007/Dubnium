@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MembersList extends StatefulWidget {
   @override
@@ -13,8 +14,8 @@ class _MembersListState extends State<MembersList> {
   final user = FirebaseAuth.instance.currentUser!;
   bool isActive = true;
   String onOff = "Off";
-  int numberOffActive = 0;
-  int numberOfUnactive = 0;
+  int numberOfActive = 0;
+  int numberOfInactive = 0;
   @override
   void initState() {
     super.initState();
@@ -23,14 +24,14 @@ class _MembersListState extends State<MembersList> {
 
   Future<void> fetchMembers() async {
     List<String> fetchedActiveMembers = await fetchActiveMemberList();
-    List<String> fetchedUnactiveMembers = await fetchUnActiveMemberList();
+    List<String> fetchedInactiveMembers = await fetchUnActiveMemberList();
 
     setState(() {
       activemembers = fetchedActiveMembers;
       activemembersSorted = activemembers;
 
-      numberOffActive = fetchedActiveMembers.length;
-      numberOfUnactive = fetchedUnactiveMembers.length;
+      numberOfActive = fetchedActiveMembers.length;
+      numberOfInactive = fetchedInactiveMembers.length;
 
       fetchedActiveMembers.sort((a, b) => b.compareTo(a));
     });
@@ -84,7 +85,8 @@ class _MembersListState extends State<MembersList> {
                                                 newMemberName = value;
                                               },
                                               decoration: const InputDecoration(
-                                                hintText: 'Enter the new member name',
+                                                hintText:
+                                                    'Enter the new member name',
                                               ),
                                             ),
                                             actions: [
@@ -96,7 +98,8 @@ class _MembersListState extends State<MembersList> {
                                                     },
                                                     child: const Text(
                                                       'Cancel',
-                                                      style: TextStyle(color: Colors.red),
+                                                      style: TextStyle(
+                                                          color: Colors.red),
                                                     ),
                                                   ),
                                                   const SizedBox(
@@ -105,13 +108,21 @@ class _MembersListState extends State<MembersList> {
                                                   ElevatedButton(
                                                     onPressed: () async {
                                                       Navigator.pop(context);
-                                                      List<String> updatedMembersList = await addMemberToList(newMemberName);
+                                                      await addMemberToList(
+                                                          newMemberName);
+                                                      List<String>
+                                                          updatedMembersList =
+                                                          await fetchActiveMemberList();
                                                       setState(() {
-                                                        activemembers = updatedMembersList;
+                                                        activemembers =
+                                                            updatedMembersList;
                                                       });
                                                     },
                                                     style: ButtonStyle(
-                                                      backgroundColor: MaterialStateProperty.all(Color(0xFF87A330)),
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Color(
+                                                                  0xFF87A330)),
                                                     ),
                                                     child: Text('Add'),
                                                   ),
@@ -123,11 +134,16 @@ class _MembersListState extends State<MembersList> {
                                       );
                                     },
                                     style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
-                                      minimumSize: MaterialStateProperty.all(Size(380, 60)),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              const Color(0xFF87A330)),
+                                      minimumSize: MaterialStateProperty.all(
+                                          Size(380, 60)),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                         ),
                                       ),
                                     ),
@@ -136,24 +152,35 @@ class _MembersListState extends State<MembersList> {
                                       color: Colors.white,
                                       size: 30,
                                     ),
-                                    label: Text('Add member', style: TextStyle(fontSize: 24, color: Color.fromARGB(255, 255, 255, 255))),
+                                    label: Text('Add member',
+                                        style: TextStyle(
+                                            fontSize: 24,
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255))),
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.only(top: 0, left: 25, right: 25, bottom: 25),
+                                  padding: EdgeInsets.only(
+                                      top: 0, left: 25, right: 25, bottom: 25),
                                   child: TextField(
                                     decoration: InputDecoration(
                                         filled: true,
                                         fillColor: Colors.white,
                                         hintText: 'Search Members',
-                                        prefixIcon: Icon(Icons.search, size: 24),
+                                        prefixIcon:
+                                            Icon(Icons.search, size: 24),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(width: 2.0),
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                         )),
                                     onChanged: (value) {
                                       setState(() {
-                                        activemembers = activemembersSorted.where((string) => string.toLowerCase().contains(value.toLowerCase())).toList();
+                                        activemembers = activemembersSorted
+                                            .where((string) => string
+                                                .toLowerCase()
+                                                .contains(value.toLowerCase()))
+                                            .toList();
                                       });
                                     },
                                   ),
@@ -162,8 +189,13 @@ class _MembersListState extends State<MembersList> {
                             ),
                           ),
                           TabBar(labelColor: Colors.black, tabs: [
-                            Tab(child: Text("Active (${activeMembers.length})", style: TextStyle(fontSize: 18))),
-                            Tab(child: Text("Inactive (${unactiveMembers.length})", style: TextStyle(fontSize: 18))),
+                            Tab(
+                                child: Text("Active (${activeMembers.length})",
+                                    style: TextStyle(fontSize: 18))),
+                            Tab(
+                                child: Text(
+                                    "Inactive (${unactiveMembers.length})",
+                                    style: TextStyle(fontSize: 18))),
                           ]),
                           Expanded(
                             child: TabBarView(
@@ -173,14 +205,20 @@ class _MembersListState extends State<MembersList> {
                                   padding: EdgeInsets.only(top: 0),
                                   itemCount: activemembers.length,
                                   //alignment: Alignment.topCenter,
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     final memberName = activemembers[index];
                                     return Container(
-                                      margin: EdgeInsets.only(top: 25, right: 25, left: 25, bottom: 0),
+                                      margin: EdgeInsets.only(
+                                          top: 25,
+                                          right: 25,
+                                          left: 25,
+                                          bottom: 0),
                                       padding: EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
                                         border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                       ),
                                       child: Text(
                                         memberName,
@@ -210,11 +248,16 @@ class _MembersListState extends State<MembersList> {
                                   child: ElevatedButton.icon(
                                     onPressed: () {},
                                     style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
-                                      minimumSize: MaterialStateProperty.all(Size(380, 60)),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              const Color(0xFF87A330)),
+                                      minimumSize: MaterialStateProperty.all(
+                                          Size(380, 60)),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                         ),
                                       ),
                                     ),
@@ -223,24 +266,35 @@ class _MembersListState extends State<MembersList> {
                                       color: Colors.white,
                                       size: 30,
                                     ),
-                                    label: Text('Add Friend', style: TextStyle(fontSize: 24, color: Color.fromARGB(255, 255, 255, 255))),
+                                    label: Text('Add Friend',
+                                        style: TextStyle(
+                                            fontSize: 24,
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255))),
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.only(top: 0, left: 25, right: 25, bottom: 25),
+                                  padding: EdgeInsets.only(
+                                      top: 0, left: 25, right: 25, bottom: 25),
                                   child: TextField(
                                     decoration: InputDecoration(
                                         filled: true,
                                         fillColor: Colors.white,
                                         hintText: 'Search Friends',
-                                        prefixIcon: Icon(Icons.search, size: 24),
+                                        prefixIcon:
+                                            Icon(Icons.search, size: 24),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(width: 2.0),
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                         )),
                                     onChanged: (value) {
                                       setState(() {
-                                        activemembers = activemembersSorted.where((string) => string.toLowerCase().contains(value.toLowerCase())).toList();
+                                        activemembers = activemembersSorted
+                                            .where((string) => string
+                                                .toLowerCase()
+                                                .contains(value.toLowerCase()))
+                                            .toList();
                                       });
                                     },
                                   ),
@@ -249,8 +303,13 @@ class _MembersListState extends State<MembersList> {
                             ),
                           ),
                           TabBar(labelColor: Colors.black, tabs: [
-                            Tab(child: Text("Active (${activeFriends.length})", style: TextStyle(fontSize: 18))),
-                            Tab(child: Text("Inactive (${unactiveFriends.length})", style: TextStyle(fontSize: 18))),
+                            Tab(
+                                child: Text("Active (${activeFriends.length})",
+                                    style: TextStyle(fontSize: 18))),
+                            Tab(
+                                child: Text(
+                                    "Inactive (${unactiveFriends.length})",
+                                    style: TextStyle(fontSize: 18))),
                           ]),
                           Expanded(
                             child: TabBarView(
@@ -271,90 +330,130 @@ class _MembersListState extends State<MembersList> {
         ));
   }
 
-  Future<List<String>> addMemberToList(String newMember) async {
+  // FUNCTIONS FOR MEMBERS
+
+  Future<String> addMemberToList(String newMember) async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
-    final snapshot = await userRef.child('${user.displayName}/ActiveAndUnactive/Members/Active').get();
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
 
-    await userRef.child('${user.displayName}/Members/$newMember').set(newMember);
+    final snapshot = await userRef
+        .child('${user.displayName}/ActiveAndInactive/Members/Active')
+        .get();
 
-    List<String> membersList = await databaseList(snapshot);
+    await userRef
+        .child('${user.displayName}/Members/Active/$newMember')
+        .set(newMember);
 
-    membersList.add(newMember);
-
-    await userRef.update({'${user.displayName}/ActiveAndUnactive/Members/Active': membersList});
-
-    return membersList;
+    return newMember;
   }
 
   Future<List<String>> fetchActiveMemberList() async {
     final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Members');
 
-    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
-    final snapshot = await userRef.child('${user.displayName}/ActiveAndUnactive/Members/Active').get();
+    final activeSnapshot = await userRef.child('Active').get();
 
-    List<String> membersList = await databaseList(snapshot);
+    List<String> activeMembers = [];
+    if (activeSnapshot.exists) {
+      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
 
-    return membersList;
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          activeMembers.add(key);
+        });
+      }
+    } else {
+      activeMembers = [];
+    }
+
+    print("People: $activeMembers");
+    return activeMembers;
   }
 
   Future<List<String>> fetchUnActiveMemberList() async {
-    DatabaseReference userRef = await fetcHelper();
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Members');
 
-    final snapshot = await userRef.child('Unactive').get();
-    List<String> UnactiveList;
+    final activeSnapshot = await userRef.child('Inactive').get();
 
-    if (snapshot.exists) {
-      List<String> membersList = await databaseList(snapshot);
+    List<String> activeMembers = [];
 
-      UnactiveList = membersList;
+    if (activeSnapshot.exists) {
+      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          activeMembers.add(key);
+        });
+      } else {
+        activeMembers = [];
+      }
     } else {
-      UnactiveList = [];
+      activeMembers = [];
     }
 
-    return UnactiveList;
-  }
-
-  Future<DatabaseReference> fetcHelper() async {
-    final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/ActiveAndUnactive/Members');
-    return userRef;
+    print("People: $activeMembers");
+    return activeMembers;
   }
 
   Future<List<String>> updateMemberName(String oldName, String newName) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
-    final activeSnapshot = await userRef.child('${user.displayName}/ActiveAndUnactive/Members/Active').get();
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
 
-    List<String> activeMembersList = await databaseList(activeSnapshot);
+    final preferenceActiveSnapshot = await userRef
+        .child('${user.displayName}/Members/Active/$oldName/Preferences')
+        .get();
 
-    List<String> updatedList;
+    final preferenceInactiveSnapshot = await userRef
+        .child('${user.displayName}/Members/Inactive/$oldName/Preferences')
+        .get();
 
-    if (activeMembersList.contains(oldName)) {
-      int index = activeMembersList.indexOf(oldName);
-      activeMembersList[index] = newName;
+    List<String> updatedList = [];
+
+    if (preferenceActiveSnapshot.exists) {
+      List<String> preferenceList =
+          await databaseList(preferenceActiveSnapshot);
 
       await userRef.update({
-        '${user.displayName}/ActiveAndUnactive/Members/Active': activeMembersList,
-        '${user.displayName}/Members/$oldName': null,
-        '${user.displayName}/Members/$newName': newName,
+        '${user.displayName}/Members/Active/$oldName': null,
+        '${user.displayName}/Members/Active/$newName/Preferences':
+            preferenceList,
       });
-      updatedList = activeMembersList;
+    } else if (preferenceInactiveSnapshot.exists) {
+      List<String> preferenceList =
+          await databaseList(preferenceInactiveSnapshot);
+
+      await userRef.update({
+        '${user.displayName}/Members/Inactive/$oldName': null,
+        '${user.displayName}/Members/Inactive/$newName/Preferences':
+            preferenceList,
+      });
     } else {
-      final unActivesnapshot = await userRef.child('${user.displayName}/ActiveAndUnactive/Members/Unactive').get();
+      final ActiveSnapshot = await userRef
+          .child('${user.displayName}/Members/Active/$oldName')
+          .get();
 
-      List<String> unActiveMembersList = await databaseList(unActivesnapshot);
+      final InactiveSnapshot = await userRef
+          .child('${user.displayName}/Members/Inactive/$oldName')
+          .get();
 
-      int index = unActiveMembersList.indexOf(oldName);
-      unActiveMembersList[index] = newName;
-
-      await userRef.update({
-        '${user.displayName}/ActiveAndUnactive/Members/Unactive': unActiveMembersList,
-        '${user.displayName}/Members/$oldName': null,
-        '${user.displayName}/Members/$newName': newName,
-      });
-      updatedList = unActiveMembersList;
+      if (ActiveSnapshot.exists) {
+        await userRef.update({
+          '${user.displayName}/Members/Active/$oldName': null,
+          '${user.displayName}/Members/Active/$newName': newName,
+        });
+      } else if (InactiveSnapshot.exists) {
+        await userRef.update({
+          '${user.displayName}/Members/Inactive/$oldName': null,
+          '${user.displayName}/Members/Inactive/$newName': newName,
+        });
+      }
     }
 
     return updatedList;
@@ -362,123 +461,263 @@ class _MembersListState extends State<MembersList> {
 
   Future<List<String>> deleteMember(String memberName) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
 
-    final activeSnapshot = await userRef.child('${user.displayName}/ActiveAndUnactive/Members/Active').get();
+    List<String> updatedList = [];
+    final ActiveSnapshot = await userRef
+        .child('${user.displayName}/Members/Active/$memberName')
+        .get();
 
-    List<String> activeMembersList = await databaseList(activeSnapshot);
+    final InactiveSnapshot = await userRef
+        .child('${user.displayName}/Members/Inactive/$memberName')
+        .get();
 
-    List<String> updatedList;
-
-    if (activeMembersList.contains(memberName)) {
-      activeMembersList.remove(memberName);
+    if (ActiveSnapshot.exists) {
       await userRef.update({
-        '${user.displayName}/ActiveAndUnactive/Members/Active': activeMembersList,
-        '${user.displayName}/Members/$memberName': null,
+        '${user.displayName}/Members/Active/$memberName': null,
       });
-      updatedList = activeMembersList;
-    } else {
-      final unActiveSnapshot = await userRef.child('${user.displayName}/ActiveAndUnactive/Members/Unactive').get();
-
-      List<String> unActiveMembersList = await databaseList(unActiveSnapshot);
-
-      unActiveMembersList.remove(memberName);
-
+    } else if (InactiveSnapshot.exists) {
       await userRef.update({
-        '${user.displayName}/ActiveAndUnactive/Members/Unactive': unActiveMembersList,
-        '${user.displayName}/Members/$memberName': null,
+        '${user.displayName}/Members/Inactive/$memberName': null,
       });
-      updatedList = unActiveMembersList;
     }
+
     return updatedList;
   }
 
-  Future<List<String>> changeToUnactive(String change) async {
+  Future<List<String>> changeToInactive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/ActiveAndUnactive/Members');
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Members');
 
-    final snapshotActive = await userRef.child('Active').get();
+    final snapshotActive = await userRef.child('Active/$change').get();
 
     List<String> newList = [];
 
-    if (snapshotActive.value != null) {
-      List<String> membersActiveList = await databaseList(snapshotActive);
+    if (snapshotActive.exists) {
+      final snapshotActivePreferences =
+          await userRef.child('Active/$change/Preferences').get();
 
-      membersActiveList.remove(change);
-
-      List<String> newUnActiveList = [change];
-
-      newList = membersActiveList;
-
-      final snapshotUnactive = await userRef.child('Unactive').get();
-
-      if (snapshotUnactive.exists) {
-        List<String> membersUnactiveList = await databaseList(snapshotUnactive);
-
-        membersUnactiveList.add(change);
+      if (snapshotActivePreferences.exists) {
+        List<String> membersInactiveList =
+            await databaseList(snapshotActivePreferences);
 
         await userRef.update({
-          'Active': membersActiveList,
-          'Unactive': membersUnactiveList,
+          'Active/$change': null,
+          'Inactive/$change/Preferences': membersInactiveList,
         });
       } else {
-        List<String> newUnactiveList = [change];
         await userRef.update({
-          'Active': membersActiveList,
-          'Unactive': newUnactiveList,
+          'Active/$change': null,
+          'Inactive/$change': change,
         });
       }
     }
-
     return newList;
   }
 
   Future<List<String>> changeToActive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/ActiveAndUnactive/Members');
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Members');
 
-    final snapshotUnactive = await userRef.child('Unactive').get();
+    final snapshotActive = await userRef.child('Inactive/$change').get();
 
     List<String> newList = [];
 
-    if (snapshotUnactive.value != null) {
-      List<String> membersUnactiveList = await databaseList(snapshotUnactive);
+    if (snapshotActive.exists) {
+      final snapshotActivePreferences =
+          await userRef.child('Inactive/$change/Preferences').get();
 
-      membersUnactiveList.remove(change);
-
-      List<String> newUnActiveList = [change];
-
-      newList = membersUnactiveList;
-
-      final snapshotActive = await userRef.child('Active').get();
-
-      if (snapshotActive.exists) {
-        List<String> membersActiveList = await databaseList(snapshotActive);
-
-        membersActiveList.add(change);
+      if (snapshotActivePreferences.exists) {
+        List<String> membersInactiveList =
+            await databaseList(snapshotActivePreferences);
 
         await userRef.update({
-          'Active': membersActiveList,
-          'Unactive': membersUnactiveList,
+          'Inactive/$change': null,
+          'Active/$change/Preferences': membersInactiveList,
         });
       } else {
-        List<String> newUnactiveList = [change];
         await userRef.update({
-          'Active': membersUnactiveList,
-          'Unactive': newUnactiveList,
+          'Inactive/$change': null,
+          'Active/$change': change,
         });
       }
     }
-
     return newList;
   }
 
   Future<List<String>> databaseList(DataSnapshot snapshot) async {
     List<dynamic> databaseListDynamic = snapshot.value as List<dynamic>;
 
-    List<String> dataBaseList = databaseListDynamic.map((member) => member.toString()).toList();
+    List<String> dataBaseList =
+        databaseListDynamic.map((member) => member.toString()).toList();
 
     return dataBaseList;
+  }
+
+// FUNCTIONS FOR FRIENDS
+
+  Future<String> sendFriendRequest(String friendName) async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
+
+    final snapshot = await userRef.child(friendName).get();
+
+    List<String> requestList = [];
+
+    if (snapshot.exists) {
+      final friendRequestsExist =
+          await userRef.child('${friendName}/Friendrequests').get();
+
+      if (friendRequestsExist.exists) {
+        List<dynamic> friendRequestListDynamic =
+            friendRequestsExist.value as List<dynamic>;
+
+        List<String> friendRequestList = friendRequestListDynamic
+            .map((member) => member.toString())
+            .toList();
+
+        friendRequestList.add('${user.displayName}');
+
+        await userRef.update({
+          '$friendName/Friendrequests': friendRequestList,
+        });
+        requestList = friendRequestList;
+      } else {
+        requestList = ['${user.displayName}'];
+        await userRef.update({
+          '$friendName/Friendrequests': requestList,
+        });
+      }
+    } else {
+      friendName = "No";
+    }
+    return friendName;
+  }
+
+  Future<List<String>> fetchFriendRequests() async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
+
+    final snapshotRequests =
+        await userRef.child('${user.displayName}/Friendrequests').get();
+
+    List<String> temp = [];
+
+    if (snapshotRequests.exists) {
+      List<dynamic> requestListDynamic =
+          snapshotRequests.value as List<dynamic>;
+
+      List<String> requestList =
+          requestListDynamic.map((member) => member.toString()).toList();
+      temp = requestList;
+    } else {
+      temp = [];
+    }
+
+    print("Testar $temp");
+    return temp;
+  }
+
+  Future<void> acceptFriendRequest(String friendName) async {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users');
+
+    final snapshotRequests =
+        await userRef.child('${user.displayName}/Friendrequests').get();
+
+    List<dynamic> requestListDynamic = snapshotRequests.value as List<dynamic>;
+
+    List<String> requestList =
+        requestListDynamic.map((member) => member.toString()).toList();
+
+    requestList.remove(friendName);
+    await userRef.update({
+      '${user.displayName}/Friendrequests': requestList,
+    });
+    final snapshotActive =
+        await userRef.child('${friendName}/Members/Active/You').get();
+
+    final snapshotInactive =
+        await userRef.child('${friendName}/Members/Inactive/You').get();
+
+    if (snapshotActive.exists) {
+      await userRef
+          .child('${user.displayName}/Friends/Active/$friendName')
+          .set(friendName);
+      await userRef
+          .child('$friendName/Friends/Active/${user.displayName}')
+          .set(user.displayName);
+    } else if (snapshotInactive.exists) {
+      await userRef
+          .child('${user.displayName}/Friends/Inactive/${user.displayName}')
+          .set(friendName);
+      await userRef
+          .child('$friendName/Friends/Inactive/$friendName')
+          .set(user.displayName);
+    }
+  }
+
+  Future<List<String>> fetchActiveFriendList() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Friends');
+
+    final activeSnapshot = await userRef.child('Active').get();
+
+    List<String> activeMembers = [];
+    if (activeSnapshot.exists) {
+      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          activeMembers.add(key);
+        });
+      }
+    } else {
+      activeMembers = [];
+    }
+
+    print("People: $activeMembers");
+    return activeMembers;
+  }
+
+  Future<List<String>> fetchUnActiveFriendsList() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Friends');
+
+    final activeSnapshot = await userRef.child('Inactive').get();
+
+    List<String> unactiveMembers = [];
+
+    if (activeSnapshot.exists) {
+      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          unactiveMembers.add(key);
+        });
+      } else {
+        unactiveMembers = [];
+      }
+    } else {
+      unactiveMembers = [];
+    }
+
+    print("People: $unactiveMembers");
+    return unactiveMembers;
   }
 }
 /* 
