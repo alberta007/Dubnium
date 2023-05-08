@@ -219,7 +219,8 @@ class _MembersListState extends State<MembersList> {
                                           bottom: 0),
                                       padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
+                                        border: Border.all(
+                                            color: Colors.black, width: 2),
                                         borderRadius:
                                             BorderRadius.circular(10.0),
                                       ),
@@ -456,7 +457,8 @@ class _MembersListState extends State<MembersList> {
                                           bottom: 0),
                                       padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
+                                        border: Border.all(
+                                            color: Colors.black, width: 2),
                                         borderRadius:
                                             BorderRadius.circular(10.0),
                                       ),
