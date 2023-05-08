@@ -42,25 +42,23 @@ class _LoginWidgetState extends State<LoginWidget> {
                 Container(
                     alignment: Alignment.center,
                     child: SingleChildScrollView(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(25),
                       child: Column(
                         children: <Widget>[
                           Image.asset(
-                            'assets/images/Dr.Preferenec-removebg-preview.png',
-                          ),
-                          SizedBox(
-                            height: 30,
+                            'assets/images/drPreference.png',
                           ),
                           TextFormField(
                             controller: emailController,
                             textInputAction: TextInputAction.next,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
+                              prefixIcon: const Icon(Icons.email_rounded, size: 24),
                               hintText: 'Enter email...',
                             ),
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 25,
                           ),
                           TextFormField(
                             controller: passwordController,
@@ -68,51 +66,43 @@ class _LoginWidgetState extends State<LoginWidget> {
                             obscureText: true,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
+                              prefixIcon: const Icon(Icons.lock, size: 24),
                               hintText: 'Enter password...',
                             ),
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 25,
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
                               signIn();
                             },
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xFF87A330)),
-                              minimumSize: MaterialStateProperty.all<Size>(
-                                  Size.fromHeight(50)),
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF87A330)),
+                              minimumSize: MaterialStateProperty.all<Size>(Size.fromHeight(60)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40.0),
+                                ),
+                              ),
                             ),
                             icon: (Icon(
                               Icons.lock_open,
                               size: 32,
-                              color: Colors.black,
+                              color: Colors.white,
                             )),
                             label: Text(
                               'Sign in',
                               style: TextStyle(
                                 fontSize: 24,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 25,
                           ),
-                          RichText(
-                              text: TextSpan(
-                                  style: TextStyle(color: Colors.black),
-                                  text: 'No account?  ',
-                                  children: [
-                                TextSpan(
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = widget.onClickSignUp,
-                                    text: 'Sign up',
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        color: Color(0xFF87A330)))
-                              ])),
+                          RichText(text: TextSpan(style: TextStyle(color: Colors.black), text: 'No account?  ', children: [TextSpan(recognizer: TapGestureRecognizer()..onTap = widget.onClickSignUp, text: 'Sign up', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF87A330)))])),
                           SizedBox(
                             height: 25,
                           ),
@@ -148,22 +138,24 @@ class _LoginWidgetState extends State<LoginWidget> {
                             height: 33,
                           ),
                           ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              primary: Color(0xFF87A330),
-                              onPrimary: Colors.black,
-                              minimumSize: Size(double.infinity, 50),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF87A330)),
+                              minimumSize: MaterialStateProperty.all<Size>(Size.fromHeight(60)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40.0),
+                                ),
+                              ),
                             ),
                             icon: FaIcon(
                               FontAwesomeIcons.google,
                               color: Colors.blue,
                             ),
                             onPressed: () {
-                              final provider =
-                                  Provider.of<GoogleSignInProvider>(context,
-                                      listen: false);
+                              final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
                               provider.googleLogin();
                             },
-                            label: Text('Sign in with Google'),
+                            label: Text('Sign in with Google', style: TextStyle(fontSize: 18, color: Colors.white)),
                           ),
                         ],
                       ),
@@ -176,19 +168,10 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   Future signIn() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text.trim(), password: passwordController.text.trim());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password' || e.code == 'user-not-found') {
-        Fluttertoast.showToast(
-            msg: 'Invalid email or password',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 20.0);
+        Fluttertoast.showToast(msg: 'Invalid email or password', toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 20.0);
       }
     }
   }
