@@ -107,6 +107,7 @@ class menuTopBar extends StatelessWidget {
                           icon: Icon(
                             Icons.menu,
                             size: 40,
+                            color: Color(0xFF87A330),
                           ),
                           itemBuilder: (context) => [
                                 PopupMenuItem(
@@ -175,8 +176,7 @@ class menuBottomBar extends StatelessWidget {
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
                       shadowColor: Color.fromARGB(255, 0, 0, 0),
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -202,8 +202,7 @@ class menuBottomBar extends StatelessWidget {
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
                       shadowColor: Color.fromARGB(255, 0, 0, 0),
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     iconSize: 60,
                     onPressed: () {
