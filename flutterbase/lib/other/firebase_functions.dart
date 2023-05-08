@@ -17,11 +17,14 @@ class FirebaseFunctions {
         .child('Inactive/$memberName')
         .get(); // Snapshot of Inactive member
 
-    if (activeMembersSnapshot.exists) { // Check if member is in active
-      DataSnapshot membersCurrentPreferences =
-          await userRef.child('Active/$memberName/Preferences').get(); // Get preferences
+    if (activeMembersSnapshot.exists) {
+      // Check if member is in active
+      DataSnapshot membersCurrentPreferences = await userRef
+          .child('Active/$memberName/Preferences')
+          .get(); // Get preferences
 
-      if (membersCurrentPreferences.exists) { // Check if previous preferences exist
+      if (membersCurrentPreferences.exists) {
+        // Check if previous preferences exist
         List<String> currentPreferences =
             databaseList(membersCurrentPreferences);
 
@@ -32,14 +35,17 @@ class FirebaseFunctions {
         });
       } else {
         await userRef.update({
-          'Active/$memberName/Preferences' : [preference],
+          'Active/$memberName/Preferences': [preference],
         });
       }
-    } else { // Else member is in Inactive
-      DataSnapshot membersCurrentPreferences =
-          await userRef.child('Inactive/$memberName/Preferences').get(); // Get preferences
+    } else {
+      // Else member is in Inactive
+      DataSnapshot membersCurrentPreferences = await userRef
+          .child('Inactive/$memberName/Preferences')
+          .get(); // Get preferences
 
-      if (membersCurrentPreferences.exists) { // Check if previous preferences exist
+      if (membersCurrentPreferences.exists) {
+        // Check if previous preferences exist
         List<String> currentPreferences =
             databaseList(membersCurrentPreferences);
 
@@ -50,7 +56,7 @@ class FirebaseFunctions {
         });
       } else {
         await userRef.update({
-          'Inactive/$memberName/Preferences' : [preference],
+          'Inactive/$memberName/Preferences': [preference],
         });
       }
     }
@@ -70,11 +76,14 @@ class FirebaseFunctions {
         .child('Inactive/$memberName')
         .get(); // Snapshot of Inactive member
 
-    if (activeMembersSnapshot.exists) { // Check if member is in active
-      DataSnapshot membersCurrentPreferences =
-          await userRef.child('Active/$memberName/Preferences').get(); // Get preferences
+    if (activeMembersSnapshot.exists) {
+      // Check if member is in active
+      DataSnapshot membersCurrentPreferences = await userRef
+          .child('Active/$memberName/Preferences')
+          .get(); // Get preferences
 
-      if (membersCurrentPreferences.exists) { // Check if previous preferences exist
+      if (membersCurrentPreferences.exists) {
+        // Check if previous preferences exist
         List<String> currentPreferences =
             databaseList(membersCurrentPreferences);
 
@@ -84,11 +93,14 @@ class FirebaseFunctions {
           'Active/$memberName/Preferences': currentPreferences,
         });
       }
-    } else { // Else member is in Inactive
-      DataSnapshot membersCurrentPreferences =
-          await userRef.child('Inactive/$memberName/Preferences').get(); // Get preferences
+    } else {
+      // Else member is in Inactive
+      DataSnapshot membersCurrentPreferences = await userRef
+          .child('Inactive/$memberName/Preferences')
+          .get(); // Get preferences
 
-      if (membersCurrentPreferences.exists) { // Check if previous preferences exist
+      if (membersCurrentPreferences.exists) {
+        // Check if previous preferences exist
         List<String> currentPreferences =
             databaseList(membersCurrentPreferences);
 
@@ -99,6 +111,17 @@ class FirebaseFunctions {
         });
       }
     }
+  }
+
+  Future<List<String>> allPreferences() async {
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Preferences');
+
+    DataSnapshot preferencesSnapshot = await userRef.get();
+
+    List<String> list = databaseList(preferencesSnapshot);
+
+    return list;
   }
 
   List<String> databaseList(DataSnapshot snapshot) {

@@ -24,13 +24,22 @@ class _ScannedProduct extends State<ScannedProduct>
 
   _ScannedProduct(this.gtin);
 
-  bool isAllergensGood(Product? product) {
-    return true;
+  bool isAllergensGood(Product? product, List<String> preferences) {
+    bool isGood = true;
+    List<String> allergens = product!.allergens.map((e) => e.allergen).toList();
+
+    allergens.forEach((element) {
+      if (preferences.contains(element)) {
+        isGood = false;
+      }
+    });
+
+    return isGood;
   }
 
-  Widget goodOrBadProduct(Product? product) {
+  Widget goodOrBadProduct(Product? product, List<String> preferences) {
     animationController.forward();
-    if (isAllergensGood(product)) {
+    if (isAllergensGood(product, preferences)) {
       return Column(
         children: [
           Expanded(
@@ -126,43 +135,84 @@ class _ScannedProduct extends State<ScannedProduct>
         .get(); // Snapshot of active friends
     List<String> activeMembersPreferences = getMembersPreferences(
         activeMembersSnapshot); // Get preferences from snapshot
-    //List<String> activeFriends = getFriends(activeFriendsSnapshot); // Get friends from snapshot
-    List<String> membersPreferences =
-        activeMembersPreferences.toSet().toList(); // Remove dublicates
+    List<String> activeFriendsPreferences = await getFriendsPreferences(
+        activeFriendsSnapshot); // Get friends from snapshot
 
-    return [];
+    List<String> combineLists = new List.from(activeMembersPreferences);
+    combineLists.addAll(activeFriendsPreferences);
+
+    preferences = combineLists.toSet().toList(); // Remove duplicates
+    return preferences;
   }
 
-  List<String> getFriends(DataSnapshot snapshot) {
-    debugPrint("snap: ${snapshot.value}");
-    Map<dynamic, dynamic> databaseMapDynamic = snapshot.value as Map;
-    List<String> friends = [];
+  Future<List<String>> getFriendsPreferences(DataSnapshot snapshot) async {
+    List<String> result = [];
 
-    if (databaseMapDynamic != null) {
-      databaseMapDynamic.forEach((key, value) {
-        debugPrint('key: $key, value: $value');
+    if (snapshot.exists) {
+      Map<dynamic, dynamic> databaseMapDynamic = snapshot.value as Map;
+      List<String> friends = [];
+
+      await Future.forEach(databaseMapDynamic.entries, (entry) async {
+        // For each friend
+        DatabaseReference friendRef = FirebaseDatabase.instance
+            .reference()
+            .child('Users/${entry.key}/Members'); //Get reference
+
+        DataSnapshot activeList =
+            await friendRef.child('Active/You').get(); //Get friend if active
+        DataSnapshot inactiveList = await friendRef
+            .child('Inactive/You')
+            .get(); //Get friend if inactive
+
+        if (activeList.exists) {
+          // If active
+          Map<dynamic, dynamic> friendMap = activeList.value as Map;
+
+          friendMap.forEach((key, value) {
+            // Get preferences
+            List<dynamic> preferences = value as List<dynamic>;
+
+            friends.addAll(preferences.cast<String>());
+          });
+        } else if (inactiveList.exists) {
+          // If inactive
+          Map<dynamic, dynamic> friendMap = inactiveList.value as Map;
+
+          friendMap.forEach((key, value) {
+            // Get preferences
+            List<dynamic> preferences = value as List<dynamic>;
+
+            friends.addAll(preferences.cast<String>());
+          });
+        }
       });
+
+      result = friends.toSet().toList(); // Remove duplicates
     }
 
-    return [];
+    return result;
   }
 
   List<String> getMembersPreferences(DataSnapshot snapshot) {
-    Map<dynamic, dynamic> databaseMapDynamic = snapshot.value as Map;
-    List<String> membersPreferences = [];
+    List<String> result = [];
+    if (snapshot.exists) {
+      Map<dynamic, dynamic> databaseMapDynamic = snapshot.value as Map;
+      List<String> membersPreferences = [];
 
-    if (databaseMapDynamic != null) {
-      databaseMapDynamic.forEach((key, value) {
-        Map<dynamic, dynamic> valueMap = value as Map;
-        valueMap.forEach((key, value) {
-          List<dynamic> preferences = value as List<dynamic>;
+      if (databaseMapDynamic != null) {
+        databaseMapDynamic.forEach((key, value) {
+          Map<dynamic, dynamic> valueMap = value as Map;
+          valueMap.forEach((key, value) {
+            List<dynamic> preferences = value as List<dynamic>;
 
-          membersPreferences.addAll(preferences.cast<String>());
+            membersPreferences.addAll(preferences.cast<String>());
+          });
         });
-      });
+      }
+      result = membersPreferences.toSet().toList(); // Remove dublicates
     }
 
-    return membersPreferences;
+    return result;
   }
 
   @override
@@ -188,8 +238,9 @@ class _ScannedProduct extends State<ScannedProduct>
                         );
                       case ConnectionState.done:
                       default:
-                        debugPrint('${snapshot.data?[0]}');
                         final Product? product = snapshot.data?[0] as Product?;
+                        final List<String> preferences =
+                            snapshot.data?[1] as List<String>;
 
                         if (product != null) {
                           return Column(
@@ -207,7 +258,8 @@ class _ScannedProduct extends State<ScannedProduct>
                                         ),
                                       ),
                                     ),
-                                    child: goodOrBadProduct(product)),
+                                    child:
+                                        goodOrBadProduct(product, preferences)),
                               ),
                               Expanded(
                                 flex: 4,
