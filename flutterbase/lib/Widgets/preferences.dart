@@ -24,30 +24,30 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
   final user = FirebaseAuth.instance.currentUser!;
 
   List<String> allPreferencesList = [
-    "Nuts",
-    "Fish",
-    "Apple",
-    "Meat",
-    "Vegan",
-    "Chocolate",
-    "Vegetarian",
-    "Milk",
-    "Banana"
+    "Nötter",
+    "Mjölk",
+    "Laktos",
+    "Råg",
+    "Vete",
+    "Sesamfrön",
+    "Sojabönor",
+    "Spannmål som innehåller gluten",
+    "Havre"
   ];
 
   List<String> filteredList = [
-    "Nuts",
-    "Fish",
-    "Apple",
-    "Meat",
-    "Vegan",
-    "Chocolate",
-    "Vegetarian",
-    "Milk",
-    "Banana"
+    "Nötter",
+    "Mjölk",
+    "Laktos",
+    "Råg",
+    "Vete",
+    "Sesamfrön",
+    "Sojabönor",
+    "Spannmål som innehåller gluten",
+    "Havre"
   ];
 
-  List<String> profilePreferences = ["Nuts", "Apple"];
+  List<String> profilePreferences = ["Nötter", "Mjölk"];
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +70,8 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                             child: Text("Your (${profilePreferences.length})",
                                 style: TextStyle(fontSize: 20))),
                         Tab(
-                            child: Text("Other ()",
-                                style: TextStyle(fontSize: 20))),
+                            child:
+                                Text("Other", style: TextStyle(fontSize: 20))),
                         Tab(
                             child: Text("All (${allPreferencesList.length})",
                                 style: TextStyle(fontSize: 20))),
@@ -214,8 +214,262 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                     Expanded(
                                       child: TabBarView(
                                         children: [
-                                          Container(color: Color(0xFFEAF5E4)),
-                                          Container(color: Color(0xFFEAF5E4)),
+                                          Container(
+                                            color: Color(0xFFEAF5E4),
+                                            child: ListView.builder(
+                                              itemCount: filteredList.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return ListTile(
+                                                  title: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Container(
+                                                      width: 300,
+                                                      height: 120,
+                                                      decoration: BoxDecoration(
+                                                        //color: Colors.blue,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: [
+                                                          Expanded(
+                                                            child: Icon(
+                                                                Icons.circle,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        222,
+                                                                        124,
+                                                                        117),
+                                                                size: 90),
+                                                          ),
+                                                          Expanded(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  filteredList[
+                                                                      index],
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFF3C2615),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      fontSize:
+                                                                          26,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis),
+                                                                ),
+                                                                Text(
+                                                                  "Tap for info >",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Color(
+                                                                        0xFF3C2615),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .bottomRight,
+                                                              child: SizedBox(
+                                                                width: 120,
+                                                                height: 35,
+                                                                child:
+                                                                    TextButton(
+                                                                  style:
+                                                                      ButtonStyle(
+                                                                    backgroundColor:
+                                                                        MaterialStateProperty.all<
+                                                                            Color>(
+                                                                      Color(
+                                                                          0xFF87A330),
+                                                                    ),
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder: (BuildContext
+                                                                              context) =>
+                                                                          AddPreferenceOverlay(),
+                                                                    );
+                                                                  },
+                                                                  child: Text(
+                                                                    "Remove",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          Container(
+                                            color: Color(0xFFEAF5E4),
+                                            child: ListView.builder(
+                                              itemCount: filteredList.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return ListTile(
+                                                  title: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Container(
+                                                      width: 300,
+                                                      height: 120,
+                                                      decoration: BoxDecoration(
+                                                        //color: Colors.blue,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: [
+                                                          Expanded(
+                                                            child: Icon(
+                                                                Icons.circle,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        222,
+                                                                        124,
+                                                                        117),
+                                                                size: 90),
+                                                          ),
+                                                          Expanded(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  filteredList[
+                                                                      index],
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFF3C2615),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      fontSize:
+                                                                          26,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis),
+                                                                ),
+                                                                Text(
+                                                                  "Tap for info >",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Color(
+                                                                        0xFF3C2615),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .bottomRight,
+                                                              child: SizedBox(
+                                                                width: 120,
+                                                                height: 35,
+                                                                child:
+                                                                    TextButton(
+                                                                  style:
+                                                                      ButtonStyle(
+                                                                    backgroundColor:
+                                                                        MaterialStateProperty.all<
+                                                                            Color>(
+                                                                      Color(
+                                                                          0xFF87A330),
+                                                                    ),
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder: (BuildContext
+                                                                              context) =>
+                                                                          AddPreferenceOverlay(),
+                                                                    );
+                                                                  },
+                                                                  child: Text(
+                                                                    "Remove",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
