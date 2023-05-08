@@ -105,6 +105,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Expanded(flex: 12, child: menuTopBar()),
@@ -630,7 +631,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
               ),
             ),
           ),
-          Expanded(flex: 12, child: menuBottomBar()),
+          Expanded(flex: 12, child: menuBottomBar())
         ],
       ),
     );
