@@ -1370,27 +1370,12 @@ class _MembersListState extends State<MembersList> {
     await userRef.update({
       '${user.displayName}/Friendrequests': requestList,
     });
-    final snapshotActive =
-        await userRef.child('${friendName}/Members/Active/You').get();
-
-    final snapshotInactive =
-        await userRef.child('${friendName}/Members/Inactive/You').get();
-
-    if (snapshotActive.exists) {
-      await userRef
-          .child('${user.displayName}/Friends/Active/$friendName')
-          .set(friendName);
-      await userRef
-          .child('$friendName/Friends/Active/${user.displayName}')
-          .set(user.displayName);
-    } else if (snapshotInactive.exists) {
-      await userRef
-          .child('${user.displayName}/Friends/Inactive/${user.displayName}')
-          .set(friendName);
-      await userRef
-          .child('$friendName/Friends/Inactive/$friendName')
-          .set(user.displayName);
-    }
+    await userRef
+        .child('${user.displayName}/Friends/Active/$friendName')
+        .set(friendName);
+    await userRef
+        .child('$friendName/Friends/Active/${user.displayName}')
+        .set(user.displayName);
   }
 
 // fetch a list of active friends
