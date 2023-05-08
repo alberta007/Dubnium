@@ -630,3 +630,8 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
             ),
           ),
           Expanded(flex: 12, child: menuBottomBar())
+        ],
+      ),
+    );
+  }
+}
