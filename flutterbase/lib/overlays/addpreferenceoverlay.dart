@@ -17,7 +17,7 @@ class _AddPreferenceOverlayState extends State<AddPreferenceOverlay> {
     "Albert"
   ];
 
-  List<bool> _isChecked = [false, false, false, false, false, false];
+  List<bool> isChecked = [false, false, false, false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -39,34 +39,37 @@ class _AddPreferenceOverlayState extends State<AddPreferenceOverlay> {
               title: Align(
                 alignment: Alignment.center,
                 child: Container(
-                    width: 200,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      //color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(profileNames[index],
-                            style: TextStyle(
-                                color: Color(0xFF3C2615),
-                                fontWeight: FontWeight.w800,
-                                fontSize: 30)),
-                        IconButton(
-                          icon: Icon(
-                            _isChecked[index]
+                  width: 200,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    //color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(profileNames[index],
+                          style: TextStyle(
+                              color: Color(0xFF3C2615),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 30)),
+                      IconButton(
+                        icon: Icon(
+                            isChecked[index]
                                 ? Icons.check_box
-                                : Icons.check_box_outline_blank, size: 40
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isChecked[index] = !_isChecked[index];
-                            });
-                          },
-                        )
-                      ],
-                    )),
+                                : Icons.check_box_outline_blank,
+                            size: 40),
+                        onPressed: () {
+                          setState(
+                            () {
+                              isChecked[index] = !isChecked[index];
+                            },
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
               ),
             );
           },
