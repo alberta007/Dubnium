@@ -67,14 +67,10 @@ class cameraScreenState extends State<cameraScreen> with RouteAware {
                     while (barCode.length < 14) {
                       barCode = '0$barCode'; //Add zeros to increase length
                     }
-                    controller.stop();
                     Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ScannedProduct(barCode)))
-                        .then((value) {
-                      controller.start();
-                    });
+                                builder: (context) => ScannedProduct(barCode)));
                   }
                 }
               },
