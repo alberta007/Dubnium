@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterbase/Widgets/members_widget.dart';
 import 'package:flutterbase/Widgets/menu_widget.dart';
+import 'package:flutterbase/other/firebase_functions.dart';
 import 'package:flutterbase/overlays/addpreferenceoverlay.dart';
 import 'package:flutterbase/overlays/scannedoverlay.dart';
 import '../overlays/settings.dart';
@@ -22,6 +24,10 @@ class MyCustomClass2 extends StatefulWidget {
 
 class _MyCustomClass2State extends State<MyCustomClass2> {
   final user = FirebaseAuth.instance.currentUser!;
+  late List<String> allMembers;
+  late List<String> allFriends;
+  late List<List<String>> allMembersPreferences;
+  late List<List<String>> allFriendsPreferences;
 
   List<String> allPreferencesList = [
     "Nötter",
@@ -48,6 +54,51 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
   ];
 
   List<String> profilePreferences = ["Nötter", "Mjölk"];
+
+  @override
+  void initState() {
+    setup();
+    super.initState();
+  }
+
+  void setup() async {
+    List<String> allPreferences = await FirebaseFunctions().allPreferences();
+
+    List<String> allMembers = await FirebaseFunctions().allMembers();
+    allMembers.remove('You');
+
+    List<String> allFriends = await FirebaseFunctions().allFriends();
+
+    List<String> youPreferences =
+        await FirebaseFunctions().fetchMembersPreferences('You');
+
+    List<List<String>> membersPreferences = [];
+    List<List<String>> friendsPreferences = [];
+
+    for (String member in allMembers) {
+      List<String> preferences =
+          await FirebaseFunctions().fetchMembersPreferences(member);
+
+      membersPreferences.add(preferences);
+    }
+
+    for (String friend in allFriends) {
+      List<String> preferences =
+          await FirebaseFunctions().fetchFriendsPreferences(friend);
+
+      friendsPreferences.add(preferences);
+    }
+
+    setState(() {
+      this.allPreferencesList = allPreferences;
+      this.filteredList = List.from(allPreferences);
+      this.profilePreferences = youPreferences;
+      this.allMembers = allMembers;
+      this.allFriends = allFriends;
+      this.allMembersPreferences = membersPreferences;
+      this.allFriendsPreferences = friendsPreferences;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -579,8 +630,3 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
             ),
           ),
           Expanded(flex: 12, child: menuBottomBar())
-        ],
-      ),
-    );
-  }
-}
