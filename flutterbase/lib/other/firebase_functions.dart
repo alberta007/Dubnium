@@ -118,7 +118,6 @@ class FirebaseFunctions {
         FirebaseDatabase.instance.reference().child('Preferences');
 
     DataSnapshot preferencesSnapshot = await userRef.get();
-    debugPrint('DATA1: ${preferencesSnapshot.value}');
 
     List<String> list = databaseList(preferencesSnapshot);
 
@@ -140,7 +139,6 @@ class FirebaseFunctions {
 
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Members');
-    debugPrint('user: $user, username: $username');
 
     DataSnapshot activeMember = await userRef.child('Active/$username').get();
     DataSnapshot inactiveMember =
@@ -148,7 +146,7 @@ class FirebaseFunctions {
 
     if (activeMember.exists) {
       Map<dynamic, dynamic> memberMap = activeMember.value as Map;
-      debugPrint('User: $memberMap');
+
       memberMap.forEach((key, value) {
         List<dynamic> preferences = value as List;
 
@@ -156,7 +154,7 @@ class FirebaseFunctions {
       });
     } else {
       Map<dynamic, dynamic> memberMap = inactiveMember.value as Map;
-      debugPrint('User: $memberMap');
+
       memberMap.forEach((key, value) {
         List<dynamic> preferences = value as List;
 
@@ -187,7 +185,7 @@ class FirebaseFunctions {
 
     if (activeFriend.exists) {
       Map<dynamic, dynamic> memberMap = activeFriend.value as Map;
-      debugPrint('User: $memberMap');
+
       memberMap.forEach((key, value) {
         List<dynamic> preferences = value as List;
 
@@ -195,7 +193,7 @@ class FirebaseFunctions {
       });
     } else {
       Map<dynamic, dynamic> memberMap = inactiveFriend.value as Map;
-      debugPrint('User: $memberMap');
+
       memberMap.forEach((key, value) {
         List<dynamic> preferences = value as List;
 

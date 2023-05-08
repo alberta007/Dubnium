@@ -28,32 +28,9 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
   late List<String> allFriends;
   late List<List<String>> allMembersPreferences;
   late List<List<String>> allFriendsPreferences;
-
-  List<String> allPreferencesList = [
-    "Nötter",
-    "Mjölk",
-    "Laktos",
-    "Råg",
-    "Vete",
-    "Sesamfrön",
-    "Sojabönor",
-    "Spannmål som innehåller gluten",
-    "Havre"
-  ];
-
-  List<String> filteredList = [
-    "Nötter",
-    "Mjölk",
-    "Laktos",
-    "Råg",
-    "Vete",
-    "Sesamfrön",
-    "Sojabönor",
-    "Spannmål som innehåller gluten",
-    "Havre"
-  ];
-
-  List<String> profilePreferences = ["Nötter", "Mjölk"];
+  late List<String> allPreferencesList = [];
+  late List<String> filteredList = [];
+  late List<String> profilePreferences = [];
 
   @override
   void initState() {
@@ -63,7 +40,6 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
 
   void setup() async {
     List<String> allPreferences = await FirebaseFunctions().allPreferences();
-    debugPrint('Here1');
 
     List<String> allMembers = await FirebaseFunctions().allMembers();
     allMembers.remove('You');
@@ -72,7 +48,6 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
 
     List<String> youPreferences =
         await FirebaseFunctions().fetchMembersPreferences('You');
-    debugPrint('youPreferences: $youPreferences');
 
     List<List<String>> membersPreferences = [];
     List<List<String>> friendsPreferences = [];
@@ -221,7 +196,15 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                   ),
                                                 ),
                                                 onPressed: () {
-                                                  print("hello world");
+                                                  FirebaseFunctions()
+                                                      .removePreference(
+                                                          'You',
+                                                          profilePreferences[
+                                                              index]);
+                                                  setState(() {
+                                                    profilePreferences
+                                                        .removeAt(index);
+                                                  });
                                                 },
                                                 child: Text(
                                                   "Remove",
