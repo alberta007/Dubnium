@@ -999,71 +999,87 @@ class _MembersListState extends State<MembersList> {
 
   // FUNCTIONS FOR MEMBERS
 
+// Add members to the database
   Future<String> addMemberToList(String newMember) async {
-    final user = FirebaseAuth.instance.currentUser!;
+    final user = FirebaseAuth.instance.currentUser!; // get the current user
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users'); // get database reference
 
-    await userRef
-        .child('${user.displayName}/Members/Active/$newMember')
-        .set(newMember);
+    await userRef.child('${user.displayName}/Members/Active/$newMember').set(
+        newMember); // create a new user under active members using the string newMember
 
     return newMember;
   }
 
+  // Fetches a list of active members from the database
   Future<List<String>> fetchActiveMemberList() async {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/Members');
 
-    final activeSnapshot = await userRef.child('Active').get();
+    final activeSnapshot = await userRef
+        .child('Active')
+        .get(); // get snapshot of all active members
 
     List<String> activeMembers = [];
+
     if (activeSnapshot.exists) {
-      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+      // check if there are any active members in the database
+      Map<dynamic, dynamic> membersMap =
+          activeSnapshot.value as Map; // map the active members
 
       if (membersMap != null) {
         membersMap.forEach((key, value) {
-          activeMembers.add(key);
+          activeMembers.add(key); // create a list from the map
         });
       }
     } else {
+      // if there are no active members, we return an empty list
       activeMembers = [];
     }
 
-    print("People: $activeMembers");
     return activeMembers;
   }
 
+  // Fetches a list of inactive members from the database
   Future<List<String>> fetchUnActiveMemberList() async {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/Members');
 
-    final activeSnapshot = await userRef.child('Inactive').get();
+    final inActiveSnapshot = await userRef
+        .child('Inactive')
+        .get(); // get snapshot of all inactive members
 
     List<String> activeMembers = [];
 
-    if (activeSnapshot.exists) {
-      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+    if (inActiveSnapshot.exists) {
+      // check if there are any inactive members in the database
+
+      Map<dynamic, dynamic> membersMap =
+          inActiveSnapshot.value as Map; // map the inactive members
       if (membersMap != null) {
         membersMap.forEach((key, value) {
-          activeMembers.add(key);
+          activeMembers.add(key); // create a list from the map
         });
       } else {
+        // if there are no inactive members, we return an empty list
         activeMembers = [];
       }
     } else {
+      // if there are no inactive members, we return an empty list
+
       activeMembers = [];
     }
 
-    print("People: $activeMembers");
     return activeMembers;
   }
 
+//updates a members name in the database
   Future<List<String>> updateMemberName(String oldName, String newName) async {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef =
@@ -1071,50 +1087,61 @@ class _MembersListState extends State<MembersList> {
 
     final preferenceActiveSnapshot = await userRef
         .child('${user.displayName}/Members/Active/$oldName/Preferences')
-        .get();
+        .get(); // get snapshot of active member preferences
 
     final preferenceInactiveSnapshot = await userRef
         .child('${user.displayName}/Members/Inactive/$oldName/Preferences')
-        .get();
+        .get(); // get snapshot of inactive member preferences
 
     List<String> updatedList = [];
 
     if (preferenceActiveSnapshot.exists) {
-      List<String> preferenceList =
-          await databaseList(preferenceActiveSnapshot);
+      //check if active member preferences exists
+      List<String> preferenceList = await databaseList(
+          preferenceActiveSnapshot); // create a list of the active member preferences
 
       await userRef.update({
-        '${user.displayName}/Members/Active/$oldName': null,
+        '${user.displayName}/Members/Active/$oldName':
+            null, // set the old name to null
         '${user.displayName}/Members/Active/$newName/Preferences':
-            preferenceList,
+            preferenceList, // set the new name with preferences
       });
     } else if (preferenceInactiveSnapshot.exists) {
-      List<String> preferenceList =
-          await databaseList(preferenceInactiveSnapshot);
+      //check if inactive member preferences exists
+      List<String> preferenceList = await databaseList(
+          preferenceInactiveSnapshot); // create a list of the inactive member preferences
 
       await userRef.update({
-        '${user.displayName}/Members/Inactive/$oldName': null,
+        '${user.displayName}/Members/Inactive/$oldName':
+            null, // set the old name to null
         '${user.displayName}/Members/Inactive/$newName/Preferences':
-            preferenceList,
+            preferenceList, // set the new name with preferences
       });
     } else {
-      final ActiveSnapshot = await userRef
+      // if the members doesn't have any preferences
+      final ActiveSnapshot = await userRef // snapshot to check if active
           .child('${user.displayName}/Members/Active/$oldName')
           .get();
 
-      final InactiveSnapshot = await userRef
+      final InactiveSnapshot = await userRef // snapshot to check if inactive
           .child('${user.displayName}/Members/Inactive/$oldName')
           .get();
 
       if (ActiveSnapshot.exists) {
+        // if active
         await userRef.update({
-          '${user.displayName}/Members/Active/$oldName': null,
-          '${user.displayName}/Members/Active/$newName': newName,
+          '${user.displayName}/Members/Active/$oldName':
+              null, // set the old name to null
+          '${user.displayName}/Members/Active/$newName':
+              newName, // set the new name
         });
       } else if (InactiveSnapshot.exists) {
+        // if inactive
         await userRef.update({
-          '${user.displayName}/Members/Inactive/$oldName': null,
-          '${user.displayName}/Members/Inactive/$newName': newName,
+          '${user.displayName}/Members/Inactive/$oldName':
+              null, // set the old name to null
+          '${user.displayName}/Members/Inactive/$newName':
+              newName, // set the new name
         });
       }
     }
@@ -1122,64 +1149,80 @@ class _MembersListState extends State<MembersList> {
     return updatedList;
   }
 
+// deletes a member from the database
   Future<List<String>> deleteMember(String memberName) async {
     final user = FirebaseAuth.instance.currentUser!;
+
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
 
     List<String> updatedList = [];
+
     final ActiveSnapshot = await userRef
         .child('${user.displayName}/Members/Active/$memberName')
-        .get();
+        .get(); // snapshot of active members
 
     final InactiveSnapshot = await userRef
         .child('${user.displayName}/Members/Inactive/$memberName')
-        .get();
+        .get(); // snapshot of inactive members
 
     if (ActiveSnapshot.exists) {
+      // if active
       await userRef.update({
-        '${user.displayName}/Members/Active/$memberName': null,
+        '${user.displayName}/Members/Active/$memberName':
+            null, // set the name to null
       });
     } else if (InactiveSnapshot.exists) {
+      // if inactive
       await userRef.update({
-        '${user.displayName}/Members/Inactive/$memberName': null,
+        '${user.displayName}/Members/Inactive/$memberName':
+            null, // set the name to null
       });
     }
 
     return updatedList;
   }
 
+// changes the member from active to inactive
   Future<List<String>> changeToInactive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/Members');
 
-    final snapshotActive = await userRef.child('Active/$change').get();
+    final snapshotActive =
+        await userRef.child('Active/$change').get(); // get snapshot of member
 
     List<String> newList = [];
 
     if (snapshotActive.exists) {
-      final snapshotActivePreferences =
-          await userRef.child('Active/$change/Preferences').get();
+      // check if member exists
+      final snapshotActivePreferences = await userRef
+          .child('Active/$change/Preferences')
+          .get(); // get snapshot of the preferences of the member
 
       if (snapshotActivePreferences.exists) {
-        List<String> membersInactiveList =
-            await databaseList(snapshotActivePreferences);
+        // if the member has preferences
+        List<String> membersInactiveList = await databaseList(
+            snapshotActivePreferences); // create list of preferences
 
         await userRef.update({
-          'Active/$change': null,
-          'Inactive/$change/Preferences': membersInactiveList,
+          'Active/$change':
+              null, // set the value to null in the members active position
+          'Inactive/$change/Preferences':
+              membersInactiveList, // create a new value in inactive with the list of preferences
         });
       } else {
         await userRef.update({
-          'Active/$change': null,
-          'Inactive/$change': change,
+          'Active/$change':
+              null, // set the value to null in the members active position
+          'Inactive/$change': change, // create a new value in inactive
         });
       }
     }
     return newList;
   }
+// changes the member from active to active
 
   Future<List<String>> changeToActive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
@@ -1187,26 +1230,34 @@ class _MembersListState extends State<MembersList> {
         .reference()
         .child('Users/${user.displayName}/Members');
 
-    final snapshotActive = await userRef.child('Inactive/$change').get();
+    final snapshotInactive =
+        await userRef.child('Inactive/$change').get(); // get snapshot of member
 
     List<String> newList = [];
 
-    if (snapshotActive.exists) {
-      final snapshotActivePreferences =
-          await userRef.child('Inactive/$change/Preferences').get();
+    if (snapshotInactive.exists) {
+      // check if member exists
+
+      final snapshotActivePreferences = await userRef
+          .child('Inactive/$change/Preferences')
+          .get(); // get snapshot of the preferences of the member
 
       if (snapshotActivePreferences.exists) {
-        List<String> membersInactiveList =
-            await databaseList(snapshotActivePreferences);
+        // if the member has preferences
+        List<String> membersInactiveList = await databaseList(
+            snapshotActivePreferences); // create list of preferences
 
         await userRef.update({
-          'Inactive/$change': null,
-          'Active/$change/Preferences': membersInactiveList,
+          'Inactive/$change':
+              null, // set the value to null in the members inactive position
+          'Active/$change/Preferences':
+              membersInactiveList, // create a new value in active with the list of preferences
         });
       } else {
         await userRef.update({
-          'Inactive/$change': null,
-          'Active/$change': change,
+          'Inactive/$change':
+              null, // set the value to null in the members inactive position
+          'Active/$change': change, // create a new value in active
         });
       }
     }
@@ -1215,38 +1266,49 @@ class _MembersListState extends State<MembersList> {
 
   //Functions for friends
 
+//sends a friendrequest to friend
   Future<String> sendFriendRequest(String friendName) async {
     final user = FirebaseAuth.instance.currentUser!;
 
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshot = await userRef.child(friendName).get();
+    final snapshot = await userRef
+        .child(friendName)
+        .get(); // get a snapshot of the friends username position in the database
 
     List<String> requestList = [];
 
     if (snapshot.exists) {
-      final friendRequestsExist =
-          await userRef.child('${friendName}/Friendrequests').get();
+      // check if username exists
+      final friendRequestsExist = await userRef
+          .child('${friendName}/Friendrequests')
+          .get(); // get snapshot of the friendrequests
 
       if (friendRequestsExist.exists) {
-        List<dynamic> friendRequestListDynamic =
-            friendRequestsExist.value as List<dynamic>;
+        // check if the friendrequests exists
+        List<dynamic> friendRequestListDynamic = friendRequestsExist.value
+            as List<dynamic>; //fetch a list of the friendrequests
 
         List<String> friendRequestList = friendRequestListDynamic
             .map((member) => member.toString())
             .toList();
 
-        friendRequestList.add('${user.displayName}');
+        friendRequestList.add(
+            '${user.displayName}'); // add the current users username to the list of friendrequests
 
         await userRef.update({
-          '$friendName/Friendrequests': friendRequestList,
+          '$friendName/Friendrequests':
+              friendRequestList, // update the friendrequests in the database
         });
         requestList = friendRequestList;
       } else {
-        requestList = ['${user.displayName}'];
+        // if it doesn't exist any previous friend requests
+        requestList = [
+          '${user.displayName}'
+        ]; // create a list of the user who's trying to add
         await userRef.update({
-          '$friendName/Friendrequests': requestList,
+          '$friendName/Friendrequests': requestList, // add that list the friend
         });
       }
     } else {
@@ -1255,45 +1317,54 @@ class _MembersListState extends State<MembersList> {
     return friendName;
   }
 
+//Fetch all the friendrequests
   Future<List<String>> fetchFriendRequests() async {
     final user = FirebaseAuth.instance.currentUser!;
 
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshotRequests =
-        await userRef.child('${user.displayName}/Friendrequests').get();
+    final snapshotRequests = await userRef
+        .child('${user.displayName}/Friendrequests')
+        .get(); // get snapshot of friendrequests
 
-    List<String> temp = [];
+    List<String> temp = []; // list to return
 
     if (snapshotRequests.exists) {
-      List<dynamic> requestListDynamic =
-          snapshotRequests.value as List<dynamic>;
+      // if there exists any friendrequests
+      List<dynamic> requestListDynamic = snapshotRequests.value
+          as List<dynamic>; // creates a list of the friend requests
 
-      List<String> requestList =
-          requestListDynamic.map((member) => member.toString()).toList();
-      temp = requestList;
+      List<String> requestList = requestListDynamic
+          .map((member) => member.toString())
+          .toList(); // creates a list of the friend requests
+
+      temp = requestList; // list to return == the friend request list
     } else {
-      temp = [];
+      // if friend request doesn't exist
+      temp = []; // list to return is empty
     }
 
     print("Testar $temp");
     return temp;
   }
 
+// accepts friend requests
   Future<void> acceptFriendRequest(String friendName) async {
     final user = FirebaseAuth.instance.currentUser!;
 
     DatabaseReference userRef =
         FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshotRequests =
-        await userRef.child('${user.displayName}/Friendrequests').get();
+    final snapshotRequests = await userRef
+        .child('${user.displayName}/Friendrequests')
+        .get(); // snapshot of friendrequest
 
     List<dynamic> requestListDynamic = snapshotRequests.value as List<dynamic>;
 
-    List<String> requestList =
-        requestListDynamic.map((member) => member.toString()).toList();
+    List<String> requestList = requestListDynamic
+        .map((member) => member.toString())
+        .toList(); // creates a list of the friend requests
 
     requestList.remove(friendName);
     await userRef.update({
@@ -1322,31 +1393,37 @@ class _MembersListState extends State<MembersList> {
     }
   }
 
+// fetch a list of active friends
   Future<List<String>> fetchActiveFriendList() async {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/Friends');
 
-    final activeSnapshot = await userRef.child('Active').get();
+    final activeSnapshot =
+        await userRef.child('Active').get(); // get snapshot of active friends
 
     List<String> activeMembers = [];
 
     if (activeSnapshot.exists) {
-      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+      // if active friends snapshot exists
+      Map<dynamic, dynamic> membersMap =
+          activeSnapshot.value as Map; // map all active friends
 
       if (membersMap != null) {
         membersMap.forEach((key, value) {
-          activeMembers.add(key);
+          activeMembers.add(key); // add active friends to a list
         });
       }
     } else {
-      activeMembers = [];
+      // if active friends snapshot doesn't exist
+      activeMembers = []; // empty list
     }
 
     print("People: $activeMembers");
     return activeMembers;
   }
+// fetch a list of inactive friends
 
   Future<List<String>> fetchUnActiveFriendsList() async {
     final user = FirebaseAuth.instance.currentUser!;
@@ -1354,45 +1431,57 @@ class _MembersListState extends State<MembersList> {
         .reference()
         .child('Users/${user.displayName}/Friends');
 
-    final activeSnapshot = await userRef.child('Inactive').get();
+    final activeSnapshot = await userRef
+        .child('Inactive')
+        .get(); // get snapshot of inactive friends
 
     List<String> unactiveMembers = [];
 
     if (activeSnapshot.exists) {
-      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map;
+      // if inactive friends snapshot exists
+
+      Map<dynamic, dynamic> membersMap =
+          activeSnapshot.value as Map; // map all inactive friends
       if (membersMap != null) {
         membersMap.forEach((key, value) {
-          unactiveMembers.add(key);
+          unactiveMembers.add(key); // add inactive friends to a list
         });
       } else {
         unactiveMembers = [];
       }
     } else {
-      unactiveMembers = [];
+      // if inactive friends snapshot doesn't exist
+
+      unactiveMembers = []; // empty list
     }
 
     print("People: $unactiveMembers");
     return unactiveMembers;
   }
 
+// changes friend from active to inactive
   Future<List<String>> changeFriendToInactive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
     DatabaseReference userRef = FirebaseDatabase.instance
         .reference()
         .child('Users/${user.displayName}/Friends');
 
-    final snapshotActive = await userRef.child('Active/$change').get();
+    final snapshotActive = await userRef
+        .child('Active/$change')
+        .get(); // get snapshot of active friend
 
     List<String> newList = [];
 
     if (snapshotActive.exists) {
+      // check if snapshot exists
       await userRef.update({
-        'Active/$change': null,
-        'Inactive/$change': change,
+        'Active/$change': null, // set active to null
+        'Inactive/$change': change, // update to inactive
       });
     }
     return newList;
   }
+// changes friend from inactive to active
 
   Future<List<String>> changeFriendToActive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
@@ -1400,19 +1489,24 @@ class _MembersListState extends State<MembersList> {
         .reference()
         .child('Users/${user.displayName}/Friends');
 
-    final snapshotActive = await userRef.child('Inactive/$change').get();
+    final snapshotActive = await userRef
+        .child('Inactive/$change')
+        .get(); // get snapshot of active friend
 
     List<String> newList = [];
 
     if (snapshotActive.exists) {
+      // check if snapshot exists
+
       await userRef.update({
-        'Inactive/$change': null,
-        'Active/$change': change,
+        'Inactive/$change': null, // set inactive to null
+        'Active/$change': change, // update to active
       });
     }
     return newList;
   }
 
+// takes a snapshot and creates a list of that snapshot(if it can)
   Future<List<String>> databaseList(DataSnapshot snapshot) async {
     List<dynamic> databaseListDynamic = snapshot.value as List<dynamic>;
 
