@@ -63,6 +63,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
 
   void setup() async {
     List<String> allPreferences = await FirebaseFunctions().allPreferences();
+    debugPrint('Here1');
 
     List<String> allMembers = await FirebaseFunctions().allMembers();
     allMembers.remove('You');
@@ -71,6 +72,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
 
     List<String> youPreferences =
         await FirebaseFunctions().fetchMembersPreferences('You');
+    debugPrint('youPreferences: $youPreferences');
 
     List<List<String>> membersPreferences = [];
     List<List<String>> friendsPreferences = [];
@@ -628,4 +630,9 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
               ),
             ),
           ),
-          Expanded(flex: 12, child: menuBottomBar())
+          Expanded(flex: 12, child: menuBottomBar()),
+        ],
+      ),
+    );
+  }
+}

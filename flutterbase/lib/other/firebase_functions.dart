@@ -118,6 +118,7 @@ class FirebaseFunctions {
         FirebaseDatabase.instance.reference().child('Preferences');
 
     DataSnapshot preferencesSnapshot = await userRef.get();
+    debugPrint('DATA1: ${preferencesSnapshot.value}');
 
     List<String> list = databaseList(preferencesSnapshot);
 
@@ -138,7 +139,8 @@ class FirebaseFunctions {
     List<String> memberPreferences = [];
 
     DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users/$user/Members');
+        FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Members');
+    debugPrint('user: $user, username: $username');
 
     DataSnapshot activeMember = await userRef.child('Active/$username').get();
     DataSnapshot inactiveMember =
