@@ -61,8 +61,6 @@ class GetProduct {
         prependString + gtin.toString() + appendString); // Concatenate full URL
     var response = await http.get(url).timeout(
         const Duration(seconds: 5)); // Send request to URL and get response
-    debugPrint(
-        '!!!!!!!!!!!!!!!!!!!!!!!!!!! ${response.statusCode} + ${product}');
 
     if (response.statusCode == 200) {
       // If statusCode indicates succesful response

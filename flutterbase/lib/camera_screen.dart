@@ -33,15 +33,8 @@ class cameraScreenState extends State<cameraScreen> with RouteAware {
   void didPopNext() {
     // Restarts scanner when coming back to route
     // BUG: Doesn't work when coming from another scanner route, starts scanner and instantly closes
-    controller.dispose();
     controller.start();
     super.didPopNext();
-  }
-
-  @override
-  void didPop() {
-    didPopNext();
-    super.didPop();
   }
 
   @override
@@ -74,14 +67,10 @@ class cameraScreenState extends State<cameraScreen> with RouteAware {
                     while (barCode.length < 14) {
                       barCode = '0$barCode'; //Add zeros to increase length
                     }
-                    controller.stop();
                     Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ScannedProduct(barCode)))
-                        .then((value) {
-                      controller.start();
-                    });
+                                builder: (context) => ScannedProduct(barCode)));
                   }
                 }
               },

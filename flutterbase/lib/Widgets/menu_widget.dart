@@ -8,6 +8,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterbase/camera_screen.dart';
 import 'package:flutterbase/social_screen.dart';
 import 'package:flutterbase/Widgets/preferences.dart';
+import 'package:flutterbase/overlays/profileoverlay.dart';
+
+enum MenuItem {
+  item1,
+  item2,
+  item3,
+}
 
 class menuTopBar extends StatelessWidget {
   const menuTopBar({Key? key}) : super(key: key);
@@ -15,7 +22,7 @@ class menuTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.topCenter,
+      alignment: Alignment.center,
       child: Container(
         width: double.infinity,
         height: 120,
@@ -58,32 +65,63 @@ class menuTopBar extends StatelessWidget {
                           ),
                           icon: Icon(
                             Icons.diversity_3,
-                            semanticLabel:
-                                'Text to announce in accessibility modes',
+                            color: Color(0xff3c2615),
+                            size: 40,
+                            semanticLabel: 'Text to announce in accessibility modes',
                           )),
-                      //Spacer(),
+                      Spacer(),
                       Text(
                         "Dr.Preference",
 
                         //overflow: TextOverflow.ellipsis,
                         style: TextStyle(
+                            //color: Color(0xFF87A330),
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.normal,
-                            fontSize: 30),
+                            fontSize: 30,
+                            foreground: Paint()
+                              ..shader = LinearGradient(
+                                colors: <Color>[
+                                  Color(0xff3c2615),
+                                  Color(0xFF87A330)
+                                  //Color(0xffcad593)
+                                  //add more color here.
+                                ],
+                              ).createShader(Rect.fromLTWH(120.0, 50.0, 200.0, 50.0))),
                       ),
                       //Spacer(),
-                      IconButton(
-                          iconSize: 40,
-                          style: IconButton.styleFrom(
-                            highlightColor: Colors.green.withOpacity(0.2),
-                          ),
-                          onPressed: () {
-                            FirebaseAuth.instance.signOut();
+                      PopupMenuButton<MenuItem>(
+                          onSelected: (value) {
+                            if (value == MenuItem.item1) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProfileOverlay(),
+                              ));
+                            } else if (value == MenuItem.item2) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProfileOverlay(),
+                              ));
+                            } else if (value == MenuItem.item3) {
+                              FirebaseAuth.instance.signOut();
+                            }
                           },
-
                           icon: Icon(
                             Icons.menu,
-                          )),
+                            size: 40,
+                          ),
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: MenuItem.item1,
+                                  child: Text('Settings'),
+                                ),
+                                PopupMenuItem(
+                                  value: MenuItem.item2,
+                                  child: Text('Profile'),
+                                ),
+                                PopupMenuItem(
+                                  value: MenuItem.item3,
+                                  child: Text('Sign Out'),
+                                ),
+                              ])
                     ],
                   )),
             ),
@@ -95,7 +133,6 @@ class menuTopBar extends StatelessWidget {
 }
 
 class menuBottomBar extends StatelessWidget {
-
   const menuBottomBar({Key? key}) : super(key: key);
 
   @override
@@ -137,7 +174,9 @@ class menuBottomBar extends StatelessWidget {
                       backgroundColor: Color(0xFFEAF5E4),
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                      shadowColor: Color.fromARGB(255, 0, 0, 0),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -149,6 +188,7 @@ class menuBottomBar extends StatelessWidget {
                     },
                     icon: const ImageIcon(
                       AssetImage("assets/images/scan-28.png"),
+                      color: Colors.black,
                       //semanticLabel: 'Text to announce in accessibility modes',
                     ),
                   ),
@@ -161,7 +201,9 @@ class menuBottomBar extends StatelessWidget {
                       backgroundColor: Color(0xFFEAF5E4),
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                      shadowColor: Color.fromARGB(255, 0, 0, 0),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     iconSize: 60,
                     onPressed: () {
@@ -174,6 +216,7 @@ class menuBottomBar extends StatelessWidget {
                     },
                     icon: const Icon(
                       Icons.flatware,
+                      color: Colors.black,
                       semanticLabel: 'Text to announce in accessibility modes',
                     ),
                   ),
