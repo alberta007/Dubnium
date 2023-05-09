@@ -279,10 +279,123 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                           (BuildContext context,
                                                               int subIndex) {
                                                         return ListTile(
-                                                          title: Text(
-                                                              (allMembersPreferences[
-                                                                      index])[
-                                                                  subIndex]),
+                                                          title: Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Container(
+                                                              width: 300,
+                                                              height: 120,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                //color: Colors.blue,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .circle,
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            222,
+                                                                            124,
+                                                                            117),
+                                                                        size:
+                                                                            90),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Text(
+                                                                          allMembersPreferences[index]
+                                                                              [
+                                                                              subIndex],
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Color(0xFF3C2615),
+                                                                            fontWeight:
+                                                                                FontWeight.w800,
+                                                                            fontSize:
+                                                                                26,
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          "Tap for info >",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Color(0xFF3C2615),
+                                                                            fontWeight:
+                                                                                FontWeight.w800,
+                                                                            fontSize:
+                                                                                14,
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .bottomRight,
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            120,
+                                                                        height:
+                                                                            35,
+                                                                        child:
+                                                                            TextButton(
+                                                                          style:
+                                                                              ButtonStyle(
+                                                                            backgroundColor:
+                                                                                MaterialStateProperty.all<Color>(
+                                                                              Color(0xFF87A330),
+                                                                            ),
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            FirebaseFunctions().removePreference('You',
+                                                                                profilePreferences[subIndex]);
+                                                                            setState(() {
+                                                                              profilePreferences.removeAt(subIndex);
+                                                                            });
+                                                                          },
+                                                                          child:
+                                                                              Text(
+                                                                            "Remove",
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 18,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
                                                         );
                                                       },
                                                     ),
@@ -321,10 +434,123 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                           (BuildContext context,
                                                               int subIndex) {
                                                         return ListTile(
-                                                          title: Text(
-                                                              (allFriendsPreferences[
-                                                                      index])[
-                                                                  subIndex]),
+                                                          title: Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Container(
+                                                              width: 300,
+                                                              height: 120,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                //color: Colors.blue,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .circle,
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            222,
+                                                                            124,
+                                                                            117),
+                                                                        size:
+                                                                            90),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Text(
+                                                                          allFriendsPreferences[index]
+                                                                              [
+                                                                              subIndex],
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Color(0xFF3C2615),
+                                                                            fontWeight:
+                                                                                FontWeight.w800,
+                                                                            fontSize:
+                                                                                26,
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          "Tap for info >",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Color(0xFF3C2615),
+                                                                            fontWeight:
+                                                                                FontWeight.w800,
+                                                                            fontSize:
+                                                                                14,
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .bottomRight,
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            120,
+                                                                        height:
+                                                                            35,
+                                                                        child:
+                                                                            TextButton(
+                                                                          style:
+                                                                              ButtonStyle(
+                                                                            backgroundColor:
+                                                                                MaterialStateProperty.all<Color>(
+                                                                              Color(0xFF87A330),
+                                                                            ),
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            FirebaseFunctions().removePreference('You',
+                                                                                profilePreferences[subIndex]);
+                                                                            setState(() {
+                                                                              profilePreferences.removeAt(subIndex);
+                                                                            });
+                                                                          },
+                                                                          child:
+                                                                              Text(
+                                                                            "Remove",
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 18,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
                                                         );
                                                       },
                                                     ),
