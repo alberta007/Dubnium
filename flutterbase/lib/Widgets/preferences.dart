@@ -300,7 +300,48 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                               },
                                             ),
                                           ),
-                                          Container(color: Color(0xFFEAF5E4)),
+                                          Container(
+                                            color: Color(0xFFEAF5E4),
+                                            child: ListView.builder(
+                                              itemCount: allFriends.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return ExpansionTile(
+                                                  title:
+                                                      Text(allFriends[index]),
+                                                  children: <Widget>[
+                                                    ListView.builder(
+                                                      shrinkWrap: true,
+                                                      itemCount:
+                                                          allFriendsPreferences[
+                                                                  index]
+                                                              .length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int subIndex) {
+                                                        return ListTile(
+                                                          title: Text(
+                                                              (allFriendsPreferences[
+                                                                      index])[
+                                                                  subIndex]),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                  onExpansionChanged:
+                                                      (bool isExpanded) {
+                                                    setState(() {
+                                                      _isExpandedList[index] =
+                                                          isExpanded;
+                                                    });
+                                                  },
+                                                  initiallyExpanded:
+                                                      _isExpandedList[index],
+                                                );
+                                              },
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
