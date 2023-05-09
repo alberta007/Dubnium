@@ -261,7 +261,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                           Container(
                                             color: Color(0xFFEAF5E4),
                                             child: ListView.builder(
-                                              itemCount: 10,
+                                              itemCount: allMembers.length,
                                               itemBuilder:
                                                   (BuildContext context,
                                                       int index) {
@@ -271,15 +271,18 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                   children: <Widget>[
                                                     ListView.builder(
                                                       shrinkWrap: true,
-                                                      itemCount: 5,
+                                                      itemCount:
+                                                          allMembersPreferences[
+                                                                  index]
+                                                              .length,
                                                       itemBuilder:
                                                           (BuildContext context,
                                                               int subIndex) {
                                                         return ListTile(
                                                           title: Text(
-                                                              'Expanded Tile ${subIndex + 1}'),
-                                                          subtitle: Text(
-                                                              'Description for Expanded Tile ${subIndex + 1}'),
+                                                              (allMembersPreferences[
+                                                                      index])[
+                                                                  subIndex]),
                                                         );
                                                       },
                                                     ),
