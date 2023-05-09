@@ -266,8 +266,18 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                   (BuildContext context,
                                                       int index) {
                                                 return ExpansionTile(
-                                                  title:
-                                                      Text(allMembers[index]),
+                                                  title: Text(allMembers[index],
+                                                      style: TextStyle(
+                                                          fontSize: 20)),
+                                                  onExpansionChanged:
+                                                      (bool isExpanded) {
+                                                    setState(() {
+                                                      _isExpandedList[index] =
+                                                          isExpanded;
+                                                    });
+                                                  },
+                                                  initiallyExpanded:
+                                                      _isExpandedList[index],
                                                   children: <Widget>[
                                                     ListView.builder(
                                                       shrinkWrap: true,
@@ -400,15 +410,6 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                       },
                                                     ),
                                                   ],
-                                                  onExpansionChanged:
-                                                      (bool isExpanded) {
-                                                    setState(() {
-                                                      _isExpandedList[index] =
-                                                          isExpanded;
-                                                    });
-                                                  },
-                                                  initiallyExpanded:
-                                                      _isExpandedList[index],
                                                 );
                                               },
                                             ),
@@ -421,8 +422,18 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                   (BuildContext context,
                                                       int index) {
                                                 return ExpansionTile(
-                                                  title:
-                                                      Text(allFriends[index]),
+                                                  title: Text(allFriends[index],
+                                                      style: TextStyle(
+                                                          fontSize: 20)),
+                                                  onExpansionChanged:
+                                                      (bool isExpanded) {
+                                                    setState(() {
+                                                      _isExpandedList[index] =
+                                                          isExpanded;
+                                                    });
+                                                  },
+                                                  initiallyExpanded:
+                                                      _isExpandedList[index],
                                                   children: <Widget>[
                                                     ListView.builder(
                                                       shrinkWrap: true,
@@ -555,15 +566,6 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                       },
                                                     ),
                                                   ],
-                                                  onExpansionChanged:
-                                                      (bool isExpanded) {
-                                                    setState(() {
-                                                      _isExpandedList[index] =
-                                                          isExpanded;
-                                                    });
-                                                  },
-                                                  initiallyExpanded:
-                                                      _isExpandedList[index],
                                                 );
                                               },
                                             ),
