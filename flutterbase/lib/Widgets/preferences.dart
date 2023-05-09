@@ -26,36 +26,15 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
   final user = FirebaseAuth.instance.currentUser!;
   late List<String> allMembers;
   late List<String> allFriends;
+  late List<String> allMembersandYou;
   late List<List<String>> allMembersPreferences;
   late List<List<String>> allFriendsPreferences;
+  late List<String> allPreferencesList = [];
+  late List<String> filteredList = [];
+  late List<String> profilePreferences = [];
+  late List<bool> isChecked;
 
   List<bool> _isExpandedList = List.generate(10, (_) => false);
-
-  List<String> allPreferencesList = [
-    "Nötter",
-    "Mjölk",
-    "Laktos",
-    "Råg",
-    "Vete",
-    "Sesamfrön",
-    "Sojabönor",
-    "Spannmål som innehåller gluten",
-    "Havre"
-  ];
-
-  List<String> filteredList = [
-    "Nötter",
-    "Mjölk",
-    "Laktos",
-    "Råg",
-    "Vete",
-    "Sesamfrön",
-    "Sojabönor",
-    "Spannmål som innehåller gluten",
-    "Havre"
-  ];
-
-  List<String> profilePreferences = ["Nötter", "Mjölk"];
 
   @override
   void initState() {
@@ -65,16 +44,15 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
 
   void setup() async {
     List<String> allPreferences = await FirebaseFunctions().allPreferences();
-    debugPrint('Here1');
 
     List<String> allMembers = await FirebaseFunctions().allMembers();
+    List<String> allMembersandYou = List.from(allMembers);
     allMembers.remove('You');
 
     List<String> allFriends = await FirebaseFunctions().allFriends();
 
     List<String> youPreferences =
         await FirebaseFunctions().fetchMembersPreferences('You');
-    debugPrint('youPreferences: $youPreferences');
 
     List<List<String>> membersPreferences = [];
     List<List<String>> friendsPreferences = [];
@@ -98,9 +76,11 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
       this.filteredList = List.from(allPreferences);
       this.profilePreferences = youPreferences;
       this.allMembers = allMembers;
+      this.allMembersandYou = allMembersandYou;
       this.allFriends = allFriends;
       this.allMembersPreferences = membersPreferences;
       this.allFriendsPreferences = friendsPreferences;
+      this.isChecked = List.filled(allMembersandYou.length, false);
     });
   }
 
@@ -223,7 +203,15 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                   ),
                                                 ),
                                                 onPressed: () {
-                                                  print("hello world");
+                                                  FirebaseFunctions()
+                                                      .removePreference(
+                                                          'You',
+                                                          profilePreferences[
+                                                              index]);
+                                                  setState(() {
+                                                    profilePreferences
+                                                        .removeAt(index);
+                                                  });
                                                 },
                                                 child: Text(
                                                   "Remove",
@@ -385,10 +373,15 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                 onPressed: () {
                                                   showDialog(
                                                     context: context,
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        AddPreferenceOverlay(),
-                                                  );
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AddPreferenceOverlay(
+                                                          allMembersandYou,
+                                                          filteredList[index]);
+                                                    },
+                                                  ).then((value) {
+                                                    setup();
+                                                  });
                                                 },
                                                 child: Text(
                                                   "Add",
