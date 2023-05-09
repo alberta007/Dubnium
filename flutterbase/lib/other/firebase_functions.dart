@@ -89,9 +89,15 @@ class FirebaseFunctions {
 
         currentPreferences.remove(preference);
 
-        await userRef.update({
-          'Active/$memberName/Preferences': currentPreferences,
-        });
+        if (currentPreferences.isEmpty) {
+          await userRef.update({
+            'Active/$memberName': memberName,
+          });
+        } else {
+          await userRef.update({
+            'Active/$memberName/Preferences': currentPreferences,
+          });
+        }
       }
     } else {
       // Else member is in Inactive
