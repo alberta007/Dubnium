@@ -6,7 +6,7 @@ import 'package:flutterbase/overlays/scannedoverlay.dart';
 import '../overlays/settings.dart';
 import '../other/products.dart';
 import '../other/scan.dart';
-import 'package:flutterbase/overlays/profileoverlay.dart';
+import 'package:flutterbase/overlays/profile_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class MyCustomClass2 extends StatefulWidget {
@@ -23,9 +23,29 @@ class MyCustomClass2 extends StatefulWidget {
 class _MyCustomClass2State extends State<MyCustomClass2> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  List<String> allPreferencesList = ["Nuts", "Fish", "Apple", "Meat", "Vegan", "Chocolate", "Vegetarian", "Milk", "Banana"];
+  List<String> allPreferencesList = [
+    "Nuts",
+    "Fish",
+    "Apple",
+    "Meat",
+    "Vegan",
+    "Chocolate",
+    "Vegetarian",
+    "Milk",
+    "Banana"
+  ];
 
-  List<String> filteredList = ["Nuts", "Fish", "Apple", "Meat", "Vegan", "Chocolate", "Vegetarian", "Milk", "Banana"];
+  List<String> filteredList = [
+    "Nuts",
+    "Fish",
+    "Apple",
+    "Meat",
+    "Vegan",
+    "Chocolate",
+    "Vegetarian",
+    "Milk",
+    "Banana"
+  ];
 
   List<String> profilePreferences = ["Nuts", "Apple"];
 
@@ -63,9 +83,15 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                       TabBar(
                         labelColor: Colors.black,
                         tabs: [
-                          Tab(child: Text("Your (${profilePreferences.length})", style: TextStyle(fontSize: 20))),
-                          Tab(child: Text("Other ()", style: TextStyle(fontSize: 20))),
-                          Tab(child: Text("All (${allPreferencesList.length})", style: TextStyle(fontSize: 20))),
+                          Tab(
+                              child: Text("Your (${profilePreferences.length})",
+                                  style: TextStyle(fontSize: 20))),
+                          Tab(
+                              child: Text("Other ()",
+                                  style: TextStyle(fontSize: 20))),
+                          Tab(
+                              child: Text("All (${allPreferencesList.length})",
+                                  style: TextStyle(fontSize: 20))),
                         ],
                       ),
                       Container(
@@ -81,7 +107,11 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                               )),
                           onChanged: (value) {
                             setState(() {
-                              filteredList = allPreferencesList.where((string) => string.toLowerCase().contains(value.toLowerCase())).toList();
+                              filteredList = allPreferencesList
+                                  .where((string) => string
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
                             });
                           },
                         ),
@@ -104,15 +134,21 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
                                         children: [
                                           Expanded(
-                                            child: Icon(Icons.circle, color: Color.fromARGB(255, 222, 124, 117), size: 90),
+                                            child: Icon(Icons.circle,
+                                                color: Color.fromARGB(
+                                                    255, 222, 124, 117),
+                                                size: 90),
                                           ),
                                           Expanded(
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   profilePreferences[index],
@@ -141,7 +177,9 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                 height: 35,
                                                 child: TextButton(
                                                   style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all<Color>(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
                                                       Color(0xFF87A330),
                                                     ),
                                                   ),
@@ -152,7 +190,8 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                     "Remove",
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 18,
                                                     ),
                                                   ),
@@ -193,19 +232,31 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
                                         children: [
                                           Expanded(
-                                            child: Icon(Icons.circle, color: Color.fromARGB(255, 222, 124, 117), size: 90),
+                                            child: Icon(Icons.circle,
+                                                color: Color.fromARGB(
+                                                    255, 222, 124, 117),
+                                                size: 90),
                                           ),
                                           Expanded(
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   filteredList[index],
-                                                  style: TextStyle(color: Color(0xFF3C2615), fontWeight: FontWeight.w800, fontSize: 26, overflow: TextOverflow.ellipsis),
+                                                  style: TextStyle(
+                                                      color: Color(0xFF3C2615),
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontSize: 26,
+                                                      overflow: TextOverflow
+                                                          .ellipsis),
                                                 ),
                                                 Text(
                                                   "Tap for info >",
@@ -226,21 +277,26 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                 height: 35,
                                                 child: TextButton(
                                                   style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all<Color>(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
                                                       Color(0xFF87A330),
                                                     ),
                                                   ),
                                                   onPressed: () {
                                                     showDialog(
                                                       context: context,
-                                                      builder: (BuildContext context) => AddPreferenceOverlay(),
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          AddPreferenceOverlay(),
                                                     );
                                                   },
                                                   child: Text(
                                                     "Add",
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 18,
                                                     ),
                                                   ),
