@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterbase/Widgets/logged_in_widget.dart';
 import 'package:flutterbase/Widgets/loginwidget.dart';
-import 'package:flutterbase/Widgets/mainmenu.dart';
 import 'package:flutterbase/Widgets/signUpandInWidget.dart';
 
 class HomePage extends StatelessWidget {

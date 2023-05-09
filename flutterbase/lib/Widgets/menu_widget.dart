@@ -4,13 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
-import 'package:flutterbase/Widgets/mainmenu.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterbase/camera_screen.dart';
 import 'package:flutterbase/social_screen.dart';
 import 'package:flutterbase/Widgets/preferences.dart';
-import 'package:flutterbase/overlays/profileoverlay.dart';
+import 'package:flutterbase/overlays/profile_screen.dart';
 import 'package:flutterbase/Widgets/members_widget.dart';
+
+import '../main.dart';
 
 enum MenuItem {
   item1,
@@ -222,6 +223,12 @@ class menuTopBar extends StatelessWidget {
                             );
                           } else if (value == MenuItem.item3) {
                             FirebaseAuth.instance.signOut();
+
+                            FirebaseAuth.instance.signOut();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => MyHome()),
+                            );
                           }
                         },
                         icon: Icon(

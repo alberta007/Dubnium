@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterbase/Widgets/mainmenu.dart';
 
 class AddPreferenceOverlay extends StatefulWidget {
   @override
@@ -55,10 +54,10 @@ class _AddPreferenceOverlayState extends State<AddPreferenceOverlay> {
                                 fontSize: 30)),
                         IconButton(
                           icon: Icon(
-                            _isChecked[index]
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank, size: 40
-                          ),
+                              _isChecked[index]
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              size: 40),
                           onPressed: () {
                             setState(() {
                               _isChecked[index] = !_isChecked[index];
