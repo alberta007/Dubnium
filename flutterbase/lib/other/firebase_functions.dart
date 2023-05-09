@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseFunctions {
+  // NEED TO CHECK IF ADD PREFERENCES WORK WITH NEW MEMBER
   Future<void> addPreference(String memberName, String preference) async {
     final user = FirebaseAuth.instance.currentUser!;
 
@@ -30,8 +31,10 @@ class FirebaseFunctions {
 
         currentPreferences.add(preference);
 
+        List<String> result = currentPreferences.toSet().toList();
+
         await userRef.update({
-          'Active/$memberName/Preferences': currentPreferences,
+          'Active/$memberName/Preferences': result,
         });
       } else {
         await userRef.update({
@@ -50,9 +53,11 @@ class FirebaseFunctions {
             databaseList(membersCurrentPreferences);
 
         currentPreferences.add(preference);
+        
+        List<String> result = currentPreferences.toSet().toList();
 
         await userRef.update({
-          'Inactive/$memberName/Preferences': currentPreferences,
+          'Inactive/$memberName/Preferences': result,
         });
       } else {
         await userRef.update({
@@ -89,9 +94,15 @@ class FirebaseFunctions {
 
         currentPreferences.remove(preference);
 
-        await userRef.update({
-          'Active/$memberName/Preferences': currentPreferences,
-        });
+        if (currentPreferences.isEmpty) {
+          await userRef.update({
+            'Active/$memberName': memberName,
+          });
+        } else {
+          await userRef.update({
+            'Active/$memberName/Preferences': currentPreferences,
+          });
+        }
       }
     } else {
       // Else member is in Inactive
@@ -137,29 +148,25 @@ class FirebaseFunctions {
     final user = FirebaseAuth.instance.currentUser!;
     List<String> memberPreferences = [];
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Members');
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Members');
 
-    DataSnapshot activeMember = await userRef.child('Active/$username').get();
+    DataSnapshot activeMember =
+        await userRef.child('Active/$username/Preferences').get();
     DataSnapshot inactiveMember =
-        await userRef.child('Inactive/$username').get();
+        await userRef.child('Inactive/$username/Preferences').get();
 
     if (activeMember.exists) {
-      Map<dynamic, dynamic> memberMap = activeMember.value as Map;
+      List<String> preferences = databaseList(activeMember);
 
-      memberMap.forEach((key, value) {
-        List<dynamic> preferences = value as List;
+      memberPreferences.addAll(preferences);
+    } else if (inactiveMember.exists) {
+      List<String> preferences = databaseList(inactiveMember);
 
-        memberPreferences.addAll(preferences.cast<String>());
-      });
+      memberPreferences.addAll(preferences);
     } else {
-      Map<dynamic, dynamic> memberMap = inactiveMember.value as Map;
-
-      memberMap.forEach((key, value) {
-        List<dynamic> preferences = value as List;
-
-        memberPreferences.addAll(preferences.cast<String>());
-      });
+      memberPreferences = [];
     }
 
     return memberPreferences;
