@@ -29,6 +29,8 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
   late List<List<String>> allMembersPreferences;
   late List<List<String>> allFriendsPreferences;
 
+  List<bool> _isExpandedList = List.generate(10, (_) => false);
+
   List<String> allPreferencesList = [
     "Nötter",
     "Mjölk",
@@ -271,259 +273,43 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                           Container(
                                             color: Color(0xFFEAF5E4),
                                             child: ListView.builder(
-                                              itemCount: filteredList.length,
+                                              itemCount: 10,
                                               itemBuilder:
                                                   (BuildContext context,
                                                       int index) {
-                                                return ListTile(
-                                                  title: Align(
-                                                    alignment: Alignment.center,
-                                                    child: Container(
-                                                      width: 300,
-                                                      height: 120,
-                                                      decoration: BoxDecoration(
-                                                        //color: Colors.blue,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        children: [
-                                                          Expanded(
-                                                            child: Icon(
-                                                                Icons.circle,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        222,
-                                                                        124,
-                                                                        117),
-                                                                size: 90),
-                                                          ),
-                                                          Expanded(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  filteredList[
-                                                                      index],
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          0xFF3C2615),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w800,
-                                                                      fontSize:
-                                                                          26,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis),
-                                                                ),
-                                                                Text(
-                                                                  "Tap for info >",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Color(
-                                                                        0xFF3C2615),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                    fontSize:
-                                                                        14,
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            child: Align(
-                                                              alignment: Alignment
-                                                                  .bottomRight,
-                                                              child: SizedBox(
-                                                                width: 120,
-                                                                height: 35,
-                                                                child:
-                                                                    TextButton(
-                                                                  style:
-                                                                      ButtonStyle(
-                                                                    backgroundColor:
-                                                                        MaterialStateProperty.all<
-                                                                            Color>(
-                                                                      Color(
-                                                                          0xFF87A330),
-                                                                    ),
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder: (BuildContext
-                                                                              context) =>
-                                                                          AddPreferenceOverlay(),
-                                                                    );
-                                                                  },
-                                                                  child: Text(
-                                                                    "Remove",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          18,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                return ExpansionTile(
+                                                  title:
+                                                      Text(allMembers[index]),
+                                                  children: <Widget>[
+                                                    ListView.builder(
+                                                      shrinkWrap: true,
+                                                      itemCount: 5,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int subIndex) {
+                                                        return ListTile(
+                                                          title: Text(
+                                                              'Expanded Tile ${subIndex + 1}'),
+                                                          subtitle: Text(
+                                                              'Description for Expanded Tile ${subIndex + 1}'),
+                                                        );
+                                                      },
                                                     ),
-                                                  ),
+                                                  ],
+                                                  onExpansionChanged:
+                                                      (bool isExpanded) {
+                                                    setState(() {
+                                                      _isExpandedList[index] =
+                                                          isExpanded;
+                                                    });
+                                                  },
+                                                  initiallyExpanded:
+                                                      _isExpandedList[index],
                                                 );
                                               },
                                             ),
                                           ),
-                                          Container(
-                                            color: Color(0xFFEAF5E4),
-                                            child: ListView.builder(
-                                              itemCount: filteredList.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return ListTile(
-                                                  title: Align(
-                                                    alignment: Alignment.center,
-                                                    child: Container(
-                                                      width: 300,
-                                                      height: 120,
-                                                      decoration: BoxDecoration(
-                                                        //color: Colors.blue,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        children: [
-                                                          Expanded(
-                                                            child: Icon(
-                                                                Icons.circle,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        222,
-                                                                        124,
-                                                                        117),
-                                                                size: 90),
-                                                          ),
-                                                          Expanded(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  filteredList[
-                                                                      index],
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          0xFF3C2615),
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w800,
-                                                                      fontSize:
-                                                                          26,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis),
-                                                                ),
-                                                                Text(
-                                                                  "Tap for info >",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Color(
-                                                                        0xFF3C2615),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                    fontSize:
-                                                                        14,
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            child: Align(
-                                                              alignment: Alignment
-                                                                  .bottomRight,
-                                                              child: SizedBox(
-                                                                width: 120,
-                                                                height: 35,
-                                                                child:
-                                                                    TextButton(
-                                                                  style:
-                                                                      ButtonStyle(
-                                                                    backgroundColor:
-                                                                        MaterialStateProperty.all<
-                                                                            Color>(
-                                                                      Color(
-                                                                          0xFF87A330),
-                                                                    ),
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder: (BuildContext
-                                                                              context) =>
-                                                                          AddPreferenceOverlay(),
-                                                                    );
-                                                                  },
-                                                                  child: Text(
-                                                                    "Remove",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          18,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
+                                          Container(color: Color(0xFFEAF5E4)),
                                         ],
                                       ),
                                     ),
