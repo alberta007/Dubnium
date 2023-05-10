@@ -157,10 +157,13 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Expanded(
-                                          child: Icon(Icons.circle,
-                                              color: Color.fromARGB(
-                                                  255, 222, 124, 117),
-                                              size: 90),
+                                          child: CircleAvatar(
+                                            radius: double.infinity,
+                                            foregroundImage: Image.asset(
+                                                    'assets/images/45332.png')
+                                                .image,
+                                            backgroundColor: Color(0xFFEAF5E4),
+                                          ),
                                         ),
                                         Expanded(
                                           child: Column(
@@ -309,16 +312,17 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                                         .spaceAround,
                                                                 children: [
                                                                   Expanded(
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .circle,
-                                                                        color: Color.fromARGB(
-                                                                            255,
-                                                                            222,
-                                                                            124,
-                                                                            117),
-                                                                        size:
-                                                                            90),
+                                                                    child:
+                                                                        CircleAvatar(
+                                                                      radius: double
+                                                                          .infinity,
+                                                                      foregroundImage:
+                                                                          Image.asset('assets/images/45332.png')
+                                                                              .image,
+                                                                      backgroundColor:
+                                                                          Color(
+                                                                              0xFFEAF5E4),
+                                                                    ),
                                                                   ),
                                                                   Expanded(
                                                                     child:
@@ -465,16 +469,17 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                                         .spaceAround,
                                                                 children: [
                                                                   Expanded(
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .circle,
-                                                                        color: Color.fromARGB(
-                                                                            255,
-                                                                            222,
-                                                                            124,
-                                                                            117),
-                                                                        size:
-                                                                            90),
+                                                                    child:
+                                                                        CircleAvatar(
+                                                                      radius: double
+                                                                          .infinity,
+                                                                      foregroundImage:
+                                                                          Image.asset('assets/images/45332.png')
+                                                                              .image,
+                                                                      backgroundColor:
+                                                                          Color(
+                                                                              0xFFEAF5E4),
+                                                                    ),
                                                                   ),
                                                                   Expanded(
                                                                     child:
@@ -596,10 +601,13 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Expanded(
-                                          child: Icon(Icons.circle,
-                                              color: Color.fromARGB(
-                                                  255, 222, 124, 117),
-                                              size: 90),
+                                          child: CircleAvatar(
+                                            radius: double.infinity,
+                                            foregroundImage: Image.asset(
+                                                    'assets/images/45332.png')
+                                                .image,
+                                            backgroundColor: Color(0xFFEAF5E4),
+                                          ),
                                         ),
                                         Expanded(
                                           child: Column(
