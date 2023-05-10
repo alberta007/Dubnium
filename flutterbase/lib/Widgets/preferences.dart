@@ -51,22 +51,19 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
 
     List<String> allFriends = await FirebaseFunctions().allFriends();
 
-    List<String> youPreferences =
-        await FirebaseFunctions().fetchMembersPreferences('You');
+    List<String> youPreferences = await FirebaseFunctions().fetchMembersPreferences('You');
 
     List<List<String>> membersPreferences = [];
     List<List<String>> friendsPreferences = [];
 
     for (String member in allMembers) {
-      List<String> preferences =
-          await FirebaseFunctions().fetchMembersPreferences(member);
+      List<String> preferences = await FirebaseFunctions().fetchMembersPreferences(member);
 
       membersPreferences.add(preferences);
     }
 
     for (String friend in allFriends) {
-      List<String> preferences =
-          await FirebaseFunctions().fetchFriendsPreferences(friend);
+      List<String> preferences = await FirebaseFunctions().fetchFriendsPreferences(friend);
 
       friendsPreferences.add(preferences);
     }
@@ -102,15 +99,9 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                     TabBar(
                       labelColor: Color(0xFF3C2615),
                       tabs: [
-                        Tab(
-                            child: Text("Your (${profilePreferences.length})",
-                                style: TextStyle(fontSize: 20))),
-                        Tab(
-                            child:
-                                Text("Other", style: TextStyle(fontSize: 20))),
-                        Tab(
-                            child: Text("All (${allPreferencesList.length})",
-                                style: TextStyle(fontSize: 20))),
+                        Tab(child: Text("Your (${profilePreferences.length})", style: TextStyle(fontSize: 20))),
+                        Tab(child: Text("Other", style: TextStyle(fontSize: 20))),
+                        Tab(child: Text("All (${allPreferencesList.length})", style: TextStyle(fontSize: 20))),
                       ],
                     ),
                     Container(
@@ -118,18 +109,17 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                       child: TextField(
                         decoration: InputDecoration(
                             hintText: 'Search',
+                            filled: true,
+                            fillColor: Colors.white,
                             suffixIcon: Icon(Icons.search),
-                            border: OutlineInputBorder(
+                            enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(width: 2.0),
                             )),
                         onChanged: (value) {
                           setState(
                             () {
-                              filteredList = allPreferencesList
-                                  .where((string) => string
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()))
-                                  .toList();
+                              filteredList = allPreferencesList.where((string) => string.toLowerCase().contains(value.toLowerCase())).toList();
                             },
                           );
                         },
@@ -153,24 +143,19 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         Expanded(
                                           child: CircleAvatar(
                                             radius: double.infinity,
-                                            foregroundImage: Image.asset(
-                                                    'assets/images/45332.png')
-                                                .image,
+                                            foregroundImage: Image.asset('assets/images/45332.png').image,
                                             backgroundColor: Color(0xFFEAF5E4),
                                           ),
                                         ),
                                         Expanded(
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Text(
                                                 profilePreferences[index],
@@ -199,21 +184,14 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                               height: 35,
                                               child: TextButton(
                                                 style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(
+                                                  backgroundColor: MaterialStateProperty.all<Color>(
                                                     Color(0xFF87A330),
                                                   ),
                                                 ),
                                                 onPressed: () {
-                                                  FirebaseFunctions()
-                                                      .removePreference(
-                                                          'You',
-                                                          profilePreferences[
-                                                              index]);
+                                                  FirebaseFunctions().removePreference('You', profilePreferences[index]);
                                                   setState(() {
-                                                    profilePreferences
-                                                        .removeAt(index);
+                                                    profilePreferences.removeAt(index);
                                                   });
                                                 },
                                                 child: Text(
@@ -246,16 +224,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                     Container(
                                       color: Color(0xFFEAF5E4),
                                       child: TabBar(
-                                        tabs: [
-                                          Tab(
-                                              child: Text("Members",
-                                                  style:
-                                                      TextStyle(fontSize: 20))),
-                                          Tab(
-                                              child: Text("Friends",
-                                                  style:
-                                                      TextStyle(fontSize: 20)))
-                                        ],
+                                        tabs: [Tab(child: Text("Members", style: TextStyle(fontSize: 18))), Tab(child: Text("Friends", style: TextStyle(fontSize: 18)))],
                                       ),
                                     ),
                                     Expanded(
@@ -265,138 +234,85 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                             color: Color(0xFFEAF5E4),
                                             child: ListView.builder(
                                               itemCount: allMembers.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
+                                              itemBuilder: (BuildContext context, int index) {
                                                 return ExpansionTile(
-                                                  title: Text(allMembers[index],
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                  onExpansionChanged:
-                                                      (bool isExpanded) {
+                                                  title: Text(allMembers[index], style: TextStyle(fontSize: 20)),
+                                                  onExpansionChanged: (bool isExpanded) {
                                                     setState(() {
-                                                      _isExpandedList[index] =
-                                                          isExpanded;
+                                                      _isExpandedList[index] = isExpanded;
                                                     });
                                                   },
-                                                  initiallyExpanded:
-                                                      _isExpandedList[index],
+                                                  initiallyExpanded: _isExpandedList[index],
                                                   children: <Widget>[
                                                     ListView.builder(
                                                       shrinkWrap: true,
-                                                      itemCount:
-                                                          allMembersPreferences[
-                                                                  index]
-                                                              .length,
-                                                      itemBuilder:
-                                                          (BuildContext context,
-                                                              int subIndex) {
+                                                      itemCount: allMembersPreferences[index].length,
+                                                      itemBuilder: (BuildContext context, int subIndex) {
                                                         return ListTile(
                                                           title: Align(
-                                                            alignment: Alignment
-                                                                .center,
+                                                            alignment: Alignment.center,
                                                             child: Container(
                                                               width: 300,
                                                               height: 120,
-                                                              decoration:
-                                                                  BoxDecoration(
+                                                              decoration: BoxDecoration(
                                                                 //color: Colors.blue,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
+                                                                borderRadius: BorderRadius.circular(10),
                                                               ),
                                                               child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceAround,
+                                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                                 children: [
                                                                   Expanded(
-                                                                    child:
-                                                                        CircleAvatar(
-                                                                      radius: double
-                                                                          .infinity,
-                                                                      foregroundImage:
-                                                                          Image.asset('assets/images/45332.png')
-                                                                              .image,
-                                                                      backgroundColor:
-                                                                          Color(
-                                                                              0xFFEAF5E4),
+                                                                    child: CircleAvatar(
+                                                                      radius: double.infinity,
+                                                                      foregroundImage: Image.asset('assets/images/45332.png').image,
+                                                                      backgroundColor: Color(0xFFEAF5E4),
                                                                     ),
                                                                   ),
                                                                   Expanded(
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
                                                                       children: [
                                                                         Text(
-                                                                          allMembersPreferences[index]
-                                                                              [
-                                                                              subIndex],
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Color(0xFF3C2615),
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                            fontSize:
-                                                                                26,
+                                                                          allMembersPreferences[index][subIndex],
+                                                                          style: TextStyle(
+                                                                            color: Color(0xFF3C2615),
+                                                                            fontWeight: FontWeight.w800,
+                                                                            fontSize: 26,
                                                                           ),
                                                                         ),
                                                                         Text(
                                                                           "Tap for info >",
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Color(0xFF3C2615),
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                            fontSize:
-                                                                                14,
+                                                                          style: TextStyle(
+                                                                            color: Color(0xFF3C2615),
+                                                                            fontWeight: FontWeight.w800,
+                                                                            fontSize: 14,
                                                                           ),
                                                                         )
                                                                       ],
                                                                     ),
                                                                   ),
                                                                   Expanded(
-                                                                    child:
-                                                                        Align(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .bottomRight,
-                                                                      child:
-                                                                          SizedBox(
-                                                                        width:
-                                                                            120,
-                                                                        height:
-                                                                            35,
-                                                                        child:
-                                                                            TextButton(
-                                                                          style:
-                                                                              ButtonStyle(
-                                                                            backgroundColor:
-                                                                                MaterialStateProperty.all<Color>(
+                                                                    child: Align(
+                                                                      alignment: Alignment.bottomRight,
+                                                                      child: SizedBox(
+                                                                        width: 120,
+                                                                        height: 35,
+                                                                        child: TextButton(
+                                                                          style: ButtonStyle(
+                                                                            backgroundColor: MaterialStateProperty.all<Color>(
                                                                               Color(0xFF87A330),
                                                                             ),
                                                                           ),
-                                                                          onPressed:
-                                                                              () {
-                                                                            FirebaseFunctions().removePreference(allMembers[index],
-                                                                                allMembersPreferences[index][subIndex]);
+                                                                          onPressed: () {
+                                                                            FirebaseFunctions().removePreference(allMembers[index], allMembersPreferences[index][subIndex]);
                                                                             setState(() {
                                                                               allMembersPreferences[index].removeAt(subIndex);
                                                                             });
                                                                           },
-                                                                          child:
-                                                                              Text(
+                                                                          child: Text(
                                                                             "Remove",
-                                                                            style:
-                                                                                TextStyle(
+                                                                            style: TextStyle(
                                                                               color: Colors.white,
                                                                               fontWeight: FontWeight.bold,
                                                                               fontSize: 18,
@@ -422,99 +338,59 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                             color: Color(0xFFEAF5E4),
                                             child: ListView.builder(
                                               itemCount: allFriends.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
+                                              itemBuilder: (BuildContext context, int index) {
                                                 return ExpansionTile(
-                                                  title: Text(allFriends[index],
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                  onExpansionChanged:
-                                                      (bool isExpanded) {
+                                                  title: Text(allFriends[index], style: TextStyle(fontSize: 20)),
+                                                  onExpansionChanged: (bool isExpanded) {
                                                     setState(() {
-                                                      _isExpandedList[index] =
-                                                          isExpanded;
+                                                      _isExpandedList[index] = isExpanded;
                                                     });
                                                   },
-                                                  initiallyExpanded:
-                                                      _isExpandedList[index],
+                                                  initiallyExpanded: _isExpandedList[index],
                                                   children: <Widget>[
                                                     ListView.builder(
                                                       shrinkWrap: true,
-                                                      itemCount:
-                                                          allFriendsPreferences[
-                                                                  index]
-                                                              .length,
-                                                      itemBuilder:
-                                                          (BuildContext context,
-                                                              int subIndex) {
+                                                      itemCount: allFriendsPreferences[index].length,
+                                                      itemBuilder: (BuildContext context, int subIndex) {
                                                         return ListTile(
                                                           title: Align(
-                                                            alignment: Alignment
-                                                                .center,
+                                                            alignment: Alignment.center,
                                                             child: Container(
                                                               width: 300,
                                                               height: 120,
-                                                              decoration:
-                                                                  BoxDecoration(
+                                                              decoration: BoxDecoration(
                                                                 //color: Colors.blue,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
+                                                                borderRadius: BorderRadius.circular(10),
                                                               ),
                                                               child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceAround,
+                                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                                 children: [
                                                                   Expanded(
-                                                                    child:
-                                                                        CircleAvatar(
-                                                                      radius: double
-                                                                          .infinity,
-                                                                      foregroundImage:
-                                                                          Image.asset('assets/images/45332.png')
-                                                                              .image,
-                                                                      backgroundColor:
-                                                                          Color(
-                                                                              0xFFEAF5E4),
+                                                                    child: CircleAvatar(
+                                                                      radius: double.infinity,
+                                                                      foregroundImage: Image.asset('assets/images/45332.png').image,
+                                                                      backgroundColor: Color(0xFFEAF5E4),
                                                                     ),
                                                                   ),
                                                                   Expanded(
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
                                                                       children: [
                                                                         Text(
-                                                                          allFriendsPreferences[index]
-                                                                              [
-                                                                              subIndex],
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Color(0xFF3C2615),
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                            fontSize:
-                                                                                26,
+                                                                          allFriendsPreferences[index][subIndex],
+                                                                          style: TextStyle(
+                                                                            color: Color(0xFF3C2615),
+                                                                            fontWeight: FontWeight.w800,
+                                                                            fontSize: 26,
                                                                           ),
                                                                         ),
                                                                         Text(
                                                                           "Tap for info >",
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Color(0xFF3C2615),
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                            fontSize:
-                                                                                14,
+                                                                          style: TextStyle(
+                                                                            color: Color(0xFF3C2615),
+                                                                            fontWeight: FontWeight.w800,
+                                                                            fontSize: 14,
                                                                           ),
                                                                         )
                                                                       ],
@@ -557,33 +433,23 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         Expanded(
                                           child: CircleAvatar(
                                             radius: double.infinity,
-                                            foregroundImage: Image.asset(
-                                                    'assets/images/45332.png')
-                                                .image,
+                                            foregroundImage: Image.asset('assets/images/45332.png').image,
                                             backgroundColor: Color(0xFFEAF5E4),
                                           ),
                                         ),
                                         Expanded(
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Text(
                                                 filteredList[index],
-                                                style: TextStyle(
-                                                    color: Color(0xFF3C2615),
-                                                    fontWeight: FontWeight.w800,
-                                                    fontSize: 26,
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
+                                                style: TextStyle(color: Color(0xFF3C2615), fontWeight: FontWeight.w800, fontSize: 26, overflow: TextOverflow.ellipsis),
                                               ),
                                               Text(
                                                 "Tap for info >",
@@ -604,20 +470,15 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                               height: 35,
                                               child: TextButton(
                                                 style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(
+                                                  backgroundColor: MaterialStateProperty.all<Color>(
                                                     Color(0xFF87A330),
                                                   ),
                                                 ),
                                                 onPressed: () {
                                                   showDialog(
                                                     context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AddPreferenceOverlay(
-                                                          allMembersandYou,
-                                                          filteredList[index]);
+                                                    builder: (BuildContext context) {
+                                                      return AddPreferenceOverlay(allMembersandYou, filteredList[index]);
                                                     },
                                                   ).then((value) {
                                                     setup();
