@@ -24,15 +24,15 @@ class MyCustomClass2 extends StatefulWidget {
 
 class _MyCustomClass2State extends State<MyCustomClass2> {
   final user = FirebaseAuth.instance.currentUser!;
-  late List<String> allMembers;
-  late List<String> allFriends;
-  late List<String> allMembersandYou;
-  late List<List<String>> allMembersPreferences;
-  late List<List<String>> allFriendsPreferences;
+  late List<String> allMembers = [];
+  late List<String> allFriends = [];
+  late List<String> allMembersandYou = [];
+  late List<List<String>> allMembersPreferences = [];
+  late List<List<String>> allFriendsPreferences = [];
   late List<String> allPreferencesList = [];
   late List<String> filteredList = [];
   late List<String> profilePreferences = [];
-  late List<bool> isChecked;
+  late List<bool> isChecked = [];
 
   List<bool> _isExpandedList = List.generate(10, (_) => false);
 
@@ -386,10 +386,10 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                                           ),
                                                                           onPressed:
                                                                               () {
-                                                                            FirebaseFunctions().removePreference('You',
-                                                                                profilePreferences[subIndex]);
+                                                                            FirebaseFunctions().removePreference(allMembers[index],
+                                                                                allMembersPreferences[index][subIndex]);
                                                                             setState(() {
-                                                                              profilePreferences.removeAt(subIndex);
+                                                                              allMembersPreferences[index].removeAt(subIndex);
                                                                             });
                                                                           },
                                                                           child:
@@ -521,47 +521,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                                     ),
                                                                   ),
                                                                   Expanded(
-                                                                    child:
-                                                                        Align(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .bottomRight,
-                                                                      child:
-                                                                          SizedBox(
-                                                                        width:
-                                                                            120,
-                                                                        height:
-                                                                            35,
-                                                                        child:
-                                                                            TextButton(
-                                                                          style:
-                                                                              ButtonStyle(
-                                                                            backgroundColor:
-                                                                                MaterialStateProperty.all<Color>(
-                                                                              Color(0xFF87A330),
-                                                                            ),
-                                                                          ),
-                                                                          onPressed:
-                                                                              () {
-                                                                            FirebaseFunctions().removePreference('You',
-                                                                                profilePreferences[subIndex]);
-                                                                            setState(() {
-                                                                              profilePreferences.removeAt(subIndex);
-                                                                            });
-                                                                          },
-                                                                          child:
-                                                                              Text(
-                                                                            "Remove",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontSize: 18,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
+                                                                    child: Align(),
                                                                   ),
                                                                 ],
                                                               ),
