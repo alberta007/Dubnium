@@ -23,23 +23,17 @@ class menuTopBar extends StatelessWidget {
   Future<List<String>> fetchFriendRequests() async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshotRequests = await userRef
-        .child('${user.displayName}/Friendrequests')
-        .get(); // get snapshot of friendrequests
+    final snapshotRequests = await userRef.child('${user.displayName}/Friendrequests').get(); // get snapshot of friendrequests
 
     List<String> temp = []; // list to return
 
     if (snapshotRequests.exists) {
       // if there exists any friendrequests
-      List<dynamic> requestListDynamic = snapshotRequests.value
-          as List<dynamic>; // creates a list of the friend requests
+      List<dynamic> requestListDynamic = snapshotRequests.value as List<dynamic>; // creates a list of the friend requests
 
-      List<String> requestList = requestListDynamic
-          .map((member) => member.toString())
-          .toList(); // creates a list of the friend requests
+      List<String> requestList = requestListDynamic.map((member) => member.toString()).toList(); // creates a list of the friend requests
 
       temp = requestList; // list to return == the friend request list
     } else {
@@ -54,43 +48,28 @@ class menuTopBar extends StatelessWidget {
   Future<void> acceptFriendRequest(String friendName) async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshotRequests = await userRef
-        .child('${user.displayName}/Friendrequests')
-        .get(); // snapshot of friendrequest
+    final snapshotRequests = await userRef.child('${user.displayName}/Friendrequests').get(); // snapshot of friendrequest
 
     List<dynamic> requestListDynamic = snapshotRequests.value as List<dynamic>;
 
-    List<String> requestList = requestListDynamic
-        .map((member) => member.toString())
-        .toList(); // creates a list of the friend requests
+    List<String> requestList = requestListDynamic.map((member) => member.toString()).toList(); // creates a list of the friend requests
 
     requestList.remove(friendName);
     await userRef.update({
       '${user.displayName}/Friendrequests': requestList,
     });
-    final snapshotActive =
-        await userRef.child('${friendName}/Members/Active/You').get();
+    final snapshotActive = await userRef.child('${friendName}/Members/Active/You').get();
 
-    final snapshotInactive =
-        await userRef.child('${friendName}/Members/Inactive/You').get();
+    final snapshotInactive = await userRef.child('${friendName}/Members/Inactive/You').get();
 
     if (snapshotActive.exists) {
-      await userRef
-          .child('${user.displayName}/Friends/Active/$friendName')
-          .set(friendName);
-      await userRef
-          .child('$friendName/Friends/Active/${user.displayName}')
-          .set(user.displayName);
+      await userRef.child('${user.displayName}/Friends/Active/$friendName').set(friendName);
+      await userRef.child('$friendName/Friends/Active/${user.displayName}').set(user.displayName);
     } else if (snapshotInactive.exists) {
-      await userRef
-          .child('${user.displayName}/Friends/Inactive/${user.displayName}')
-          .set(friendName);
-      await userRef
-          .child('$friendName/Friends/Inactive/$friendName')
-          .set(user.displayName);
+      await userRef.child('${user.displayName}/Friends/Inactive/${user.displayName}').set(friendName);
+      await userRef.child('$friendName/Friends/Inactive/$friendName').set(user.displayName);
     }
   }
 
@@ -144,8 +123,7 @@ class menuTopBar extends StatelessWidget {
                             Icons.diversity_3,
                             color: Color(0xff3c2615),
                             size: 40,
-                            semanticLabel:
-                                'Text to announce in accessibility modes',
+                            semanticLabel: 'Text to announce in accessibility modes',
                           )),
                       Spacer(),
                       Text(
@@ -165,8 +143,7 @@ class menuTopBar extends StatelessWidget {
                                   //Color(0xffcad593)
                                   //add more color here.
                                 ],
-                              ).createShader(
-                                  Rect.fromLTWH(120.0, 50.0, 200.0, 50.0))),
+                              ).createShader(Rect.fromLTWH(120.0, 50.0, 200.0, 50.0))),
                       ),
                       //Spacer(),
 
@@ -178,8 +155,7 @@ class menuTopBar extends StatelessWidget {
                             ));
                           } else if (value == MenuItem.item2) {
                             // add friend requests button
-                            List<String> fetchedRequestList =
-                                await fetchFriendRequests();
+                            List<String> fetchedRequestList = await fetchFriendRequests();
 
                             showDialog(
                               context: context,
@@ -196,16 +172,13 @@ class menuTopBar extends StatelessWidget {
                                           return ListTile(
                                             title: Text(
                                               fetchedRequestList[index],
-                                              style:
-                                                  const TextStyle(fontSize: 25),
+                                              style: const TextStyle(fontSize: 25),
                                             ),
                                             trailing: Stack(
                                               children: [
                                                 IconButton(
                                                   onPressed: () {
-                                                    acceptFriendRequest(
-                                                        fetchedRequestList[
-                                                            index]);
+                                                    acceptFriendRequest(fetchedRequestList[index]);
                                                     Navigator.pop(context);
                                                   },
                                                   icon: Icon(Icons.check),
@@ -234,6 +207,7 @@ class menuTopBar extends StatelessWidget {
                         icon: Icon(
                           Icons.menu,
                           size: 40,
+                          color: Color(0xFF87A330),
                         ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
@@ -310,8 +284,7 @@ class menuBottomBar extends StatelessWidget {
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
                       shadowColor: Color.fromARGB(255, 0, 0, 0),
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -337,8 +310,7 @@ class menuBottomBar extends StatelessWidget {
                       highlightColor: Colors.green.withOpacity(0.2),
                       elevation: 2,
                       shadowColor: Color.fromARGB(255, 0, 0, 0),
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                     ),
                     iconSize: 60,
                     onPressed: () {
