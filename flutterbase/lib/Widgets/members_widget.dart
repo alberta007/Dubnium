@@ -18,6 +18,7 @@ class _MembersListState extends State<MembersList> {
   int numberOfActive = 0;
   int numberOfInactive = 0;
   int totMembers = 0;
+  int totFriends = 0;
   @override
   void initState() {
     super.initState();
@@ -32,6 +33,7 @@ class _MembersListState extends State<MembersList> {
 
     setState(() {
       totMembers = fetchedActiveMembers.length + fetchedInactiveMembers.length;
+      totFriends = fetchedInactiveFriends.length + fetchedActiveFriends.length;
       activemembers = fetchedActiveMembers;
       inactiveMembers = fetchedInactiveMembers;
       activefriends = fetchedActiveFriends;
@@ -58,7 +60,9 @@ class _MembersListState extends State<MembersList> {
                 Tab(
                     child: Text("Members ($totMembers)",
                         style: TextStyle(fontSize: 20))),
-                Tab(child: Text("Friends ()", style: TextStyle(fontSize: 20))),
+                Tab(
+                    child: Text("Friends ($totFriends)",
+                        style: TextStyle(fontSize: 20))),
               ]),
               Expanded(
                 child: TabBarView(
@@ -850,7 +854,6 @@ class _MembersListState extends State<MembersList> {
                                   //alignment: Alignment.topCenter,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    final memberName = activefriends[index];
                                     return Container(
                                       margin: const EdgeInsets.only(
                                           top: 25,
@@ -867,7 +870,10 @@ class _MembersListState extends State<MembersList> {
                                         children: [
                                           Align(
                                             alignment: Alignment.centerLeft,
-                                            child: Text(activefriends[index]),
+                                            child: Text(activefriends[index],
+                                                style: const TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black)),
                                           ),
                                           Align(
                                               alignment: Alignment.centerRight,
@@ -884,7 +890,7 @@ class _MembersListState extends State<MembersList> {
                                                   setState(() {
                                                     activefriends =
                                                         updatedActiveFriends;
-                                                    inactiveMembers =
+                                                    inactiveFriends =
                                                         updatedInactiveFriends;
                                                   });
                                                 },
@@ -920,7 +926,7 @@ class _MembersListState extends State<MembersList> {
                                 ListView.builder(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.only(top: 0),
-                                  itemCount: activefriends.length,
+                                  itemCount: inactiveFriends.length,
                                   //alignment: Alignment.topCenter,
                                   itemBuilder:
                                       (BuildContext context, int index) {
@@ -940,14 +946,17 @@ class _MembersListState extends State<MembersList> {
                                         children: [
                                           Align(
                                             alignment: Alignment.centerLeft,
-                                            child: Text(inactiveFriends[index]),
+                                            child: Text(inactiveFriends[index],
+                                                style: const TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black)),
                                           ),
                                           Align(
                                               alignment: Alignment.centerRight,
                                               child: ElevatedButton(
                                                 onPressed: () async {
                                                   await changeFriendToActive(
-                                                      activefriends[index]);
+                                                      inactiveFriends[index]);
                                                   List<String>
                                                       updatedActiveFriends =
                                                       await fetchActiveFriendList();
@@ -957,15 +966,14 @@ class _MembersListState extends State<MembersList> {
                                                   setState(() {
                                                     activefriends =
                                                         updatedActiveFriends;
-                                                    inactiveMembers =
+                                                    inactiveFriends =
                                                         updatedInactiveFriends;
                                                   });
                                                 },
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
-                                                          Color.fromARGB(255,
-                                                              168, 32, 32)),
+                                                          Color(0xFF87A330)),
                                                   minimumSize:
                                                       MaterialStateProperty.all(
                                                           const Size(100, 40)),
