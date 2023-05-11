@@ -78,22 +78,29 @@ class _AddPreferenceOverlayState extends State<AddPreferenceOverlay> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(profileNames[index],
+                        Expanded(
+                          flex: 8,
+                          child: Text(profileNames[index],
                             style: TextStyle(
                                 color: Color(0xFF3C2615),
                                 fontWeight: FontWeight.w800,
-                                fontSize: 30)),
-                        IconButton(
-                          icon: Icon(
-                            isChecked[index]
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank, size: 40
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              isChecked[index] = !isChecked[index];
-                            });
-                          },
+                                fontSize: 30,
+                                overflow: TextOverflow.ellipsis)),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child:IconButton(
+                            icon: Icon(
+                              isChecked[index]
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank, size: 40
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isChecked[index] = !isChecked[index];
+                              });
+                            },
+                          )
                         )
                       ],
                     )),
