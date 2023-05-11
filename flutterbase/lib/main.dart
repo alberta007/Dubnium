@@ -6,7 +6,6 @@ import 'package:flutterbase/camera_screen.dart';
 import 'package:flutterbase/provider/google_sign_in.dart';
 import 'package:flutterbase/social_screen.dart';
 import 'Widgets/signUpandInWidget.dart';
-import 'Widgets/mainmenu.dart';
 import 'package:provider/provider.dart';
 import 'Widgets/preferences.dart';
 

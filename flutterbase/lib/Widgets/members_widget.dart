@@ -17,6 +17,7 @@ class _MembersListState extends State<MembersList> {
   String onOff = "Off";
   int numberOfActive = 0;
   int numberOfInactive = 0;
+  int totMembers = 0;
   @override
   void initState() {
     super.initState();
@@ -30,6 +31,7 @@ class _MembersListState extends State<MembersList> {
     List<String> fetchedInactiveFriends = await fetchUnActiveFriendsList();
 
     setState(() {
+      totMembers = fetchedActiveMembers.length + fetchedInactiveMembers.length;
       activemembers = fetchedActiveMembers;
       inactiveMembers = fetchedInactiveMembers;
       activefriends = fetchedActiveFriends;
@@ -52,8 +54,10 @@ class _MembersListState extends State<MembersList> {
           backgroundColor: const Color(0xFFEAF5E4),
           body: Column(
             children: [
-              const TabBar(labelColor: Colors.black, tabs: [
-                Tab(child: Text("Members ()", style: TextStyle(fontSize: 20))),
+              TabBar(labelColor: Colors.black, tabs: [
+                Tab(
+                    child: Text("Members ($totMembers)",
+                        style: TextStyle(fontSize: 20))),
                 Tab(child: Text("Friends ()", style: TextStyle(fontSize: 20))),
               ]),
               Expanded(
@@ -93,9 +97,6 @@ class _MembersListState extends State<MembersList> {
                                                 children: [
                                                   TextButton(
                                                     onPressed: () {
-                                                      print(
-                                                          "Längd: ${activemembers} ");
-
                                                       Navigator.pop(context);
                                                     },
                                                     child: const Text(
@@ -115,7 +116,10 @@ class _MembersListState extends State<MembersList> {
                                                       List<String>
                                                           updatedMembersList =
                                                           await fetchActiveMemberList();
+
                                                       setState(() {
+                                                        totMembers =
+                                                            totMembers + 1;
                                                         activemembers =
                                                             updatedMembersList;
                                                       });
@@ -219,7 +223,8 @@ class _MembersListState extends State<MembersList> {
                                           bottom: 0),
                                       padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
+                                        border: Border.all(
+                                            color: Colors.black, width: 2),
                                         borderRadius:
                                             BorderRadius.circular(10.0),
                                       ),
@@ -293,6 +298,7 @@ class _MembersListState extends State<MembersList> {
                                                                                     );
 
                                                                                     setState(() {
+                                                                                      totMembers = totMembers - 1;
                                                                                       activemembers.removeAt(index);
                                                                                     });
                                                                                     Navigator.pop(context);
@@ -456,7 +462,8 @@ class _MembersListState extends State<MembersList> {
                                           bottom: 0),
                                       padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
+                                        border: Border.all(
+                                            color: Colors.black, width: 2),
                                         borderRadius:
                                             BorderRadius.circular(10.0),
                                       ),
@@ -1370,27 +1377,12 @@ class _MembersListState extends State<MembersList> {
     await userRef.update({
       '${user.displayName}/Friendrequests': requestList,
     });
-    final snapshotActive =
-        await userRef.child('${friendName}/Members/Active/You').get();
-
-    final snapshotInactive =
-        await userRef.child('${friendName}/Members/Inactive/You').get();
-
-    if (snapshotActive.exists) {
-      await userRef
-          .child('${user.displayName}/Friends/Active/$friendName')
-          .set(friendName);
-      await userRef
-          .child('$friendName/Friends/Active/${user.displayName}')
-          .set(user.displayName);
-    } else if (snapshotInactive.exists) {
-      await userRef
-          .child('${user.displayName}/Friends/Inactive/${user.displayName}')
-          .set(friendName);
-      await userRef
-          .child('$friendName/Friends/Inactive/$friendName')
-          .set(user.displayName);
-    }
+    await userRef
+        .child('${user.displayName}/Friends/Active/$friendName')
+        .set(friendName);
+    await userRef
+        .child('$friendName/Friends/Active/${user.displayName}')
+        .set(user.displayName);
   }
 
 // fetch a list of active friends

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterbase/Widgets/mainmenu.dart';
 
 class SettingsDialog extends StatelessWidget {
   @override
@@ -35,7 +34,6 @@ class SettingsDialog extends StatelessWidget {
                           MaterialStateProperty.all(Colors.grey.shade400),
                       minimumSize: MaterialStateProperty.all(Size(200, 50))),
                   onPressed: () {
-                    MyCustomClass();
                     Navigator.of(context).pop();
                   },
                 ),

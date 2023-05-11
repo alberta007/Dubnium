@@ -8,7 +8,7 @@ import 'package:flutterbase/overlays/scannedoverlay.dart';
 import '../overlays/settings.dart';
 import '../other/products.dart';
 import '../other/scan.dart';
-import 'package:flutterbase/overlays/profileoverlay.dart';
+import 'package:flutterbase/overlays/profile_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class MyCustomClass2 extends StatefulWidget {
