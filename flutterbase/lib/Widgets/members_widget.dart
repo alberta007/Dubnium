@@ -1072,7 +1072,11 @@ class _MembersListState extends State<MembersList> {
       '${user.displayName}/Friendrequests': requestList,
     });
     await userRef.child('${user.displayName}/Friends/Active/$friendName').set(friendName);
-    await userRef.child('$friendName/Friends/Active/${user.displayName}').set(user.displayName);
+    /*
+    await userRef
+        .child('$friendName/Friends/Active/${user.displayName}')
+        .set(user.displayName);
+    */
   }
 
 // fetch a list of active friends
