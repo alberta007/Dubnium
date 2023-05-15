@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseFunctions {
+  // NEED TO CHECK IF ADD PREFERENCES WORK WITH NEW MEMBER
   Future<void> addPreference(String memberName, String preference) async {
     final user = FirebaseAuth.instance.currentUser!;
 
@@ -30,8 +31,10 @@ class FirebaseFunctions {
 
         currentPreferences.add(preference);
 
+        List<String> result = currentPreferences.toSet().toList();
+
         await userRef.update({
-          'Active/$memberName/Preferences': currentPreferences,
+          'Active/$memberName/Preferences': result,
         });
       } else {
         await userRef.update({
@@ -50,9 +53,11 @@ class FirebaseFunctions {
             databaseList(membersCurrentPreferences);
 
         currentPreferences.add(preference);
+        
+        List<String> result = currentPreferences.toSet().toList();
 
         await userRef.update({
-          'Inactive/$memberName/Preferences': currentPreferences,
+          'Inactive/$memberName/Preferences': result,
         });
       } else {
         await userRef.update({
@@ -130,6 +135,82 @@ class FirebaseFunctions {
     return list;
   }
 
+  Future<List<String>> allMembers() async {
+    List<String> activeMembers = await fetchActiveMemberList();
+    List<String> inactiveMembers = await fetchUnActiveMemberList();
+
+    activeMembers.addAll(inactiveMembers);
+
+    return activeMembers;
+  }
+
+  Future<List<String>> fetchMembersPreferences(String username) async {
+    final user = FirebaseAuth.instance.currentUser!;
+    List<String> memberPreferences = [];
+
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Members');
+
+    DataSnapshot activeMember =
+        await userRef.child('Active/$username/Preferences').get();
+    DataSnapshot inactiveMember =
+        await userRef.child('Inactive/$username/Preferences').get();
+
+    if (activeMember.exists) {
+      List<String> preferences = databaseList(activeMember);
+
+      memberPreferences.addAll(preferences);
+    } else if (inactiveMember.exists) {
+      List<String> preferences = databaseList(inactiveMember);
+
+      memberPreferences.addAll(preferences);
+    } else {
+      memberPreferences = [];
+    }
+
+    return memberPreferences;
+  }
+
+  Future<List<String>> allFriends() async {
+    List<String> activeFriends = await fetchActiveFriendList();
+    List<String> inactiveFriends = await fetchUnActiveFriendsList();
+
+    activeFriends.addAll(inactiveFriends);
+
+    return activeFriends;
+  }
+
+  Future<List<String>> fetchFriendsPreferences(String username) async {
+    List<String> friendPreferences = [];
+
+    DatabaseReference userRef =
+        FirebaseDatabase.instance.reference().child('Users/$username/Members');
+
+    DataSnapshot activeFriend = await userRef.child('Active/You').get();
+    DataSnapshot inactiveFriend = await userRef.child('Inactive/You').get();
+
+    if (activeFriend.exists) {
+      Map<dynamic, dynamic> memberMap = activeFriend.value as Map;
+
+      memberMap.forEach((key, value) {
+        List<dynamic> preferences = value as List;
+
+        friendPreferences.addAll(preferences.cast<String>());
+      });
+    } else {
+      Map<dynamic, dynamic> memberMap = inactiveFriend.value as Map;
+
+      memberMap.forEach((key, value) {
+        List<dynamic> preferences = value as List;
+
+        friendPreferences.addAll(preferences.cast<String>());
+      });
+    }
+
+    return friendPreferences;
+  }
+
   List<String> databaseList(DataSnapshot snapshot) {
     List<dynamic> databaseListDynamic = snapshot.value as List<dynamic>;
 
@@ -137,5 +218,137 @@ class FirebaseFunctions {
         databaseListDynamic.map((member) => member.toString()).toList();
 
     return dataBaseList;
+  }
+
+  // Fetches a list of active members from the database
+  Future<List<String>> fetchActiveMemberList() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Members');
+
+    final activeSnapshot = await userRef
+        .child('Active')
+        .get(); // get snapshot of all active members
+
+    List<String> activeMembers = [];
+
+    if (activeSnapshot.exists) {
+      // check if there are any active members in the database
+      Map<dynamic, dynamic> membersMap =
+          activeSnapshot.value as Map; // map the active members
+
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          activeMembers.add(key); // create a list from the map
+        });
+      }
+    } else {
+      // if there are no active members, we return an empty list
+      activeMembers = [];
+    }
+
+    return activeMembers;
+  }
+
+  // Fetches a list of inactive members from the database
+  Future<List<String>> fetchUnActiveMemberList() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Members');
+
+    final inActiveSnapshot = await userRef
+        .child('Inactive')
+        .get(); // get snapshot of all inactive members
+
+    List<String> activeMembers = [];
+
+    if (inActiveSnapshot.exists) {
+      // check if there are any inactive members in the database
+
+      Map<dynamic, dynamic> membersMap =
+          inActiveSnapshot.value as Map; // map the inactive members
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          activeMembers.add(key); // create a list from the map
+        });
+      } else {
+        // if there are no inactive members, we return an empty list
+        activeMembers = [];
+      }
+    } else {
+      // if there are no inactive members, we return an empty list
+
+      activeMembers = [];
+    }
+
+    return activeMembers;
+  }
+
+  // fetch a list of active friends
+  Future<List<String>> fetchActiveFriendList() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Friends');
+
+    final activeSnapshot =
+        await userRef.child('Active').get(); // get snapshot of active friends
+
+    List<String> activeMembers = [];
+
+    if (activeSnapshot.exists) {
+      // if active friends snapshot exists
+      Map<dynamic, dynamic> membersMap =
+          activeSnapshot.value as Map; // map all active friends
+
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          activeMembers.add(key); // add active friends to a list
+        });
+      }
+    } else {
+      // if active friends snapshot doesn't exist
+      activeMembers = []; // empty list
+    }
+
+    print("People: $activeMembers");
+    return activeMembers;
+  }
+  // fetch a list of inactive friends
+
+  Future<List<String>> fetchUnActiveFriendsList() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('Users/${user.displayName}/Friends');
+
+    final activeSnapshot = await userRef
+        .child('Inactive')
+        .get(); // get snapshot of inactive friends
+
+    List<String> unactiveMembers = [];
+
+    if (activeSnapshot.exists) {
+      // if inactive friends snapshot exists
+
+      Map<dynamic, dynamic> membersMap =
+          activeSnapshot.value as Map; // map all inactive friends
+      if (membersMap != null) {
+        membersMap.forEach((key, value) {
+          unactiveMembers.add(key); // add inactive friends to a list
+        });
+      } else {
+        unactiveMembers = [];
+      }
+    } else {
+      // if inactive friends snapshot doesn't exist
+
+      unactiveMembers = []; // empty list
+    }
+
+    print("People: $unactiveMembers");
+    return unactiveMembers;
   }
 }
