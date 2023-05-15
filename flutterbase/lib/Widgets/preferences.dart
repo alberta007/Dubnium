@@ -184,6 +184,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                               height: 35,
                                               child: TextButton(
                                                 style: ButtonStyle(
+                                                  padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(0)),
                                                   backgroundColor: MaterialStateProperty.all<Color>(
                                                     Color(0xFF87A330),
                                                   ),
@@ -199,7 +200,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                   ),
                                                 ),
                                               ),
@@ -300,6 +301,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                                         height: 35,
                                                                         child: TextButton(
                                                                           style: ButtonStyle(
+                                                                            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(0)),
                                                                             backgroundColor: MaterialStateProperty.all<Color>(
                                                                               Color(0xFF87A330),
                                                                             ),
@@ -315,7 +317,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                                             style: TextStyle(
                                                                               color: Colors.white,
                                                                               fontWeight: FontWeight.bold,
-                                                                              fontSize: 18,
+                                                                              fontSize: 16,
                                                                             ),
                                                                           ),
                                                                         ),
@@ -470,6 +472,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                               height: 35,
                                               child: TextButton(
                                                 style: ButtonStyle(
+                                                  padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(0)),
                                                   backgroundColor: MaterialStateProperty.all<Color>(
                                                     Color(0xFF87A330),
                                                   ),
@@ -489,7 +492,7 @@ class _MyCustomClass2State extends State<MyCustomClass2> {
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                   ),
                                                 ),
                                               ),

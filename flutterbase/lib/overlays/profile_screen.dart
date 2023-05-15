@@ -32,6 +32,8 @@ class ProfileOverlay extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/drPreference.png',
                       scale: 1,
+                      width: 250,
+                      height: 250,
                     ),
                   ),
                   Align(
@@ -51,9 +53,7 @@ class ProfileOverlay extends StatelessWidget {
                               Container(
                                   width: 310,
                                   height: 70,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15))),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
                                   child: Row(
                                     children: [
                                       SizedBox(
@@ -68,14 +68,7 @@ class ProfileOverlay extends StatelessWidget {
                                       ),
                                       IconButton(
                                           onPressed: () {
-                                            Fluttertoast.showToast(
-                                                msg: 'Not yet implemented',
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.CENTER,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                                textColor: Colors.black,
-                                                fontSize: 20.0);
+                                            Fluttertoast.showToast(msg: 'Not yet implemented', toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.black, fontSize: 20.0);
                                           },
                                           icon: Icon(
                                             Icons.edit,
@@ -94,9 +87,7 @@ class ProfileOverlay extends StatelessWidget {
                             Container(
                                 width: 310,
                                 height: 70,
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15))),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15))),
                                 child: Row(
                                   children: [
                                     SizedBox(width: 10),
@@ -113,14 +104,7 @@ class ProfileOverlay extends StatelessWidget {
                                     SizedBox(width: 10),
                                     IconButton(
                                         onPressed: () {
-                                          Fluttertoast.showToast(
-                                              msg: 'Not yet implemented',
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.CENTER,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.red,
-                                              textColor: Colors.black,
-                                              fontSize: 20.0);
+                                          Fluttertoast.showToast(msg: 'Not yet implemented', toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.black, fontSize: 20.0);
                                         },
                                         icon: Icon(
                                           Icons.edit,
@@ -145,40 +129,29 @@ class ProfileOverlay extends StatelessWidget {
                                 alignment: Alignment.topCenter,
                                 child: ElevatedButton(
                                     style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              const Color(0xFF87A330)),
-                                      minimumSize: MaterialStateProperty.all(
-                                          const Size(300, 40)),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
+                                      backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
+                                      minimumSize: MaterialStateProperty.all(const Size(300, 40)),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
                                       ),
                                     ),
                                     onPressed: () {},
                                     child: Text(
                                       "Change password",
-                                      style: TextStyle(
-                                          fontSize: 20, color: Colors.white),
+                                      style: TextStyle(fontSize: 20, color: Colors.white),
                                     )),
                               ),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: ElevatedButton(
                                     style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              const Color(0xFF87A330)),
-                                      minimumSize: MaterialStateProperty.all(
-                                          const Size(300, 40)),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
+                                      backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
+                                      minimumSize: MaterialStateProperty.all(const Size(300, 40)),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
                                       ),
                                     ),
@@ -186,14 +159,12 @@ class ProfileOverlay extends StatelessWidget {
                                       FirebaseAuth.instance.signOut();
                                       Navigator.pushReplacement(
                                         context,
-                                        MaterialPageRoute(
-                                            builder: (context) => MyHome()),
+                                        MaterialPageRoute(builder: (context) => MyHome()),
                                       );
                                     },
                                     child: const Text(
                                       "Sign Out",
-                                      style: TextStyle(
-                                          fontSize: 20, color: Colors.white),
+                                      style: TextStyle(fontSize: 20, color: Colors.white),
                                     )),
                               ),
                               SizedBox(

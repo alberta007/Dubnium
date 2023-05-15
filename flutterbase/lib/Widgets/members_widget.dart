@@ -57,12 +57,8 @@ class _MembersListState extends State<MembersList> {
           body: Column(
             children: [
               TabBar(labelColor: Colors.black, tabs: [
-                Tab(
-                    child: Text("Members ($totMembers)",
-                        style: TextStyle(fontSize: 20))),
-                Tab(
-                    child: Text("Friends ($totFriends)",
-                        style: TextStyle(fontSize: 20))),
+                Tab(child: Text("Members ($totMembers)", style: TextStyle(fontSize: 20))),
+                Tab(child: Text("Friends ($totFriends)", style: TextStyle(fontSize: 20))),
               ]),
               Expanded(
                 child: TabBarView(
@@ -85,19 +81,18 @@ class _MembersListState extends State<MembersList> {
                                         builder: (context) {
                                           String newMemberName = '';
                                           return AlertDialog(
-                                            title:
-                                                const Text('Add a new member'),
+                                            title: const Text('Add a new member'),
                                             content: TextField(
                                               onChanged: (value) {
                                                 newMemberName = value;
                                               },
                                               decoration: const InputDecoration(
-                                                hintText:
-                                                    'Enter the new member name',
+                                                hintText: 'Enter the new member name',
                                               ),
                                             ),
                                             actions: [
                                               Row(
+                                                //mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                 children: [
                                                   TextButton(
                                                     onPressed: () {
@@ -105,36 +100,29 @@ class _MembersListState extends State<MembersList> {
                                                     },
                                                     child: const Text(
                                                       'Cancel',
-                                                      style: TextStyle(
-                                                          color: Colors.red),
+                                                      style: TextStyle(color: Colors.red),
                                                     ),
                                                   ),
                                                   const SizedBox(
-                                                    width: 120,
+                                                    width: 100,
                                                   ),
                                                   ElevatedButton(
                                                     onPressed: () async {
                                                       Navigator.pop(context);
-                                                      await addMemberToList(
-                                                          newMemberName);
-                                                      List<String>
-                                                          updatedMembersList =
-                                                          await fetchActiveMemberList();
+                                                      await addMemberToList(newMemberName);
+                                                      List<String> updatedMembersList = await fetchActiveMemberList();
 
                                                       setState(() {
-                                                        totMembers =
-                                                            totMembers + 1;
-                                                        activemembers =
-                                                            updatedMembersList;
+                                                        totMembers = totMembers + 1;
+                                                        activemembers = updatedMembersList;
                                                       });
                                                     },
                                                     style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(const Color(
-                                                                  0xFF87A330)),
+                                                      backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
                                                     ),
-                                                    child: const Text('Add'),
+                                                    child: const Text(
+                                                      'Add',
+                                                    ),
                                                   ),
                                                 ],
                                               )
@@ -144,16 +132,11 @@ class _MembersListState extends State<MembersList> {
                                       );
                                     },
                                     style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              const Color(0xFF87A330)),
-                                      minimumSize: MaterialStateProperty.all(
-                                          const Size(380, 60)),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
+                                      backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
+                                      minimumSize: MaterialStateProperty.all(const Size(380, 60)),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
                                       ),
                                     ),
@@ -162,36 +145,24 @@ class _MembersListState extends State<MembersList> {
                                       color: Colors.white,
                                       size: 30,
                                     ),
-                                    label: const Text('Add member',
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255))),
+                                    label: const Text('Add member', style: TextStyle(fontSize: 24, color: Color.fromARGB(255, 255, 255, 255))),
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.only(
-                                      top: 0, left: 25, right: 25, bottom: 25),
+                                  padding: const EdgeInsets.only(top: 0, left: 25, right: 25, bottom: 25),
                                   child: TextField(
                                     decoration: InputDecoration(
                                         filled: true,
                                         fillColor: Colors.white,
                                         hintText: 'Search Members',
-                                        prefixIcon:
-                                            const Icon(Icons.search, size: 24),
+                                        prefixIcon: const Icon(Icons.search, size: 24),
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide:
-                                              const BorderSide(width: 2.0),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderSide: const BorderSide(width: 2.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         )),
                                     onChanged: (value) {
                                       setState(() {
-                                        activemembers = activemembersSorted
-                                            .where((string) => string
-                                                .toLowerCase()
-                                                .contains(value.toLowerCase()))
-                                            .toList();
+                                        activemembers = activemembersSorted.where((string) => string.toLowerCase().contains(value.toLowerCase())).toList();
                                       });
                                     },
                                   ),
@@ -200,13 +171,8 @@ class _MembersListState extends State<MembersList> {
                             ),
                           ),
                           TabBar(labelColor: Colors.black, tabs: [
-                            Tab(
-                                child: Text("Active (${activemembers.length})",
-                                    style: const TextStyle(fontSize: 18))),
-                            Tab(
-                                child: Text(
-                                    "Inactive (${inactiveMembers.length})",
-                                    style: const TextStyle(fontSize: 18))),
+                            Tab(child: Text("Active (${activemembers.length})", style: const TextStyle(fontSize: 18))),
+                            Tab(child: Text("Inactive (${inactiveMembers.length})", style: const TextStyle(fontSize: 18))),
                           ]),
                           Expanded(
                             child: TabBarView(
@@ -216,21 +182,14 @@ class _MembersListState extends State<MembersList> {
                                   padding: const EdgeInsets.only(top: 0),
                                   itemCount: activemembers.length,
                                   //alignment: Alignment.topCenter,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
+                                  itemBuilder: (BuildContext context, int index) {
                                     final memberName = activemembers[index];
                                     return Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 25,
-                                          right: 25,
-                                          left: 25,
-                                          bottom: 0),
+                                      margin: const EdgeInsets.only(top: 25, right: 25, left: 25, bottom: 0),
                                       padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black, width: 2),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        border: Border.all(color: Colors.black, width: 2),
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
                                       child: Stack(
                                         children: [
@@ -241,44 +200,30 @@ class _MembersListState extends State<MembersList> {
                                                   showDialog(
                                                     context: context,
                                                     builder: (context) {
-                                                      String updatedMemberName =
-                                                          activemembers[index];
-                                                      String oldName =
-                                                          updatedMemberName;
+                                                      String updatedMemberName = activemembers[index];
+                                                      String oldName = updatedMemberName;
                                                       return AlertDialog(
-                                                        title: const Text(
-                                                            'Edit member'),
+                                                        title: const Text('Edit member'),
                                                         content: TextField(
                                                           onChanged: (value) {
-                                                            updatedMemberName =
-                                                                value;
+                                                            updatedMemberName = value;
                                                           },
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            hintText:
-                                                                'Enter the updated member name',
+                                                          decoration: const InputDecoration(
+                                                            hintText: 'Enter the updated member name',
                                                           ),
-                                                          controller:
-                                                              TextEditingController(
-                                                                  text: activemembers[
-                                                                      index]),
+                                                          controller: TextEditingController(text: activemembers[index]),
                                                         ),
                                                         actions: [
                                                           Row(
                                                             children: [
-                                                              const SizedBox(
-                                                                  width: 10),
+                                                              const SizedBox(width: 10),
                                                               ElevatedButton(
-                                                                onPressed:
-                                                                    () async {
+                                                                onPressed: () async {
                                                                   showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) {
+                                                                      context: context,
+                                                                      builder: (context) {
                                                                         return AlertDialog(
-                                                                          title:
-                                                                              const Text('Are you sure?'),
+                                                                          title: const Text('Are you sure?'),
                                                                           actions: [
                                                                             Row(
                                                                               children: [
@@ -320,26 +265,17 @@ class _MembersListState extends State<MembersList> {
                                                                         );
                                                                       });
                                                                 },
-                                                                style: ButtonStyle(
-                                                                    backgroundColor:
-                                                                        MaterialStateProperty.all(
-                                                                            Colors.red)),
-                                                                child: const Text(
-                                                                    'Delete'),
+                                                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+                                                                child: const Text('Delete'),
                                                               ),
-                                                              const SizedBox(
-                                                                  width: 110),
+                                                              const SizedBox(width: 110),
                                                               ElevatedButton(
-                                                                onPressed:
-                                                                    () async {
+                                                                onPressed: () async {
                                                                   showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) {
+                                                                      context: context,
+                                                                      builder: (context) {
                                                                         return AlertDialog(
-                                                                          title:
-                                                                              const Text('Are you sure?'),
+                                                                          title: const Text('Are you sure?'),
                                                                           actions: [
                                                                             Row(
                                                                               children: [
@@ -377,16 +313,10 @@ class _MembersListState extends State<MembersList> {
                                                                         );
                                                                       });
                                                                 },
-                                                                style:
-                                                                    ButtonStyle(
-                                                                  backgroundColor:
-                                                                      MaterialStateProperty.all(
-                                                                          const Color(
-                                                                              0xFF87A330)),
+                                                                style: ButtonStyle(
+                                                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
                                                                 ),
-                                                                child:
-                                                                    const Text(
-                                                                        'Save'),
+                                                                child: const Text('Save'),
                                                               ),
                                                             ],
                                                           ),
@@ -397,52 +327,33 @@ class _MembersListState extends State<MembersList> {
                                                 },
                                                 child: Text(
                                                   memberName,
-                                                  style: const TextStyle(
-                                                      fontSize: 20,
-                                                      color: Colors.black),
+                                                  style: const TextStyle(fontSize: 20, color: Colors.black),
                                                 )),
                                           ),
                                           Align(
                                               alignment: Alignment.centerRight,
                                               child: ElevatedButton(
                                                 onPressed: () async {
-                                                  await changeToInactive(
-                                                      activemembers[index]);
-                                                  List<String>
-                                                      updatedActiveMembers =
-                                                      await fetchActiveMemberList();
-                                                  List<String>
-                                                      updatedInactiveMembers =
-                                                      await fetchUnActiveMemberList();
+                                                  await changeToInactive(activemembers[index]);
+                                                  List<String> updatedActiveMembers = await fetchActiveMemberList();
+                                                  List<String> updatedInactiveMembers = await fetchUnActiveMemberList();
                                                   setState(() {
-                                                    activemembers =
-                                                        updatedActiveMembers;
-                                                    inactiveMembers =
-                                                        updatedInactiveMembers;
+                                                    activemembers = updatedActiveMembers;
+                                                    inactiveMembers = updatedInactiveMembers;
                                                   });
                                                 },
                                                 style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Color.fromARGB(255,
-                                                              168, 32, 32)),
-                                                  minimumSize:
-                                                      MaterialStateProperty.all(
-                                                          const Size(100, 40)),
-                                                  shape:
-                                                      MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
+                                                  backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 168, 32, 32)),
+                                                  minimumSize: MaterialStateProperty.all(const Size(100, 40)),
+                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                     RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
+                                                      borderRadius: BorderRadius.circular(10.0),
                                                     ),
                                                   ),
                                                 ),
                                                 child: const Text(
                                                   "Deactivate",
-                                                  style: TextStyle(
-                                                      color: Colors.black),
+                                                  style: TextStyle(color: Colors.black),
                                                 ),
                                               )),
                                         ],
@@ -455,21 +366,14 @@ class _MembersListState extends State<MembersList> {
                                   padding: const EdgeInsets.only(top: 0),
                                   itemCount: inactiveMembers.length,
                                   //alignment: Alignment.topCenter,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
+                                  itemBuilder: (BuildContext context, int index) {
                                     final memberName = inactiveMembers[index];
                                     return Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 25,
-                                          right: 25,
-                                          left: 25,
-                                          bottom: 0),
+                                      margin: const EdgeInsets.only(top: 25, right: 25, left: 25, bottom: 0),
                                       padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black, width: 2),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        border: Border.all(color: Colors.black, width: 2),
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
                                       child: Stack(
                                         children: [
@@ -480,45 +384,30 @@ class _MembersListState extends State<MembersList> {
                                                   showDialog(
                                                     context: context,
                                                     builder: (context) {
-                                                      String updatedMemberName =
-                                                          inactiveMembers[
-                                                              index];
-                                                      String oldName =
-                                                          updatedMemberName;
+                                                      String updatedMemberName = inactiveMembers[index];
+                                                      String oldName = updatedMemberName;
                                                       return AlertDialog(
-                                                        title: const Text(
-                                                            'Edit member'),
+                                                        title: const Text('Edit member'),
                                                         content: TextField(
                                                           onChanged: (value) {
-                                                            updatedMemberName =
-                                                                value;
+                                                            updatedMemberName = value;
                                                           },
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            hintText:
-                                                                'Enter the updated member name',
+                                                          decoration: const InputDecoration(
+                                                            hintText: 'Enter the updated member name',
                                                           ),
-                                                          controller:
-                                                              TextEditingController(
-                                                                  text: inactiveMembers[
-                                                                      index]),
+                                                          controller: TextEditingController(text: inactiveMembers[index]),
                                                         ),
                                                         actions: [
                                                           Row(
                                                             children: [
-                                                              const SizedBox(
-                                                                  width: 10),
+                                                              const SizedBox(width: 10),
                                                               ElevatedButton(
-                                                                onPressed:
-                                                                    () async {
+                                                                onPressed: () async {
                                                                   showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) {
+                                                                      context: context,
+                                                                      builder: (context) {
                                                                         return AlertDialog(
-                                                                          title:
-                                                                              const Text('Are you sure?'),
+                                                                          title: const Text('Are you sure?'),
                                                                           actions: [
                                                                             Row(
                                                                               children: [
@@ -559,26 +448,17 @@ class _MembersListState extends State<MembersList> {
                                                                         );
                                                                       });
                                                                 },
-                                                                style: ButtonStyle(
-                                                                    backgroundColor:
-                                                                        MaterialStateProperty.all(
-                                                                            Colors.red)),
-                                                                child: const Text(
-                                                                    'Delete'),
+                                                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+                                                                child: const Text('Delete'),
                                                               ),
-                                                              const SizedBox(
-                                                                  width: 110),
+                                                              const SizedBox(width: 110),
                                                               ElevatedButton(
-                                                                onPressed:
-                                                                    () async {
+                                                                onPressed: () async {
                                                                   showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) {
+                                                                      context: context,
+                                                                      builder: (context) {
                                                                         return AlertDialog(
-                                                                          title:
-                                                                              const Text('Are you sure?'),
+                                                                          title: const Text('Are you sure?'),
                                                                           actions: [
                                                                             Row(
                                                                               children: [
@@ -616,16 +496,10 @@ class _MembersListState extends State<MembersList> {
                                                                         );
                                                                       });
                                                                 },
-                                                                style:
-                                                                    ButtonStyle(
-                                                                  backgroundColor:
-                                                                      MaterialStateProperty.all(
-                                                                          const Color(
-                                                                              0xFF87A330)),
+                                                                style: ButtonStyle(
+                                                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
                                                                 ),
-                                                                child:
-                                                                    const Text(
-                                                                        'Save'),
+                                                                child: const Text('Save'),
                                                               ),
                                                             ],
                                                           ),
@@ -636,52 +510,33 @@ class _MembersListState extends State<MembersList> {
                                                 },
                                                 child: Text(
                                                   memberName,
-                                                  style: const TextStyle(
-                                                      fontSize: 20,
-                                                      color: Colors.black),
+                                                  style: const TextStyle(fontSize: 20, color: Colors.black),
                                                 )),
                                           ),
                                           Align(
                                               alignment: Alignment.centerRight,
                                               child: ElevatedButton(
                                                 onPressed: () async {
-                                                  await changeToActive(
-                                                      inactiveMembers[index]);
-                                                  List<String>
-                                                      updatedActiveMembers =
-                                                      await fetchActiveMemberList();
-                                                  List<String>
-                                                      updatedInactiveMembers =
-                                                      await fetchUnActiveMemberList();
+                                                  await changeToActive(inactiveMembers[index]);
+                                                  List<String> updatedActiveMembers = await fetchActiveMemberList();
+                                                  List<String> updatedInactiveMembers = await fetchUnActiveMemberList();
                                                   setState(() {
-                                                    activemembers =
-                                                        updatedActiveMembers;
-                                                    inactiveMembers =
-                                                        updatedInactiveMembers;
+                                                    activemembers = updatedActiveMembers;
+                                                    inactiveMembers = updatedInactiveMembers;
                                                   });
                                                 },
                                                 style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          const Color(
-                                                              0xFF87A330)),
-                                                  minimumSize:
-                                                      MaterialStateProperty.all(
-                                                          const Size(100, 40)),
-                                                  shape:
-                                                      MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
+                                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
+                                                  minimumSize: MaterialStateProperty.all(const Size(100, 40)),
+                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                     RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
+                                                      borderRadius: BorderRadius.circular(10.0),
                                                     ),
                                                   ),
                                                 ),
                                                 child: const Text(
                                                   "Activate",
-                                                  style: TextStyle(
-                                                      color: Colors.black),
+                                                  style: TextStyle(color: Colors.black),
                                                 ),
                                               )),
                                         ],
@@ -732,43 +587,23 @@ class _MembersListState extends State<MembersList> {
                                                     },
                                                     child: const Text(
                                                       'Cancel',
-                                                      style: TextStyle(
-                                                          color: Colors.red),
+                                                      style: TextStyle(color: Colors.red),
                                                     ),
                                                   ),
                                                   const SizedBox(
-                                                    width: 120,
+                                                    width: 100,
                                                   ),
                                                   ElevatedButton(
                                                     onPressed: () async {
                                                       Navigator.pop(context);
-                                                      String test =
-                                                          await sendFriendRequest(
-                                                              newMemberName);
+                                                      String test = await sendFriendRequest(newMemberName);
 
                                                       if (test == "No") {
-                                                        Fluttertoast.showToast(
-                                                            msg:
-                                                                'Username doesnt exist',
-                                                            toastLength: Toast
-                                                                .LENGTH_SHORT,
-                                                            gravity:
-                                                                ToastGravity
-                                                                    .CENTER,
-                                                            timeInSecForIosWeb:
-                                                                1,
-                                                            backgroundColor:
-                                                                Colors.red,
-                                                            textColor: Color(
-                                                                0xFF87A330),
-                                                            fontSize: 20.0);
+                                                        Fluttertoast.showToast(msg: 'Username doesnt exist', toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Color(0xFF87A330), fontSize: 20.0);
                                                       }
                                                     },
                                                     style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all(Color(
-                                                                  0xFF87A330)),
+                                                      backgroundColor: MaterialStateProperty.all(Color(0xFF87A330)),
                                                     ),
                                                     child: Text('Add'),
                                                   ),
@@ -780,16 +615,11 @@ class _MembersListState extends State<MembersList> {
                                       );
                                     },
                                     style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              const Color(0xFF87A330)),
-                                      minimumSize: MaterialStateProperty.all(
-                                          const Size(380, 60)),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
+                                      backgroundColor: MaterialStateProperty.all(const Color(0xFF87A330)),
+                                      minimumSize: MaterialStateProperty.all(const Size(380, 60)),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
                                       ),
                                     ),
@@ -798,36 +628,24 @@ class _MembersListState extends State<MembersList> {
                                       color: Colors.white,
                                       size: 30,
                                     ),
-                                    label: const Text('Add Friend',
-                                        style: TextStyle(
-                                            fontSize: 24,
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255))),
+                                    label: const Text('Add Friend', style: TextStyle(fontSize: 24, color: Color.fromARGB(255, 255, 255, 255))),
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.only(
-                                      top: 0, left: 25, right: 25, bottom: 25),
+                                  padding: const EdgeInsets.only(top: 0, left: 25, right: 25, bottom: 25),
                                   child: TextField(
                                     decoration: InputDecoration(
                                         filled: true,
                                         fillColor: Colors.white,
                                         hintText: 'Search Friends',
-                                        prefixIcon:
-                                            const Icon(Icons.search, size: 24),
+                                        prefixIcon: const Icon(Icons.search, size: 24),
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide:
-                                              const BorderSide(width: 2.0),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderSide: const BorderSide(width: 2.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         )),
                                     onChanged: (value) {
                                       setState(() {
-                                        activemembers = activemembersSorted
-                                            .where((string) => string
-                                                .toLowerCase()
-                                                .contains(value.toLowerCase()))
-                                            .toList();
+                                        activemembers = activemembersSorted.where((string) => string.toLowerCase().contains(value.toLowerCase())).toList();
                                       });
                                     },
                                   ),
@@ -836,13 +654,8 @@ class _MembersListState extends State<MembersList> {
                             ),
                           ),
                           TabBar(labelColor: Colors.black, tabs: [
-                            Tab(
-                                child: Text("Active (${activefriends.length})",
-                                    style: const TextStyle(fontSize: 18))),
-                            Tab(
-                                child: Text(
-                                    "Inactive (${inactiveFriends.length})",
-                                    style: const TextStyle(fontSize: 18))),
+                            Tab(child: Text("Active (${activefriends.length})", style: const TextStyle(fontSize: 18))),
+                            Tab(child: Text("Inactive (${inactiveFriends.length})", style: const TextStyle(fontSize: 18))),
                           ]),
                           Expanded(
                             child: TabBarView(
@@ -852,70 +665,44 @@ class _MembersListState extends State<MembersList> {
                                   padding: const EdgeInsets.only(top: 0),
                                   itemCount: activefriends.length,
                                   //alignment: Alignment.topCenter,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
+                                  itemBuilder: (BuildContext context, int index) {
                                     return Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 25,
-                                          right: 25,
-                                          left: 25,
-                                          bottom: 0),
+                                      margin: const EdgeInsets.only(top: 25, right: 25, left: 25, bottom: 0),
                                       padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
                                         border: Border.all(color: Colors.black),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
                                       child: Stack(
                                         children: [
                                           Align(
                                             alignment: Alignment.centerLeft,
-                                            child: Text(activefriends[index],
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    color: Colors.black)),
+                                            child: Text(activefriends[index], style: const TextStyle(fontSize: 20, color: Colors.black)),
                                           ),
                                           Align(
                                               alignment: Alignment.centerRight,
                                               child: ElevatedButton(
                                                 onPressed: () async {
-                                                  await changeFriendToInactive(
-                                                      activefriends[index]);
-                                                  List<String>
-                                                      updatedActiveFriends =
-                                                      await fetchActiveFriendList();
-                                                  List<String>
-                                                      updatedInactiveFriends =
-                                                      await fetchUnActiveFriendsList();
+                                                  await changeFriendToInactive(activefriends[index]);
+                                                  List<String> updatedActiveFriends = await fetchActiveFriendList();
+                                                  List<String> updatedInactiveFriends = await fetchUnActiveFriendsList();
                                                   setState(() {
-                                                    activefriends =
-                                                        updatedActiveFriends;
-                                                    inactiveFriends =
-                                                        updatedInactiveFriends;
+                                                    activefriends = updatedActiveFriends;
+                                                    inactiveFriends = updatedInactiveFriends;
                                                   });
                                                 },
                                                 style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Color.fromARGB(255,
-                                                              168, 32, 32)),
-                                                  minimumSize:
-                                                      MaterialStateProperty.all(
-                                                          const Size(100, 40)),
-                                                  shape:
-                                                      MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
+                                                  backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 168, 32, 32)),
+                                                  minimumSize: MaterialStateProperty.all(const Size(100, 40)),
+                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                     RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
+                                                      borderRadius: BorderRadius.circular(10.0),
                                                     ),
                                                   ),
                                                 ),
                                                 child: const Text(
                                                   "Deactivate",
-                                                  style: TextStyle(
-                                                      color: Colors.black),
+                                                  style: TextStyle(color: Colors.black),
                                                 ),
                                               )),
                                         ],
@@ -928,69 +715,44 @@ class _MembersListState extends State<MembersList> {
                                   padding: const EdgeInsets.only(top: 0),
                                   itemCount: inactiveFriends.length,
                                   //alignment: Alignment.topCenter,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
+                                  itemBuilder: (BuildContext context, int index) {
                                     return Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 25,
-                                          right: 25,
-                                          left: 25,
-                                          bottom: 0),
+                                      margin: const EdgeInsets.only(top: 25, right: 25, left: 25, bottom: 0),
                                       padding: const EdgeInsets.all(16.0),
                                       decoration: BoxDecoration(
                                         border: Border.all(color: Colors.black),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
                                       child: Stack(
                                         children: [
                                           Align(
                                             alignment: Alignment.centerLeft,
-                                            child: Text(inactiveFriends[index],
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    color: Colors.black)),
+                                            child: Text(inactiveFriends[index], style: const TextStyle(fontSize: 20, color: Colors.black)),
                                           ),
                                           Align(
                                               alignment: Alignment.centerRight,
                                               child: ElevatedButton(
                                                 onPressed: () async {
-                                                  await changeFriendToActive(
-                                                      inactiveFriends[index]);
-                                                  List<String>
-                                                      updatedActiveFriends =
-                                                      await fetchActiveFriendList();
-                                                  List<String>
-                                                      updatedInactiveFriends =
-                                                      await fetchUnActiveFriendsList();
+                                                  await changeFriendToActive(inactiveFriends[index]);
+                                                  List<String> updatedActiveFriends = await fetchActiveFriendList();
+                                                  List<String> updatedInactiveFriends = await fetchUnActiveFriendsList();
                                                   setState(() {
-                                                    activefriends =
-                                                        updatedActiveFriends;
-                                                    inactiveFriends =
-                                                        updatedInactiveFriends;
+                                                    activefriends = updatedActiveFriends;
+                                                    inactiveFriends = updatedInactiveFriends;
                                                   });
                                                 },
                                                 style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Color(0xFF87A330)),
-                                                  minimumSize:
-                                                      MaterialStateProperty.all(
-                                                          const Size(100, 40)),
-                                                  shape:
-                                                      MaterialStateProperty.all<
-                                                          RoundedRectangleBorder>(
+                                                  backgroundColor: MaterialStateProperty.all(Color(0xFF87A330)),
+                                                  minimumSize: MaterialStateProperty.all(const Size(100, 40)),
+                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                     RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
+                                                      borderRadius: BorderRadius.circular(10.0),
                                                     ),
                                                   ),
                                                 ),
                                                 child: const Text(
                                                   "Activate",
-                                                  style: TextStyle(
-                                                      color: Colors.black),
+                                                  style: TextStyle(color: Colors.black),
                                                 ),
                                               )),
                                         ],
@@ -1018,12 +780,9 @@ class _MembersListState extends State<MembersList> {
   Future<String> addMemberToList(String newMember) async {
     final user = FirebaseAuth.instance.currentUser!; // get the current user
 
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users'); // get database reference
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users'); // get database reference
 
-    await userRef.child('${user.displayName}/Members/Active/$newMember').set(
-        newMember); // create a new user under active members using the string newMember
+    await userRef.child('${user.displayName}/Members/Active/$newMember').set(newMember); // create a new user under active members using the string newMember
 
     return newMember;
   }
@@ -1031,20 +790,15 @@ class _MembersListState extends State<MembersList> {
   // Fetches a list of active members from the database
   Future<List<String>> fetchActiveMemberList() async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}/Members');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Members');
 
-    final activeSnapshot = await userRef
-        .child('Active')
-        .get(); // get snapshot of all active members
+    final activeSnapshot = await userRef.child('Active').get(); // get snapshot of all active members
 
     List<String> activeMembers = [];
 
     if (activeSnapshot.exists) {
       // check if there are any active members in the database
-      Map<dynamic, dynamic> membersMap =
-          activeSnapshot.value as Map; // map the active members
+      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map; // map the active members
 
       if (membersMap != null) {
         membersMap.forEach((key, value) {
@@ -1062,21 +816,16 @@ class _MembersListState extends State<MembersList> {
   // Fetches a list of inactive members from the database
   Future<List<String>> fetchUnActiveMemberList() async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}/Members');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Members');
 
-    final inActiveSnapshot = await userRef
-        .child('Inactive')
-        .get(); // get snapshot of all inactive members
+    final inActiveSnapshot = await userRef.child('Inactive').get(); // get snapshot of all inactive members
 
     List<String> activeMembers = [];
 
     if (inActiveSnapshot.exists) {
       // check if there are any inactive members in the database
 
-      Map<dynamic, dynamic> membersMap =
-          inActiveSnapshot.value as Map; // map the inactive members
+      Map<dynamic, dynamic> membersMap = inActiveSnapshot.value as Map; // map the inactive members
       if (membersMap != null) {
         membersMap.forEach((key, value) {
           activeMembers.add(key); // create a list from the map
@@ -1097,40 +846,29 @@ class _MembersListState extends State<MembersList> {
 //updates a members name in the database
   Future<List<String>> updateMemberName(String oldName, String newName) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
 
-    final preferenceActiveSnapshot = await userRef
-        .child('${user.displayName}/Members/Active/$oldName/Preferences')
-        .get(); // get snapshot of active member preferences
+    final preferenceActiveSnapshot = await userRef.child('${user.displayName}/Members/Active/$oldName/Preferences').get(); // get snapshot of active member preferences
 
-    final preferenceInactiveSnapshot = await userRef
-        .child('${user.displayName}/Members/Inactive/$oldName/Preferences')
-        .get(); // get snapshot of inactive member preferences
+    final preferenceInactiveSnapshot = await userRef.child('${user.displayName}/Members/Inactive/$oldName/Preferences').get(); // get snapshot of inactive member preferences
 
     List<String> updatedList = [];
 
     if (preferenceActiveSnapshot.exists) {
       //check if active member preferences exists
-      List<String> preferenceList = await databaseList(
-          preferenceActiveSnapshot); // create a list of the active member preferences
+      List<String> preferenceList = await databaseList(preferenceActiveSnapshot); // create a list of the active member preferences
 
       await userRef.update({
-        '${user.displayName}/Members/Active/$oldName':
-            null, // set the old name to null
-        '${user.displayName}/Members/Active/$newName/Preferences':
-            preferenceList, // set the new name with preferences
+        '${user.displayName}/Members/Active/$oldName': null, // set the old name to null
+        '${user.displayName}/Members/Active/$newName/Preferences': preferenceList, // set the new name with preferences
       });
     } else if (preferenceInactiveSnapshot.exists) {
       //check if inactive member preferences exists
-      List<String> preferenceList = await databaseList(
-          preferenceInactiveSnapshot); // create a list of the inactive member preferences
+      List<String> preferenceList = await databaseList(preferenceInactiveSnapshot); // create a list of the inactive member preferences
 
       await userRef.update({
-        '${user.displayName}/Members/Inactive/$oldName':
-            null, // set the old name to null
-        '${user.displayName}/Members/Inactive/$newName/Preferences':
-            preferenceList, // set the new name with preferences
+        '${user.displayName}/Members/Inactive/$oldName': null, // set the old name to null
+        '${user.displayName}/Members/Inactive/$newName/Preferences': preferenceList, // set the new name with preferences
       });
     } else {
       // if the members doesn't have any preferences
@@ -1145,18 +883,14 @@ class _MembersListState extends State<MembersList> {
       if (ActiveSnapshot.exists) {
         // if active
         await userRef.update({
-          '${user.displayName}/Members/Active/$oldName':
-              null, // set the old name to null
-          '${user.displayName}/Members/Active/$newName':
-              newName, // set the new name
+          '${user.displayName}/Members/Active/$oldName': null, // set the old name to null
+          '${user.displayName}/Members/Active/$newName': newName, // set the new name
         });
       } else if (InactiveSnapshot.exists) {
         // if inactive
         await userRef.update({
-          '${user.displayName}/Members/Inactive/$oldName':
-              null, // set the old name to null
-          '${user.displayName}/Members/Inactive/$newName':
-              newName, // set the new name
+          '${user.displayName}/Members/Inactive/$oldName': null, // set the old name to null
+          '${user.displayName}/Members/Inactive/$newName': newName, // set the new name
         });
       }
     }
@@ -1168,30 +902,23 @@ class _MembersListState extends State<MembersList> {
   Future<List<String>> deleteMember(String memberName) async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
 
     List<String> updatedList = [];
 
-    final ActiveSnapshot = await userRef
-        .child('${user.displayName}/Members/Active/$memberName')
-        .get(); // snapshot of active members
+    final ActiveSnapshot = await userRef.child('${user.displayName}/Members/Active/$memberName').get(); // snapshot of active members
 
-    final InactiveSnapshot = await userRef
-        .child('${user.displayName}/Members/Inactive/$memberName')
-        .get(); // snapshot of inactive members
+    final InactiveSnapshot = await userRef.child('${user.displayName}/Members/Inactive/$memberName').get(); // snapshot of inactive members
 
     if (ActiveSnapshot.exists) {
       // if active
       await userRef.update({
-        '${user.displayName}/Members/Active/$memberName':
-            null, // set the name to null
+        '${user.displayName}/Members/Active/$memberName': null, // set the name to null
       });
     } else if (InactiveSnapshot.exists) {
       // if inactive
       await userRef.update({
-        '${user.displayName}/Members/Inactive/$memberName':
-            null, // set the name to null
+        '${user.displayName}/Members/Inactive/$memberName': null, // set the name to null
       });
     }
 
@@ -1201,36 +928,27 @@ class _MembersListState extends State<MembersList> {
 // changes the member from active to inactive
   Future<List<String>> changeToInactive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}/Members');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Members');
 
-    final snapshotActive =
-        await userRef.child('Active/$change').get(); // get snapshot of member
+    final snapshotActive = await userRef.child('Active/$change').get(); // get snapshot of member
 
     List<String> newList = [];
 
     if (snapshotActive.exists) {
       // check if member exists
-      final snapshotActivePreferences = await userRef
-          .child('Active/$change/Preferences')
-          .get(); // get snapshot of the preferences of the member
+      final snapshotActivePreferences = await userRef.child('Active/$change/Preferences').get(); // get snapshot of the preferences of the member
 
       if (snapshotActivePreferences.exists) {
         // if the member has preferences
-        List<String> membersInactiveList = await databaseList(
-            snapshotActivePreferences); // create list of preferences
+        List<String> membersInactiveList = await databaseList(snapshotActivePreferences); // create list of preferences
 
         await userRef.update({
-          'Active/$change':
-              null, // set the value to null in the members active position
-          'Inactive/$change/Preferences':
-              membersInactiveList, // create a new value in inactive with the list of preferences
+          'Active/$change': null, // set the value to null in the members active position
+          'Inactive/$change/Preferences': membersInactiveList, // create a new value in inactive with the list of preferences
         });
       } else {
         await userRef.update({
-          'Active/$change':
-              null, // set the value to null in the members active position
+          'Active/$change': null, // set the value to null in the members active position
           'Inactive/$change': change, // create a new value in inactive
         });
       }
@@ -1241,37 +959,28 @@ class _MembersListState extends State<MembersList> {
 
   Future<List<String>> changeToActive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}/Members');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Members');
 
-    final snapshotInactive =
-        await userRef.child('Inactive/$change').get(); // get snapshot of member
+    final snapshotInactive = await userRef.child('Inactive/$change').get(); // get snapshot of member
 
     List<String> newList = [];
 
     if (snapshotInactive.exists) {
       // check if member exists
 
-      final snapshotActivePreferences = await userRef
-          .child('Inactive/$change/Preferences')
-          .get(); // get snapshot of the preferences of the member
+      final snapshotActivePreferences = await userRef.child('Inactive/$change/Preferences').get(); // get snapshot of the preferences of the member
 
       if (snapshotActivePreferences.exists) {
         // if the member has preferences
-        List<String> membersInactiveList = await databaseList(
-            snapshotActivePreferences); // create list of preferences
+        List<String> membersInactiveList = await databaseList(snapshotActivePreferences); // create list of preferences
 
         await userRef.update({
-          'Inactive/$change':
-              null, // set the value to null in the members inactive position
-          'Active/$change/Preferences':
-              membersInactiveList, // create a new value in active with the list of preferences
+          'Inactive/$change': null, // set the value to null in the members inactive position
+          'Active/$change/Preferences': membersInactiveList, // create a new value in active with the list of preferences
         });
       } else {
         await userRef.update({
-          'Inactive/$change':
-              null, // set the value to null in the members inactive position
+          'Inactive/$change': null, // set the value to null in the members inactive position
           'Active/$change': change, // create a new value in active
         });
       }
@@ -1285,43 +994,31 @@ class _MembersListState extends State<MembersList> {
   Future<String> sendFriendRequest(String friendName) async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshot = await userRef
-        .child(friendName)
-        .get(); // get a snapshot of the friends username position in the database
+    final snapshot = await userRef.child(friendName).get(); // get a snapshot of the friends username position in the database
 
     List<String> requestList = [];
 
     if (snapshot.exists) {
       // check if username exists
-      final friendRequestsExist = await userRef
-          .child('${friendName}/Friendrequests')
-          .get(); // get snapshot of the friendrequests
+      final friendRequestsExist = await userRef.child('${friendName}/Friendrequests').get(); // get snapshot of the friendrequests
 
       if (friendRequestsExist.exists) {
         // check if the friendrequests exists
-        List<dynamic> friendRequestListDynamic = friendRequestsExist.value
-            as List<dynamic>; //fetch a list of the friendrequests
+        List<dynamic> friendRequestListDynamic = friendRequestsExist.value as List<dynamic>; //fetch a list of the friendrequests
 
-        List<String> friendRequestList = friendRequestListDynamic
-            .map((member) => member.toString())
-            .toList();
+        List<String> friendRequestList = friendRequestListDynamic.map((member) => member.toString()).toList();
 
-        friendRequestList.add(
-            '${user.displayName}'); // add the current users username to the list of friendrequests
+        friendRequestList.add('${user.displayName}'); // add the current users username to the list of friendrequests
 
         await userRef.update({
-          '$friendName/Friendrequests':
-              friendRequestList, // update the friendrequests in the database
+          '$friendName/Friendrequests': friendRequestList, // update the friendrequests in the database
         });
         requestList = friendRequestList;
       } else {
         // if it doesn't exist any previous friend requests
-        requestList = [
-          '${user.displayName}'
-        ]; // create a list of the user who's trying to add
+        requestList = ['${user.displayName}']; // create a list of the user who's trying to add
         await userRef.update({
           '$friendName/Friendrequests': requestList, // add that list the friend
         });
@@ -1336,23 +1033,17 @@ class _MembersListState extends State<MembersList> {
   Future<List<String>> fetchFriendRequests() async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshotRequests = await userRef
-        .child('${user.displayName}/Friendrequests')
-        .get(); // get snapshot of friendrequests
+    final snapshotRequests = await userRef.child('${user.displayName}/Friendrequests').get(); // get snapshot of friendrequests
 
     List<String> temp = []; // list to return
 
     if (snapshotRequests.exists) {
       // if there exists any friendrequests
-      List<dynamic> requestListDynamic = snapshotRequests.value
-          as List<dynamic>; // creates a list of the friend requests
+      List<dynamic> requestListDynamic = snapshotRequests.value as List<dynamic>; // creates a list of the friend requests
 
-      List<String> requestList = requestListDynamic
-          .map((member) => member.toString())
-          .toList(); // creates a list of the friend requests
+      List<String> requestList = requestListDynamic.map((member) => member.toString()).toList(); // creates a list of the friend requests
 
       temp = requestList; // list to return == the friend request list
     } else {
@@ -1368,47 +1059,34 @@ class _MembersListState extends State<MembersList> {
   Future<void> acceptFriendRequest(String friendName) async {
     final user = FirebaseAuth.instance.currentUser!;
 
-    DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('Users');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users');
 
-    final snapshotRequests = await userRef
-        .child('${user.displayName}/Friendrequests')
-        .get(); // snapshot of friendrequest
+    final snapshotRequests = await userRef.child('${user.displayName}/Friendrequests').get(); // snapshot of friendrequest
 
     List<dynamic> requestListDynamic = snapshotRequests.value as List<dynamic>;
 
-    List<String> requestList = requestListDynamic
-        .map((member) => member.toString())
-        .toList(); // creates a list of the friend requests
+    List<String> requestList = requestListDynamic.map((member) => member.toString()).toList(); // creates a list of the friend requests
 
     requestList.remove(friendName);
     await userRef.update({
       '${user.displayName}/Friendrequests': requestList,
     });
-    await userRef
-        .child('${user.displayName}/Friends/Active/$friendName')
-        .set(friendName);
-    await userRef
-        .child('$friendName/Friends/Active/${user.displayName}')
-        .set(user.displayName);
+    await userRef.child('${user.displayName}/Friends/Active/$friendName').set(friendName);
+    await userRef.child('$friendName/Friends/Active/${user.displayName}').set(user.displayName);
   }
 
 // fetch a list of active friends
   Future<List<String>> fetchActiveFriendList() async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}/Friends');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Friends');
 
-    final activeSnapshot =
-        await userRef.child('Active').get(); // get snapshot of active friends
+    final activeSnapshot = await userRef.child('Active').get(); // get snapshot of active friends
 
     List<String> activeMembers = [];
 
     if (activeSnapshot.exists) {
       // if active friends snapshot exists
-      Map<dynamic, dynamic> membersMap =
-          activeSnapshot.value as Map; // map all active friends
+      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map; // map all active friends
 
       if (membersMap != null) {
         membersMap.forEach((key, value) {
@@ -1427,21 +1105,16 @@ class _MembersListState extends State<MembersList> {
 
   Future<List<String>> fetchUnActiveFriendsList() async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}/Friends');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Friends');
 
-    final activeSnapshot = await userRef
-        .child('Inactive')
-        .get(); // get snapshot of inactive friends
+    final activeSnapshot = await userRef.child('Inactive').get(); // get snapshot of inactive friends
 
     List<String> unactiveMembers = [];
 
     if (activeSnapshot.exists) {
       // if inactive friends snapshot exists
 
-      Map<dynamic, dynamic> membersMap =
-          activeSnapshot.value as Map; // map all inactive friends
+      Map<dynamic, dynamic> membersMap = activeSnapshot.value as Map; // map all inactive friends
       if (membersMap != null) {
         membersMap.forEach((key, value) {
           unactiveMembers.add(key); // add inactive friends to a list
@@ -1462,13 +1135,9 @@ class _MembersListState extends State<MembersList> {
 // changes friend from active to inactive
   Future<List<String>> changeFriendToInactive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}/Friends');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Friends');
 
-    final snapshotActive = await userRef
-        .child('Active/$change')
-        .get(); // get snapshot of active friend
+    final snapshotActive = await userRef.child('Active/$change').get(); // get snapshot of active friend
 
     List<String> newList = [];
 
@@ -1485,13 +1154,9 @@ class _MembersListState extends State<MembersList> {
 
   Future<List<String>> changeFriendToActive(String change) async {
     final user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('Users/${user.displayName}/Friends');
+    DatabaseReference userRef = FirebaseDatabase.instance.reference().child('Users/${user.displayName}/Friends');
 
-    final snapshotActive = await userRef
-        .child('Inactive/$change')
-        .get(); // get snapshot of active friend
+    final snapshotActive = await userRef.child('Inactive/$change').get(); // get snapshot of active friend
 
     List<String> newList = [];
 
@@ -1510,8 +1175,7 @@ class _MembersListState extends State<MembersList> {
   Future<List<String>> databaseList(DataSnapshot snapshot) async {
     List<dynamic> databaseListDynamic = snapshot.value as List<dynamic>;
 
-    List<String> dataBaseList =
-        databaseListDynamic.map((member) => member.toString()).toList();
+    List<String> dataBaseList = databaseListDynamic.map((member) => member.toString()).toList();
 
     return dataBaseList;
   }
